@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\repository\AuctionParticipantRepository;
+use App\Repository\AuctionParticipantRepository ;
 use Symfony\Component\Validator\Constraints\Date;
 
 #[ORM\Entity(repositoryClass: AuctionParticipantRepository::class)]
