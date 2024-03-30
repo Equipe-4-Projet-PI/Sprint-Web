@@ -22,7 +22,9 @@
 
   <body id="particles-js"></body>
   <div class="animated bounceInDown">
-    <div class="container">
+    <div class="container" style="
+    height: 670px;
+">
       <span class="error animated tada" id="msg"></span>
       <form name="form1"  class="box" onsubmit = "return checkStuff()" action="{{ path('signup2',{'username': 'example_username', 'email': 'example_email'})}}">
         <img src="{{asset('img/logo.png')}}" alt="ArtyVnci"style="width: 35%;">
@@ -39,7 +41,8 @@
 
        
         <div class="box">
-          <select aria-placeholder="Select your role.." name="role">
+          <select aria-placeholder="Select your role.." name="role" style="
+    width: 320px;">
            <option value="" disabled selected>Select your role</option>
             <option>Member</option>
             <option>Artist</option>
@@ -48,7 +51,9 @@
 
 
 
-        <input type="submit" value="Next" class="btn2">
+        <input type="submit" value="Next" class="btn2" style="
+    top: 83%;
+">
       </form>
 
 
