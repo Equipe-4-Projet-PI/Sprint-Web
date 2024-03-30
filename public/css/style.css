@@ -343,9 +343,7 @@ label span {
 }
 
 
-.box {
- 
-}
+
 
 .box select {
   background-color: #262e49;
@@ -372,6 +370,46 @@ label span {
 .box select option {
   padding: 30px;
 }
+
+
+
+
+
+
+
+
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+input[type="date"] {
+  background-color: #0080ff;
+  padding: 15px;
+  color: white;
+  font-family: "Roboto Mono", monospace;
+  font-size: 18px;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  /* move date picker to center */
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+}
+::-webkit-calendar-picker-indicator {
+  background-color: white;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+
+
 
 
 

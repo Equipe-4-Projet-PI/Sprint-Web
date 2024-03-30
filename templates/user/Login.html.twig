@@ -22,7 +22,28 @@
 <div class="animated bounceInDown">
   <div class="container">
     <span class="error animated tada" id="msg"></span>
-    <form name="form1" class="box" onsubmit="return checkStuff() ">
+   
+   
+
+
+  <form name="form1" class="box" {{ form_start(form) }}>
+    <img src="{{ asset('img/logo.png') }}" alt="ArtyVnci" style="width: 35%;">
+    <h5>Sign in to your account.</h5>
+
+    {{ form_widget(form.username, {'attr': {'placeholder': 'Username', 'autocomplete': 'off'}}) }} 
+    {{ form_widget(form.password, {'attr': {'placeholder': 'Password', 'autocomplete': 'off', 'id': 'pwd'}}) }}
+    <label>
+       <input type="checkbox">
+        <span></span>
+        <small class="rmb">Remember me</small>
+    </label>
+    
+    {{ form_row(form.connexion, {'attr': {'class': 'btn1', 'value': 'Sign in'}}) }}
+    <a href="#" class="forgetpass">Forget Password?</a>
+</form >
+
+   <!-- 
+  <form name="form1" class="box" onsubmit="return checkStuff() ">
       <img src="{{asset('img/logo.png')}}" alt="ArtyVnci"style="width: 35%;">
      
       <h5>Sign in to your account.</h5>
@@ -38,6 +59,8 @@
         <a href="#" class="forgetpass">Forget Password?</a>
         <input type="submit" value="Sign in" class="btn1">
       </form>
+-->
+    
      
       <div class="a b c ">
         <div class="slide"></div>

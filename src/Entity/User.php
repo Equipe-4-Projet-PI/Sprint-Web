@@ -6,6 +6,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\Date;
 use App\Repository\UserRepository;
+use DateTime;
+use Symfony\Bundle\MakerBundle\Str;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User
@@ -37,7 +39,7 @@ class User
     private ?string  $lastname = null;  
 
     #[ORM\Column(length: 255)]
-    private ?string  $address = null;
+    private ?string  $adress = null;
 
     #[ORM\Column(length: 255)]
     private ?string $phone = null;
@@ -45,8 +47,8 @@ class User
     #[ORM\Column(length: 255)]
     private ?string $gender  = null;
 
-    #[ORM\Column(name: "date", type: "date", nullable: false)]
-    private ?Date $dob = null;
+    #[ORM\Column(length: 255)]
+    private ?string $dob = null ;
 
     #[ORM\Column(length: 255)]
     private ?string $imageurl = null;
@@ -128,14 +130,14 @@ class User
         return $this;
     }
 
-    public function getAddress(): ?string
+    public function getAdress(): ?string
     {
-        return $this->address;
+        return $this->adress;
     }
 
-    public function setAddress(string $address): static
+    public function setAdress(string $address): static
     {
-        $this->address = $address;
+        $this->adress = $address;
 
         return $this;
     }
@@ -164,12 +166,12 @@ class User
         return $this;
     }
 
-    public function getDob(): ?\DateTimeInterface
+    public function getDob(): ?string
     {
         return $this->dob;
     }
 
-    public function setDob(\DateTimeInterface $dob): static
+    public function setDob(string $dob): static
     {
         $this->dob = $dob;
 

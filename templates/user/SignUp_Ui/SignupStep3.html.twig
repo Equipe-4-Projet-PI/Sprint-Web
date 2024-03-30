@@ -25,40 +25,50 @@
   <div class="animated bounceInDown">
     <div class="container">
       <span class="error animated tada" id="msg"></span>
-      <form name="form1" class="box" onsubmit="return checkStuff()">
-        <img src="{{asset('img/logo.png')}}" alt="ArtyVnci"style="width: 35%;">
-        <h5>Join ArtyVenci</h5>
-        
-         <img src="{{asset('img/pagination3.png')}}" alt="ArtyVnci" style="position: fixed;width: 10%;top: 27%;right: 45%;">
-          
-          <!-- Other fields -->
-
-        <input type="hidden" name="username" value={{username}}>
-        <input type="hidden" name="email" value={{email}}>
-        <input type="hidden" name="password" value = {{password}}>
-        <input type="hidden" name="Role" value = {{Role}}>
-        <input type="hidden" name="FirstName" value = {{FirstName}} >
-        <input type="hidden" name="LastName"  value = {{LastName}}>
-        <input type="hidden" name="Adress"  value = {{Adress}} >
-        <input type="hidden" name="Phone"  value = {{Phone}}> 
-        <input type="hidden" name="Genre" value = {{Genre}}>
-
-         <!-- Other fields -->
-         <br>
-<br>
+      
+      
+       <form name="form1" class="box" {{ form_start(form) }}>
+    <img src="{{ asset('img/logo.png') }}" alt="ArtyVnci" style="width: 35%;">
+    <h5>Sign in to your account.</h5>
+ 
 <div class="profile-pic">
-  <label class="-label" for="file">
-   Change Image
-  </label> 
-  <input id="file" type="file" onchange="loadFile(event)"/>
-  <img src="{{asset('img/userprofile.png')}}" id="output" width="200" />
+    <label class="-label" for="file">
+        Change Image
+    </label> 
+    <input id="file" type="file" onchange="loadFile(event)" name="imageurl"/>
+    <img src="{{ asset('img/userprofile.png') }}" id="output" width="200" />
 </div>
 <br>
 <br>
-      <h5>Add your Profile Picture </h5>
+{{ form_widget(form.imageurl, {'attr': {'value':}}) }}
 
-        <input type="submit" value="Next" class="btn2">
-      </form>
+<script>
+    function loadFile(event) {
+        var image = document.getElementById('output');
+        image.src = URL.createObjectURL(event.target.files[0]);
+        
+        var imageUrlInput = document.getElementById('imageurl_field');
+        imageUrlInput.value = event.target.value; // Set the value of the hidden input field to the image URL
+    }
+</script>
+
+
+
+
+
+
+
+
+
+    
+    {{ form_row(form.Done, {'attr': {'class': 'btn1', 'value': 'Sign in'}}) }}
+   
+</form >
+      
+
+
+
+    
 
 
       

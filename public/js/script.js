@@ -20,7 +20,6 @@ function togglePass1(){
 }
 
 
-
 // Form Validation
 
 function checkStuff() {
