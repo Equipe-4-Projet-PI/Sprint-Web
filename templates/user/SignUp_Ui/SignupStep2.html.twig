@@ -25,7 +25,7 @@
   <body id="particles-js"></body>
   <div class="animated bounceInDown">
     <div class="container" style="
-    height: 680px;">
+    height: 690px;">
       <span class="error animated tada" id="msg"></span>
       <form name="form1"  class="box" onsubmit = "return checkStuff()" action="{{ path('signup3',{'username': 'example_username', 'email': 'example_email' , 'dob':'example_dob'})}}">
         <img src="{{asset('img/logo.png')}}" alt="ArtyVnci"style="width: 35%;">
@@ -46,13 +46,31 @@
         <input type="text" name="LastName" placeholder="LastName" autocomplete="off">
         <input type="text" name="adress" placeholder="Adress" autocomplete="off">
         <input type="text" name="Phone" placeholder="Phone" autocomplete="off">
-       <input type="date" name="Phone1" placeholder="Select Birthday " id="dateInput" autocomplete="off" > 
+       <input type="date" name="Phone1" placeholder="Select Birthday " id="dateInput" autocomplete="off" 
+       style="
+    display: block;
+    margin: 20px auto;
+    background: #262e49;
+    border: 0;
+    border-radius: 5px;
+    padding: 14px 10px;
+    width: 320px;
+    outline: none;
+    color: #d6d6d6;
+    -webkit-transition: all .2s ease-out;
+    -moz-transition: all .2s ease-out;
+    -ms-transition: all .2s ease-out;
+    -o-transition: all .2s ease-out;
+    transition: all .2s ease-out;
+"> 
     
   
 
     
         <div class="box">
-          <select aria-placeholder="Select your Gender.." name="Gender">
+          <select aria-placeholder="Select your Gender.." name="Gender" style="
+    width: 340px;
+">
            <option value="" disabled selected>Gender</option>
             <option>Male</option>
             <option>Female</option>

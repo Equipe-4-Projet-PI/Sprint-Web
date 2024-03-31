@@ -1,4 +1,5 @@
-var pwd = document.getElementById('pwd');
+var pwd = document.getElementById('password');
+
 var Cpwd = document.getElementById('Cpwd');
 var eye = document.getElementById('eye');
 var eye1 = document.getElementById('eye1');
@@ -12,7 +13,10 @@ function togglePass(){
 
    eye.classList.toggle('active');
    (pwd.type == 'password') ? pwd.type = 'text' : pwd.type = 'password';
+   
+
 }
+
 
 function togglePass1(){
   eye1.classList.toggle('active');
@@ -23,19 +27,45 @@ function togglePass1(){
 // Form Validation
 
 function checkStuff() {
-  var email = document.form1.email;
+  var username = document.form1.username;
   var password = document.form1.password;
   var msg = document.getElementById('msg');
   
-  if (email.value == "") {
+  if (username.value == "") {
     msg.style.display = 'block';
-    msg.innerHTML = "Please enter your email";
+    msg.innerHTML = "Please enter your username";
     email.focus();
     return false;
   }
   
   if (password.value == "") {
-    msg.innerHTML = "Please enter your password";
+    msg.innerHTML = "Please enter your email";
+    password.focus();
+    return false;
+  }
+  
+ 
+    return  true
+}
+
+
+function checkStuffS() {
+  var username = document.form1.username;
+  var email = document.form1.email;
+  var password = document.form1.pwd;
+  var confirmpwd = document.form1.Cpwd;
+  var role = document.form1.role;
+  var msg = document.getElementById('msg');
+  
+  if (username.value == "") {
+    msg.style.display = 'block';
+    msg.innerHTML = "Please enter your username";
+    email.focus();
+    return false;
+  }
+  
+  if (password.value == "") {
+    msg.innerHTML = "Please enter your email";
     password.focus();
     return false;
   }
@@ -46,18 +76,30 @@ function checkStuff() {
     email.focus();
     return false;
   }
+
+  if (password.password == "") {
+    msg.innerHTML = "Please enter your password";
+    password.focus();
+    return false;
+  }
+  if (confirmpwd.value == "") {
+    msg.innerHTML = "Please enter your Confirm Password";
+    password.focus();
+    return false;
+  }
+  if (password.value != confirmpwd.value) {
+    msg.innerHTML = "Please confirm your password";
+    password.focus();
+    return false;
+  }
+  if (role.value == "") {
+    msg.innerHTML = "Please choose your role";
+    password.focus();
+    return false;
+  }
     return  true
 }
 
-function redirectToPage() {
-  // Redirect to page 2 after the form is successfully submitted
-  window.location.href = "{{ path('login')}}";
-  return true;
-}
-function redirectToPage3() {
-  // Redirect to page 2 after the form is successfully submitted
-  window.location.href = "{{ path('signup3') }}";
-}
 
 
 

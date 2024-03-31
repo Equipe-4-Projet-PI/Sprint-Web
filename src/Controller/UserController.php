@@ -5,33 +5,62 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\LoginType;
 use App\Form\SignupType;
+use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 
 class UserController extends AbstractController
 {
     #[Route('/user/login', name: 'login')]
-    public function Openlogin(Request $req ,ManagerRegistry $manager): Response
+    public function login(Request $req ): Response
     {
+        $error = $req->query->get('error');
 
-        $user = new User();
-        $form = $this->createForm(LoginType::class,$user);
-        $form -> handleRequest($req);
-        if ($form->isSubmitted() && $form->isValid())  
-        {  
-            $entityManager= $manager->getManager(); 
-            $entityManager->persist($user);  
-            $entityManager->flush();  
-             return $this->redirectToRoute('welcome');
-        }
         return $this->render('user/Login.html.twig', [
             'controller_name' => 'UserController',
-            'form'=>$form->createView()
+            'error' => $error
         ]);
+    }
+
+    #[Route('/user/authenticate', name: 'authenticate')]
+    public function authenticate(Request $request, UserRepository $repo): Response
+    {
+        $username = $request->request->get('username');
+        $password = $request->request->get('password');
+    
+        
+        if ($username === null || $username === '') {
+          
+            return $this->redirectToRoute('login', ['error' => 'Username is required']);
+        }
+    
+       
+        $user = $repo->findOneByUsername($username);
+    
+        if (!$user) {
+           
+            return $this->redirectToRoute('login', ['error' => 'Couldnt find that username']);
+        }
+        if ($user->getRole() === "Admin") {
+            
+            return $this->redirectToRoute('Admin');
+        }else{
+            if ($user->getPassword() === $password) {
+            
+                return $this->redirectToRoute('home');
+            } else {
+                
+                return $this->redirectToRoute('login', ['error' => 'Invalid Username or Password']);
+            }
+        }
+    
+      
+      
     }
 
 
@@ -136,6 +165,25 @@ class UserController extends AbstractController
             'controller_name' => 'UserController',
         ]);
     }
+    #[Route('/Admin', name: 'Admin')]
+    public function Admin( UserRepository $repo): Response
+    {
+        $users = $repo->findAll() ; 
+        $usernumbers = $repo ->numberOfUsers();
+        return $this->render('Admin.html.twig', [
+            'users' => $users ,
+            'usernumber'=> $usernumbers,
+        ]);
+    }
+    #[Route('/user/delete/{id}', name: 'user_delete')]
+    public function deleteAuthor(ManagerRegistry $manager,UserRepository $repo,$id){
+        $user = $repo->find($id);
+        $manager->getManager()->remove($user);
+        $manager->getManager()->flush();
+        return $this->redirectToRoute('Admin');
+    }
+
+
    
     
    
