@@ -30,11 +30,12 @@ function checkStuff() {
   var username = document.form1.username;
   var password = document.form1.password;
   var msg = document.getElementById('msg');
+  var user = document.getElementById('username');
   
   if (username.value == "") {
     msg.style.display = 'block';
     msg.innerHTML = "Please enter your username";
-    email.focus();
+    user.focus();
     return false;
   }
   
@@ -44,61 +45,9 @@ function checkStuff() {
     return false;
   }
   
- 
     return  true
 }
 
-
-function checkStuffS() {
-  var username = document.form1.username;
-  var email = document.form1.email;
-  var password = document.form1.pwd;
-  var confirmpwd = document.form1.Cpwd;
-  var role = document.form1.role;
-  var msg = document.getElementById('msg');
-  
-  if (username.value == "") {
-    msg.style.display = 'block';
-    msg.innerHTML = "Please enter your username";
-    email.focus();
-    return false;
-  }
-  
-  if (password.value == "") {
-    msg.innerHTML = "Please enter your email";
-    password.focus();
-    return false;
-  }
-  
-  var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  if (!re.test(email.value)) {
-    msg.innerHTML = "Please enter a valid email";
-    email.focus();
-    return false;
-  }
-
-  if (password.password == "") {
-    msg.innerHTML = "Please enter your password";
-    password.focus();
-    return false;
-  }
-  if (confirmpwd.value == "") {
-    msg.innerHTML = "Please enter your Confirm Password";
-    password.focus();
-    return false;
-  }
-  if (password.value != confirmpwd.value) {
-    msg.innerHTML = "Please confirm your password";
-    password.focus();
-    return false;
-  }
-  if (role.value == "") {
-    msg.innerHTML = "Please choose your role";
-    password.focus();
-    return false;
-  }
-    return  true
-}
 
 
 
