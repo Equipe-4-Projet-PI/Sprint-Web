@@ -26,7 +26,8 @@
     <div class="container">
       <span class="error animated tada" id="msg"></span>
        <img src="{{asset('img/Closepage.png')}}" alt="ArtyVnci" style="width: 10%;position: absolute;top: 2%;right: 2%;" >
-       <img src="{{asset('img/return.png')}}" alt="ArtyVnci" style="width: 8%;position: absolute;top: 3%;left: 4%;" >
+       <a href="{{path('signup2')}}"><img src="{{asset('img/return.png')}}" alt="ArtyVnci" style="width: 8%;position: absolute;top: 3%;left: 4%;" ></a>
+      
        <form name="form1" class="box" {{ form_start(form) }}>
     <img src="{{ asset('img/logo.png') }}" alt="ArtyVnci" style="width: 35%;">
     <h5>Sign in to your account.</h5>

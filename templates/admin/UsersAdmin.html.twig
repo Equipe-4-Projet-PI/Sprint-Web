@@ -1,0 +1,87 @@
+{% extends 'Admin.html.twig' %}
+{% block content %}
+<li style="
+    padding: 24px;
+    background: var(--light);
+    border-radius: 20px;
+">
+			<div class="left">
+					<h1 style="
+    font-size: 30px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--dark);
+">Table of Users</h1>
+					
+				</div>
+				   <div class="box">
+          <select aria-placeholder="Select your role.." name="role" id="role" style="
+    width: 340px;">
+           <option value="" disabled selected>Select your role</option>
+            <option>Member</option>
+            <option>Artist</option>
+          </select>
+        </div>
+
+<div class="table-wrapper">
+    <table class="fl-table">
+        <thead>
+		
+        <tr>
+		    <th style="background:#144CCC;" ></th>
+            <th style="background:#144CCC;">Username</th>
+            <th style="background:#144CCC;">Email</th>
+            <th style="background:#144CCC;">Role</th>
+            <th style="background:#144CCC;">FirstName</th>
+            <th style="background:#144CCC;">LastName</th>
+			<th style="background:#144CCC;">Address</th>
+            <th style="background:#144CCC;">Phone</th>
+            <th style="background:#144CCC;">Gender</th>
+            <th style="background:#144CCC;">Birthday</th>
+			<th style="background:#144CCC;" ></th>
+        </tr>
+        </thead>
+
+
+
+
+		
+        <tbody>
+       {% for user in users %}
+        <tr>
+		<td style=" width: 10px;">  <img src="{{asset('img/UserIcon.png')}}"></img></td>
+            <td>{{user.username}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.role}}</td>
+            <td>{{user.firstname}}</td>
+            <td>{{user.lastname}}</td>
+			<td>{{user.adress}}</td>
+            <td>{{user.phone}}</td>
+            <td>{{user.gender}}</td>
+            <td>{{user.dob}}</td>
+			<td style=" width: 10px;"> <a href={{path('user_delete',{id:user.idUser})}}  >  <img src="{{asset('img/deleteUser.png')}}" ></img> </a> </td>
+           </tr>
+		    {% endfor %}
+      
+             <tbody>
+	  	
+         </table>
+	
+	             </div>
+            </li>
+
+
+			
+		</main>
+		<!-- MAIN -->
+
+
+
+
+	
+</div>
+	
+	</li> 
+
+
+{% endblock %}
