@@ -64,6 +64,7 @@
           </li>
           <li><a href="services.html">Services</a></li>
           <li><a href="contact.html">Contact</a></li>
+          <li><a href="{{path('app_list_forums')}}">Forums</a></li>
         </ul>
       </nav><!-- .navbar -->
 
@@ -79,7 +80,7 @@
     </div>
   </header><!-- End Header -->
 
-
+  {% block body %}
   <!-- ======= Hero Section ======= -->
   <section id="hero" class="hero d-flex flex-column justify-content-center align-items-center" data-aos="fade" data-aos-delay="1500">
     <div class="container">
@@ -252,7 +253,7 @@
 
   </main><!-- End #main -->
 
-
+{% endblock %}
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
     <div class="container">

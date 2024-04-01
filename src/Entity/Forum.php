@@ -7,6 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ForumRepository;
 use Symfony\Component\Validator\Constraints\Date;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 #[ORM\Entity(repositoryClass: ForumRepository::class)]
 class Forum
 {
@@ -15,10 +17,11 @@ class Forum
     #[ORM\Column]
     private ?int $idForum=null;
 
-
+    #[Assert\NotBlank(message: "Le titre ne peut pas etre null")]
     #[ORM\Column(length: 255)]
     private ?string $title=null;
 
+    #[Assert\NotBlank(message: "La description ne peut pas etre null")]
     #[ORM\Column(length: 255)]
     private ?string $description=null;
 
@@ -26,11 +29,17 @@ class Forum
     private ?int $repliesNumber=null;
 
     #[ORM\Column(name: "date", type: "date", nullable: false)]
-    private ?Date $date = null;
+    private $date = null;
 
     public function getIdForum(): ?int
     {
         return $this->idForum;
+    }
+    public function setIdForum(int $id): static
+    {
+        $this->idForum = $id;
+        
+        return $this;
     }
 
     public function getTitle(): ?string
