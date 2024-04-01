@@ -1,2 +1,2 @@
-# Sprint-Web.
+# Sprint-Web
 Sprint-Web
