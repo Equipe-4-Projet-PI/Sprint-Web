@@ -170,7 +170,7 @@ class UserController extends AbstractController
     {
         $users = $repo->findAll() ; 
         $usernumbers = $repo ->numberOfUsers();
-        return $this->render('Admin.html.twig', [
+        return $this->render('admin/UsersAdmin.html.twig', [
             'users' => $users ,
             'usernumber'=> $usernumbers,
         ]);
