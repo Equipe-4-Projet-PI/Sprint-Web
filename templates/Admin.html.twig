@@ -23,7 +23,7 @@
 		</a>
 		<ul class="side-menu top">
 			<li class="active">
-				<a href="#">
+				<a href="{{path('Admin')}}">
 					<i class='bx bx-user' ></i>
 					<span class="text">Users</span>
 				</a>
@@ -35,9 +35,9 @@
 				</a>
 			</li>
 			<li>
-				<a href="#">
+				<a href="{{path('ForumsAdmin')}}">
 					<i class='bx bx-message-square-detail' ></i>
-					<span class="text">Forms</span>
+					<span class="text">Forums</span>
 				</a>
 			</li>
 			<li>
@@ -124,35 +124,64 @@
 				<li>
 					 <img src="{{asset('img/UserA.png')}}">
 					<span class="text">
-						<h3>{{usernumber}}</h3>
+						<h3>
+							{% if usernumber is defined %}
+								{{usernumber}}
+							{% else %}
+								0
+							{% endif %}
+						</h3>
 						<p>Userss</p>
 					</span>
 				</li>
 				<li>
 					 <img src="{{asset('img/ProduitArt.png')}}">
 					<span class="text">
-						<h3>2834</h3>
+						<h3>{% if NumProducts is defined %}
+								{{NumProducts}}
+							{% else %}
+								$2543
+							{% endif %}
+						</h3>
 						<p>Products</p>
 					</span>
 				</li>
 				<li>
 					 <img src="{{asset('img/Forum.png')}}">
 					<span class="text">
-						<h3>$2543</h3>
+						<h3>
+							{% if NumForms is defined %}
+								{{NumForms}}
+							{% else %}
+								$2543
+							{% endif %}
+						</h3>
 						<p>Forums</p>
 					</span>
 				</li>
 				<li>
 					 <img src="{{asset('img/Event.png')}}">
 					<span class="text">
-						<h3>$2543</h3>
+						<h3>
+							{% if NumEvents is defined %}
+								{{NumEvents}}
+							{% else %}
+								$2543
+							{% endif %}
+						</h3>
 						<p>Events</p>
 					</span>
 				</li>
 				<li>
 					 <img src="{{asset('img/Auction.png')}}">
 					<span class="text">
-						<h3>$2543</h3>
+						<h3>
+							{% if NumAuctions is defined %}
+								{{NumAuctions}}
+							{% else %}
+								$2543
+							{% endif %}
+						</h3>
 						<p>Auctions</p>
 					</span>
 				</li>
