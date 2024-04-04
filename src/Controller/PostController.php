@@ -147,4 +147,25 @@ class PostController extends AbstractController
             'idf' => $forumid,
         ]);
     }
+
+
+    //////////////   ADMIN SECTION   //////////////
+    #[Route('/adminPosts_{idf}', name: 'PostsAdmin')]
+    public function AdminPosts($idf,UserRepository $Urepo,PostRepository $Prepo,ForumRepository $Frepo): Response
+    {
+        $posts = $Prepo->getPostsByForumNormalSQL($idf);
+        $ForumName = $Frepo->find($idf)->getTitle();
+        $NumForums = $Frepo ->numberOfForums();
+
+        $users = $Urepo->findAll() ; 
+        $usernumbers = $Urepo ->numberOfUsers();
+
+        return $this->render('admin/PostsAdmin.html.twig', [
+            'posts' => $posts ,
+            'NumForms'=> $NumForums,
+            'NameForum'=>$ForumName,
+            'users' => $users ,
+            'usernumber'=> $usernumbers,
+        ]);
+    }
 }

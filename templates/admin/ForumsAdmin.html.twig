@@ -1,0 +1,70 @@
+{% extends 'Admin.html.twig' %}
+{% block content %}
+<li style="
+    padding: 24px;
+    background: var(--light);
+    border-radius: 20px;
+">
+			<div class="left">
+					<h1 style="
+    font-size: 30px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--dark);
+">Table of Forums</h1>
+					
+				</div>
+				
+
+<div class="table-wrapper">
+    <table class="fl-table">
+        <thead>
+		
+        <tr>
+		    <th style="background:#144CCC;" ></th>
+            <th style="background:#144CCC;">Title</th>
+            <th style="background:#144CCC;">Description</th>
+            <th style="background:#144CCC;">Posts Number</th>
+            <th style="background:#144CCC;">Date</th>
+			<th style="background:#144CCC;" ></th>
+        </tr>
+        </thead>
+
+
+
+
+		
+        <tbody>
+       {% for f in forums %}
+        <tr>
+		<td style=" width: 10px;">  <img src="{{asset('img/UserIcon.png')}}"></img></td>
+            <td><a class="titleButt" href="{{path('PostsAdmin',{'idf':f.idForum})}}">{{f.title}}</a></td>
+            <td>{{f.description}}</td>
+            <td>{{f.repliesNumber}}</td>
+            <td>{{f.getDate| date("d/m/Y")}}</td>
+			<td style=" width: 10px;"> <a href={{path('app_delete_forum',{id:f.idForum})}}  >  <img src="{{asset('img/deleteUser.png')}}" ></img> </a> </td>
+           </tr>
+		    {% endfor %}
+      
+             <tbody>
+	  	
+         </table>
+	
+	             </div>
+            </li>
+
+
+			
+		</main>
+		<!-- MAIN -->
+
+
+
+
+	
+</div>
+	
+	</li> 
+
+
+{% endblock %}

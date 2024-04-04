@@ -45,4 +45,11 @@ class ForumRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+public function numberOfForums(){
+    $entitymanager=$this->getEntityManager();
+    $query= $entitymanager->createQuery("SELECT COUNT(f) FROM APP\Entity\Forum f");
+    return $query->getSingleScalarResult();
+
+}
 }

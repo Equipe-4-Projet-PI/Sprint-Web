@@ -343,15 +343,12 @@ label span {
 }
 
 
-.box {
- 
-}
 
 .box select {
   background-color: #262e49;
   color: white;
   padding: 12px;
-  width: 340px;
+  width: 320px;
   border: none;
   font-size: 20px;
   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
@@ -372,3 +369,18 @@ label span {
 .box select option {
   padding: 30px;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

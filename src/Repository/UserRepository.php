@@ -21,6 +21,41 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
+
+
+
+  /**
+     * Find a user by username.
+     *
+     * @param string $username
+     * @return User|null
+     */
+    public function findOneByUsername(string $username): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.username = :username')
+            ->setParameter('username', $username)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    
+    public function numberOfUsers(){
+        $entitymanager=$this->getEntityManager();
+        $query= $entitymanager->createQuery("SELECT COUNT(u) FROM APP\Entity\User u");
+        return $query->getSingleScalarResult();
+
+    }
+
+
+
+
+
+
+
+
+
+
 //    /**
 //     * @return User[] Returns an array of User objects
 //     */

@@ -23,11 +23,12 @@ class AuctionParticipant
 
     private $Ratingove = '0';
 
-
+    #[ORM\Id]
+    #[ORM\Column(type: "integer")]
     #[ORM\OneToOne(targetEntity : "User", inversedBy : 'id_User')]
     private ?User $idParticipant;
 
-    #[ORM\Id]
+
     #[ORM\ManyToOne(targetEntity : "Auction", inversedBy: '$idAuction' )]
     private ?Auction $idAuction;
 

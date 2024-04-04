@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Forum;
 use App\Form\ForumType;
 use App\Repository\ForumRepository;
+use App\Repository\UserRepository;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -67,5 +68,24 @@ class ForumController extends AbstractController
         return $this->redirectToRoute('app_list_forums');
         }
         return $this->render('forum/addForum.html.twig',['f'=>$form->createView()]);
+    }
+
+
+    //////////////   ADMIN SECTION   //////////////
+    #[Route('/adminForums', name: 'ForumsAdmin')]
+    public function AdminForums(UserRepository $Urepo,ForumRepository $repo): Response
+    {
+        $forums = $repo->findAll() ; 
+        $NumForums = $repo ->numberOfForums();
+
+        $users = $Urepo->findAll() ; 
+        $usernumbers = $Urepo ->numberOfUsers();
+
+        return $this->render('admin/ForumsAdmin.html.twig', [
+            'forums' => $forums ,
+            'NumForms'=> $NumForums,
+            'users' => $users ,
+            'usernumber'=> $usernumbers,
+        ]);
     }
 }
