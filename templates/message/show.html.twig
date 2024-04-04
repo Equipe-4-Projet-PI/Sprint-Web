@@ -1,0 +1,46 @@
+{% extends 'home.html.twig' %}
+
+{% block title %}Message{% endblock %}
+
+{% block body %}
+    <h1>Message</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Idmsg</th>
+                <td>{{ message.idmsg }}</td>
+            </tr>
+            <tr>
+                <th>Idsender</th>
+                <td>{{ message.idsender }}</td>
+            </tr>
+            <tr>
+                <th>Iddis</th>
+                <td>{{ message.iddis }}</td>
+            </tr>
+            <tr>
+                <th>Content</th>
+                <td>{{ message.content }}</td>
+            </tr>
+            <tr>
+                <th>Reaction</th>
+                <td>{{ message.reaction }}</td>
+            </tr>
+            <tr>
+                <th>Vu</th>
+                <td>{{ message.vu }}</td>
+            </tr>
+            <tr>
+                <th>Datasent</th>
+                <td>{{ message.datasent ? message.datasent|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_message_index') }}">back to list</a>
+
+    <a href="{{ path('app_message_edit', {'idmsg': message.idmsg}) }}">edit</a>
+
+    {{ include('message/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'home.html.twig' %}
+
+{% block title %}Message index{% endblock %}
+
+{% block body %}
+    <h1>Message index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Idmsg</th>
+                <th>Idsender</th>
+                <th>Iddis</th>
+                <th>Content</th>
+                <th>Reaction</th>
+                <th>Vu</th>
+                <th>Datasent</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for message in messages %}
+            <tr>
+                <td>{{ message.idmsg }}</td>
+                <td>{{ message.idsender }}</td>
+                <td>{{ message.iddis }}</td>
+                <td>{{ message.content }}</td>
+                <td>{{ message.reaction }}</td>
+                <td>{{ message.vu }}</td>
+                <td>{{ message.datasent ? message.datasent|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_message_show', {'idmsg': message.idmsg}) }}">show</a>
+                    <a href="{{ path('app_message_edit', {'idmsg': message.idmsg}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_message_new') }}">Create new</a>
+{% endblock %}

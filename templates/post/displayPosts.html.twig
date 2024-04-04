@@ -1,0 +1,59 @@
+{% extends 'Home.html.twig' %}
+
+{% block title %}Display Forums{% endblock %}
+
+{% block body %}
+<style>
+  .DisplayTable  {
+    text-align: left; 
+    padding : 10px;
+    margin : 10px;
+  }
+  th,td {
+    padding-right: 15px;
+  }
+  .fcc-btn {
+    background-color: lightblue;
+    color: white;
+    padding: 15px 25px;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    display: inline-block;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position : absolute;
+    right : 1em;
+  }
+
+</style>
+  <!-- ======= Hero Section ======= -->
+  <section id="hero" class="hero d-flex flex-column justify-content-center align-items-center" data-aos="fade" data-aos-delay="1500">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-6 text-center">
+        {% set firstPost = posts[0] %}
+        <a class="fcc-btn" href="{{path('app_add_post_diff_forum',{'idf':firstPost.idForum.getIdForum})}}">+</a>
+        <table class="DisplayTable">
+            <tr>
+              <th>User</th>
+              <th>Title</th>
+              <th>Message</th>
+              <th>Likes</th>
+              <th>Date</th>
+            </tr>
+            {% for p in posts %}
+                <tr>
+                  <td>{{ p.idUser.username }}</td>
+                    <td>{{ p.title }}</td>    
+                    <td>{{ p.textmessage }}</td>
+                    <td>{{ p.likeNumber }}</td>
+                    <td>{{ p.timeofcreation| date("d/m/Y H:i:s") }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        </div>
+      </div>
+    </div>
+  </section><!-- End Hero Section -->
+{% endblock %}
