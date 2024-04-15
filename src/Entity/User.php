@@ -11,14 +11,12 @@ use App\Repository\UserRepository;
 class User
 {
    
-     #[ORM\Id]
-     #[ORM\GeneratedValue]
-     #[ORM\Column]
-     private ?int $Id_User = null;
-
-
-
-     #[ORM\Column(length: 255)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(name:"Id_User", type:"integer", nullable:false)]
+    private $idUser = null;
+    
+    #[ORM\Column(length: 255)]
     private ?string $username = null;
 
     #[ORM\Column(length: 255)]
@@ -37,7 +35,7 @@ class User
     private ?string  $lastname = null;  
 
     #[ORM\Column(length: 255)]
-    private ?string  $address = null;
+    private ?string  $adress = null;
 
     #[ORM\Column(length: 255)]
     private ?string $phone = null;
@@ -45,17 +43,16 @@ class User
     #[ORM\Column(length: 255)]
     private ?string $gender  = null;
 
-    #[ORM\Column(name: "date", type: "date", nullable: false)]
-    private ?Date $dob = null;
+    #[ORM\Column(name: "DOB", type: "date", nullable: false)]
+    private $dob = null;
 
     #[ORM\Column(length: 255)]
     private ?string $imageurl = null;
 
     public function getIdUser(): ?int
     {
-        return $this->Id_User;
+        return $this->idUser;
     }
-
     public function getUsername(): ?string
     {
         return $this->username;
@@ -128,14 +125,14 @@ class User
         return $this;
     }
 
-    public function getAddress(): ?string
+    public function getAdress(): ?string
     {
-        return $this->address;
+        return $this->adress;
     }
 
-    public function setAddress(string $address): static
+    public function setAdress(string $address): static
     {
-        $this->address = $address;
+        $this->adress = $address;
 
         return $this;
     }

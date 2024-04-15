@@ -26,7 +26,7 @@ class Forum
     private ?int $repliesNumber=null;
 
     #[ORM\Column(name: "date", type: "date", nullable: false)]
-    private ?Date $date = null;
+    private $date = null;
 
     public function getIdForum(): ?int
     {

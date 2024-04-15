@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Product index{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .card {
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* Ensure each card takes full height */
+        }
+
+        .card-body {
+            flex-grow: 1; /* Allow card body to grow to take remaining space */
+        }
+
+        .card-img-top {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="mb-4">Product index</h1>
+            <a href="{{ path('app_product_new') }}" class="btn btn-success mb-4">Create new</a>
+            <a href="{{ path('app_orderproduct_index') }}" class="btn btn-success mb-4">View Orders</a>
+
+        </div>
+    </div>
+
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                {% set imagePath = product.productimage %}
+                {% set parts = imagePath|split('/') %}
+                {% set relativeImagePath = '/uploads/' ~ parts|last %}
+                <img src="{{ relativeImagePath }}" class="card-img-top" alt="{{ product.title }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.title }}</h5>
+                    <p class="card-text">{{ product.description }}</p>
+                    <p class="card-text">For Sale: {{ product.forsale ? 'Yes' : 'No' }}</p>
+                    <p class="card-text">Price: {{ product.price }}</p>
+                    <p class="card-text">Creation Date: {{ product.creationdate }}</p>
+                    <a href="{{ path('app_product_show', {'idProduct': product.idProduct}) }}" class="btn btn-primary">Show</a>
+                    <a href="{{ path('app_product_edit', {'idProduct': product.idProduct}) }}" class="btn btn-secondary">Edit</a>
+                    {% if product.forsale %}
+                        <a href="{{ path('app_orderproduct_new', {'idProduct': product.idProduct}) }}" class="btn btn-success">Order</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-md-12">
+            <p>No records found</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

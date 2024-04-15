@@ -27,7 +27,7 @@ class AuctionParticipant
     #[ORM\OneToOne(targetEntity : "User", inversedBy : 'id_User')]
     private ?User $idParticipant;
 
-
+    #[ORM\Id]
     #[ORM\ManyToOne(targetEntity : "Auction", inversedBy: '$idAuction' )]
     private ?Auction $idAuction;
 

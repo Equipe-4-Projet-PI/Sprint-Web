@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Orderproduct index{% endblock %}
+{% block stylesheets %}
+    <style>
+        .card {
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* Ensure each card takes full height */
+        }
+
+        .card-body {
+            flex-grow: 1; /* Allow card body to grow to take remaining space */
+        }
+
+        .card-img-top {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+        .button-delete {
+            margin-top: 1rem; 
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="mb-4">Orderproduct index</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for orderproduct in orderproducts %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                {% set imagePath = orderproduct.prodImg %}
+                {% set parts = imagePath|split('/') %}
+                {% set relativeImagePath = '/uploads/' ~ parts|last %}
+                <img src="{{ relativeImagePath }}" class="card-img-top" alt="{{ orderproduct.title }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ orderproduct.title }}</h5>
+                    <p class="card-text">Price: {{ orderproduct.price }}</p>
+                    <p class="card-text">Order Date: {{ orderproduct.orderdate }}</p>
+                    <div class="button-container">
+                        <a href="{{ path('app_orderproduct_show', {'idOrder': orderproduct.idOrder}) }}" class="btn btn-primary">Show</a> 
+                        <a href="" class="btn btn-success">PAY</a>
+                    </div>
+                    {{ include('orderproduct/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-md-12">
+            <p>No records found</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}

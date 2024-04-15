@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Product{% endblock %}
+
+{% block body %}
+    <!-- ======= Hero Section ======= -->
+  <section id="hero" class="hero d-flex flex-column justify-content-center align-items-center" data-aos="fade" data-aos-delay="1500">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-6 text-center">
+    <h1>Product</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>IdProduct</th>
+                <td>{{ product.idProduct }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ product.title }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ product.description }}</td>
+            </tr>
+            <tr>
+                <th>Forsale</th>
+                <td>{{ product.forsale ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ product.price }}</td>
+            </tr>
+            <tr>
+                <th>Creationdate</th>
+                <td>{{ product.creationdate }}</td>
+            </tr>
+            <tr>
+                <th>Productimage</th>
+                {% set imagePath = product.productimage %}
+                {% set parts = imagePath|split('/') %}
+                {% set relativeImagePath = '/uploads/' ~ parts|last %}
+                <td >  <img src="{{ relativeImagePath }}" alt="{{ product.title }}" style="height:100px;" ></img></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_product_index') }}">back to list</a>
+    </br>
+    <a href="{{ path('app_product_edit', {'idProduct': product.idProduct}) }}">edit</a>
+
+    {{ include('product/_delete_form.html.twig') }}
+    
+        </div>
+      </div>
+    </div>
+  </section><!-- End Hero Section -->
+{% endblock %}
