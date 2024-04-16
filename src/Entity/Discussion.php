@@ -4,15 +4,17 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\DiscussionRepository ;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: DiscussionRepository::class)]
 class Discussion
 {
+    
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-
-    private ?int $iddis=null;
+    #[ORM\Column(type: 'integer')]
+    private ?int $iddis;
     
     #[ORM\Column]
     private ?int $idreciever=null;
@@ -62,6 +64,22 @@ class Discussion
         $this->sig = $sig;
 
         return $this;
+    }
+
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: "discussion")]
+    private $messages;
+
+    public function __construct()
+    {
+        $this->messages = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
     }
 
 

@@ -1,0 +1,25 @@
+
+{% extends 'home.html.twig' %}
+
+{% block title %}Messages de la discussion {{ discussion.iddis }}{% endblock %}
+
+{% block body %}
+    <h1>Messages de la discussion {{ discussion.iddis }}</h1>
+
+    <div class="message-container">
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{ message.content }}</p>
+            {% endfor %}
+        {% else %}
+            <p>Aucun message trouvé pour cette discussion.</p>
+        {% endif %}
+    </div>
+
+    <h2>Create new Message</h2>
+
+    {{ include('message/_form.html.twig') }}
+    <a href="{{ path('app_message_index') }}">back to list</a>
+
+    <a href="{{ path('app_discussion_index') }}">Retour aux discussions</a>
+{% endblock %}

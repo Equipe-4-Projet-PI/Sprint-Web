@@ -1,0 +1,27 @@
+{% extends 'home.html.twig' %}
+
+{% block title %}Discussion{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/discussion.css') }}">
+{% endblock %}
+
+{% block body %}
+    <h1>Discussion index</h1>
+
+    <div class="discussion-list">
+        {% for discussion in discussions %}
+    <div class="discussion-item">
+        <p><strong>Iddis:</strong> {{ discussion.iddis }}</p>
+        <!-- Autres détails de la discussion -->
+        <p>
+            <a href="{{ path('app_discussion_show_messages', {'iddis': discussion.iddis}) }}">Voir les messages</a>
+        </p>
+    </div>
+{% endfor %}
+
+    </div>
+
+    <a href="{{ path('app_discussion_new') }}">Create new</a>
+{% endblock %}

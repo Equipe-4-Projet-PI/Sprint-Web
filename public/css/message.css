@@ -1,0 +1,21 @@
+/* Style pour les messages de l'émetteur (sender) */
+.sender-message {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    background-color: #e6f7ff; /* Couleur de fond pour les messages de l'émetteur */
+    padding: 10px;
+    margin: 5px;
+    border-radius: 10px;
+}
+
+/* Style pour les messages du récepteur (receiver) */
+.receiver-message {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    background-color: #f2f2f2; /* Couleur de fond pour les messages du récepteur */
+    padding: 10px;
+    margin: 5px;
+    border-radius: 10px;
+}

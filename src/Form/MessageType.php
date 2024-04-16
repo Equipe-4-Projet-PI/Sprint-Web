@@ -12,12 +12,12 @@ class MessageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('idsender')
-            ->add('iddis')
+        //    ->add('idsender')
+        //    ->add('iddis')
             ->add('content')
-            ->add('reaction')
-            ->add('vu')
-            ->add('datasent')
+        //    ->add('reaction')
+        //    ->add('vu')
+        //    ->add('datasent')
         ;
     }
 
