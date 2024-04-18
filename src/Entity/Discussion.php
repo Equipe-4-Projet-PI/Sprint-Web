@@ -3,27 +3,36 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\DiscussionRepository ;
+use App\Repository\DiscussionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: DiscussionRepository::class)]
 class Discussion
 {
-    
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private ?int $iddis;
     
     #[ORM\Column]
-    private ?int $idreciever=null;
+    private ?int $idreciever = null;
 
     #[ORM\Column]
-    private ?int $idsender=null;
+    private ?int $idsender = null;
 
     #[ORM\Column]
-    private ?string $sig=null;
+    private ?string $sig = null;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="discussion")
+     */
+    private $messages;
+
+    public function __construct()
+    {
+        $this->messages = new ArrayCollection();
+    }
 
     public function getIddis(): ?int
     {
@@ -35,7 +44,7 @@ class Discussion
         return $this->idreciever;
     }
 
-    public function setIdreciever(int $idreciever): static
+    public function setIdreciever(?int $idreciever): self
     {
         $this->idreciever = $idreciever;
 
@@ -47,7 +56,7 @@ class Discussion
         return $this->idsender;
     }
 
-    public function setIdsender(int $idsender): static
+    public function setIdsender(?int $idsender): self
     {
         $this->idsender = $idsender;
 
@@ -59,19 +68,11 @@ class Discussion
         return $this->sig;
     }
 
-    public function setSig(?string $sig): static
+    public function setSig(?string $sig): self
     {
         $this->sig = $sig;
 
         return $this;
-    }
-
-    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: "discussion")]
-    private $messages;
-
-    public function __construct()
-    {
-        $this->messages = new ArrayCollection();
     }
 
     /**

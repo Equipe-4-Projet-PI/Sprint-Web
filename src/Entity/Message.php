@@ -2,14 +2,13 @@
 
 namespace App\Entity;
 
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\MessageRepository;
+use Symfony\Component\Validator\Constraints as Assert ;
 
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
 class Message
 {
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -21,6 +20,7 @@ class Message
     #[ORM\Column(nullable: true)]
     private ?int $iddis;
 
+    #[Assert\NotBlank(message:"Le contenu de message ne peut pas etre nul")]
     #[ORM\Column(nullable: true)]
     private ?string $content;
 
@@ -32,7 +32,7 @@ class Message
 
     #[ORM\Column(type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $datasent;
-    
+
     public function getIdmsg(): ?int
     {
         return $this->idmsg;

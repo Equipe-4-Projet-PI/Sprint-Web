@@ -13,8 +13,8 @@ class DiscussionType extends AbstractType
     {
         $builder
             ->add('idreciever')
-            ->add('idsender')
-            ->add('sig')
+            //->add('idsender')
+            //->add('sig')
         ;
     }
 
