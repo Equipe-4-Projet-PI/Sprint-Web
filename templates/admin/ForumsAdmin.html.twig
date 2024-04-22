@@ -56,7 +56,16 @@
             <td>{{f.description}}</td>
             <td>{{f.repliesNumber}}</td>
             <td>{{f.getDate| date("d/m/Y")}}</td>
-			<td style=" width: 10px;"> <a href={{path('app_delete_forum',{id:f.idForum})}}  >  <img src="{{asset('img/deleteUser.png')}}" ></img> </a> </td>
+
+
+
+			<td style=" width: 10px;"> 
+				<form method="post" action="{{ path('AdminDelete',{id:f.idForum}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+					<button class="btn" style="background-color:transparent;border:0px;">
+						<img src="{{asset('img/deleteUser.png')}}" ></img>
+					</button>
+				</form>
+			</td>
            </tr>
 		    {% endfor %}
         </tbody>

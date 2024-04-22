@@ -88,4 +88,13 @@ class ForumController extends AbstractController
             'usernumber'=> $usernumbers,
         ]);
     }
+
+    //Delete the Forums Admin
+    #[Route('/forum/admin/delete/{id}',name:'AdminDelete')]
+    public function Admindelete($id,ManagerRegistry $manager,ForumRepository $repo){
+        $forum = $repo->find($id);
+        $manager->getManager()->remove($forum);
+        $manager->getManager()->flush();
+        return $this->redirectToRoute('ForumsAdmin');
+    }
 }

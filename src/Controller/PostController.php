@@ -95,7 +95,7 @@ class PostController extends AbstractController
         return $this->render('post/addPost.html.twig',['f'=>$form->createView()]);
     }
     //Add a Post witth Different User and Forum
-    #[Route('/postadd{idu}_{idf}',name:'app_add_post_diff_user&forum')]
+    #[Route('/postadds{idu}_{idf}',name:'app_add_post_diff_user&forum')]
     public function AddPost2($idu,$idf,Request $req,ManagerRegistry $manager,UserRepository $repoUser,ForumRepository $repoForum){
         $NewPost = new Post();
         $form = $this->createForm(PostType::class,$NewPost);
@@ -138,16 +138,54 @@ class PostController extends AbstractController
     }
     //Delete the Forums
     #[Route('/postdelete_{id}',name:'app_delete_post')]
-    public function delete($id,ManagerRegistry $manager,PostRepository $repo){
+    public function delete($id,ManagerRegistry $manager,PostRepository $repo,ForumRepository $Frepo){
         $post = $repo->find($id);
         $manager->getManager()->remove($post);
         $manager->getManager()->flush();
         $forumid = $post->getIdForum()->getIdForum();
+        //Remove 1 Post from Froum Attribute
+        $forum = $Frepo->find($forumid);
+        $forum->setRepliesNumber($forum->getRepliesNumber()-1);
+        $manager->getManager()->persist($forum);
+        $manager->getManager()->flush();
+
+        return $this->redirectToRoute('app_list_posts_by_forum', [
+            'idf' => $forumid,
+        ]);
+    }
+    //////////////   Works   ////////////////////
+
+    //Update Post Likes
+    #[Route('/postLike{id}',name:'app_update_post_like')]
+    public function updateLikes(PostRepository $rep,$id,ManagerRegistry $manager){
+        $post = $rep->find($id);
+        $post->setLikeNumber($post->getLikeNumber()+1);
+        $forumid = $post->getIdForum()->getIdForum();
+        $manager->getManager()->persist($post);
+        $manager->getManager()->flush();
         return $this->redirectToRoute('app_list_posts_by_forum', [
             'idf' => $forumid,
         ]);
     }
 
+    //List The Posts by Their Respective Forums & Connected User
+    #[Route('/postlists_{idf}_{idU}',name:'app_list_posts_by_forum_user')]
+    public function getpostsbyidforumAndUser($idU,$idf,PostRepository $repo,UserRepository $Urepo){
+        $posts = $repo->getPostsByForumNormalSQL($idf);
+        $User = $Urepo->find($idU);
+        return $this->render('post/displayPosts.html.twig',[
+            'posts'=>$posts,
+            'idU'=>$User
+        ]);
+    }
+
+    ///////////////////////////////////////////////
+
+    //////////////   TESTING  ////////////////////
+
+    
+    
+    ///////////////////////////////////////////////
 
     //////////////   ADMIN SECTION   //////////////
     #[Route('/adminPosts_{idf}', name: 'PostsAdmin')]

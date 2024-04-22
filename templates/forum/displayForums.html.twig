@@ -61,6 +61,9 @@
                 </tr>
             {% endfor %}
         </table>
+        {% for f in forums %}
+          {% include 'forum/forumTemplate.html.twig' %}
+        {% endfor %}
         </div>
       </div>
     </div>

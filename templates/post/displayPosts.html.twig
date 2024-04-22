@@ -32,26 +32,53 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-lg-6 text-center">
-        {% set firstPost = posts[0] %}
-        <a class="fcc-btn" href="{{path('app_add_post_diff_forum',{'idf':firstPost.idForum.getIdForum})}}">+</a>
-        <table class="DisplayTable">
-            <tr>
-              <th>User</th>
-              <th>Title</th>
-              <th>Message</th>
-              <th>Likes</th>
-              <th>Date</th>
-            </tr>
-            {% for p in posts %}
-                <tr>
-                  <td>{{ p.idUser.username }}</td>
-                    <td>{{ p.title }}</td>    
-                    <td>{{ p.textmessage }}</td>
-                    <td>{{ p.likeNumber }}</td>
-                    <td>{{ p.timeofcreation| date("d/m/Y H:i:s") }}</td>
-                </tr>
-            {% endfor %}
-        </table>
+        {% if posts is defined and posts ==null %}
+          <p>No Records</p>
+        {% else %}
+          {% set firstPost = posts[0] %}
+          <a class="fcc-btn" href="{{path('app_add_post_diff_forum',{'idf':firstPost.idForum.getIdForum})}}">+</a>
+          <table class="DisplayTable">
+              <tr>
+                <th>User</th>
+                <th>Title</th>
+                <th>Message</th>
+                <th>Likes</th>
+                <th>Date</th>
+              </tr>
+              {% for p in posts %}
+                {% if (idU is defined and idU != null) %}
+                  {% if p.idUser.idUser == idU.idUser %}
+                    <tr>
+                      <td>{{ p.idUser.username }}</td>
+                        <td>{{ p.title }}</td>    
+                        <td>{{ p.textmessage }}</td>
+                        <td>{{ p.likeNumber }}</td>
+                        <td>{{ p.timeofcreation| date("d/m/Y H:i:s") }}</td>
+                        <td> Can't Like it's mine </td>
+                    </tr>
+                  {% else %}
+                    <tr>
+                      <td>{{ p.idUser.username }}</td>
+                        <td>{{ p.title }}</td>    
+                        <td>{{ p.textmessage }}</td>
+                        <td>{{ p.likeNumber }}</td>
+                        <td>{{ p.timeofcreation| date("d/m/Y H:i:s") }}</td>
+                        <td><a href={{path('app_update_post_like',{id:p.idPost})}} >Like </td>
+                    </tr>
+                  {% endif %}
+                {% else %}
+                  <tr>
+                      <td>{{ p.idUser.username }}</td>
+                        <td>{{ p.title }}</td>    
+                        <td>{{ p.textmessage }}</td>
+                        <td>{{ p.likeNumber }}</td>
+                        <td>{{ p.timeofcreation| date("d/m/Y H:i:s") }}</td>
+                        <td><a href={{path('app_update_post_like',{id:p.idPost})}} >Like </td>
+                    </tr>
+                {% endif %}
+              {% endfor %}
+          </table>
+        {% endif %}
         </div>
       </div>
     </div>
