@@ -91,13 +91,14 @@
 				<span class="num">8</span>
 			</a>
 			<a href="#" class="profile">
-				<img src="img/people.png">
+				<img src="img/admin.png">
 			</a>
 		</nav>
 		<!-- NAVBAR -->
 
 		<!-- MAIN -->
 		<main>
+		{% block path  %} 
 			<div class="head-title">
 				<div class="left">
 					<h1>Dashboard</h1>
@@ -111,6 +112,7 @@
 						</li>
 					</ul>
 				</div>
+		{% endblock %}
 
 				<!--
 				<a href="#" class="btn-download">

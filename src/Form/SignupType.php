@@ -9,7 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 class SignupType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -25,7 +25,11 @@ class SignupType extends AbstractType
             ->add('phone')
             ->add('gender')
             ->add('dob')
-            ->add('imageurl')
+            ->add('imageurl', FileType::class, [
+                'label' => 'Product Image',
+                'mapped' => false, // This field is not mapped to any entity property
+                'required' => false, // Set to true if the file is required
+            ])
             ->add('Done',SubmitType::class)
         ;
     }
