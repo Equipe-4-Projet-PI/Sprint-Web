@@ -1,12 +1,16 @@
 <?php
 
 namespace App\Controller;
+
+
+use Symfony\Component\HttpFoundation\JsonResponse ;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use App\Entity\Discussion;
 use App\Entity\Message;
 use App\Entity\User;
 use App\Form\DiscussionType;
 use App\Form\MessageType;
+use App\Repository\UserRepository;
 use App\Repository\DiscussionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,13 +26,32 @@ use App\Form\SignalType;
 class DiscussionController extends AbstractController
 {
 
-    #[Route('/', name: 'app_discussion_index', methods: ['GET'])]
+    /*#[Route('_', name: 'app_discussion_index', methods: ['GET'])]
     public function index(DiscussionRepository $discussionRepository): Response
     {
         return $this->render('discussion/afficherDis.html.twig', [
             'discussions' => $discussionRepository->findAll(),
         ]);
+    }*/
+
+    #[Route('', name: 'app_discussion_index', methods: ['GET'])]
+public function index(DiscussionRepository $discussionRepository, UserRepository $userRepository): Response
+{
+    // Récupérer les discussions avec les informations sur le destinataire
+    $discussions = $discussionRepository->findAllWithReceiver();
+
+    // Récupérer les noms des destinataires
+    foreach ($discussions as $discussion) {
+        $receiver = $discussion->getReceiver();
+        $receiverName = $receiver ? $receiver->getUsername() : 'Destinataire inconnu';
+        $discussion->setReceiver($receiver);
     }
+
+    return $this->render('discussion/afficherDis.html.twig', [
+        'discussions' => $discussions,
+    ]);
+}
+
 
     #[Route('/new', name: 'app_discussion_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -43,8 +66,8 @@ class DiscussionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($discussion);
             $entityManager->flush();
-
-            return $this->redirectToRoute('app_discussion_index', [], Response::HTTP_SEE_OTHER);
+            $iddis = $discussion->getIddis();
+            return $this->redirectToRoute('/{iddis}/messages', [$iddis], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('discussion/new.html.twig', [
@@ -99,7 +122,7 @@ class DiscussionController extends AbstractController
         return $this->redirectToRoute('app_discussion_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('_{iddis}_messages', name: 'app_discussion_show_messages', methods: ['GET', 'POST'])]
+    #[Route('/{iddis}/messages', name: 'app_discussion_show_messages', methods: ['GET', 'POST'])]
     public function showMessages($iddis, Request $request, MessageRepository $messageRepository, EntityManagerInterface $entityManager): Response
     {
         $discussion = $this->getDoctrine()->getRepository(Discussion::class)->find($iddis);
@@ -152,5 +175,18 @@ class DiscussionController extends AbstractController
             'discussion' => $discussion,
         ]);
     }
+
+
+    #[Route('/search-discussion', name: 'search_discussion', methods: ['GET'])]
+    public function searchDiscussionByUsername(Request $request, DiscussionRepository $discussionRepository): JsonResponse
+        {
+         $username = $request->query->get('username');
+
+          // Recherche des discussions par nom d'utilisateur du destinataire
+           $discussions = $discussionRepository->findByReceiverUsername($username);
+
+          return $this->json($discussions);
+        }
+
     
 }

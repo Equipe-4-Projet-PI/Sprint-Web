@@ -8,20 +8,67 @@
 {% endblock %}
 
 {% block body %}
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <form id="searchForm">
+        <input type="text" id="username" name="username" placeholder="Nom d'utilisateur">
+        <button type="submit">Rechercher</button>
+    </form>
+    <br>
+    <br>
+
+    <div id="discussionList">
+        <!-- Les résultats de la recherche seront affichés ici -->
+    </div>
+
     <h1>Discussion index</h1>
+
+    <br>
+    <br>
 
     <div class="discussion-list">
         {% for discussion in discussions %}
-    <div class="discussion-item">
-        <p><strong>Iddis:</strong> {{ discussion.iddis }}</p>
-        <!-- Autres détails de la discussion -->
-        <p>
-            <a href="{{ path('app_discussion_show_messages', {'iddis': discussion.iddis}) }}">Voir les messages</a>
-        </p>
-    </div>
-{% endfor %}
-
+            <div class="discussion-item">
+                {% if discussion.receiver %}
+                    <a href="{{ path('app_discussion_show_messages', {'iddis': discussion.iddis}) }}"> <p><strong>{{ discussion.receiver.username }}  <strong><p> <a>
+                    {% if discussion.receiver.ImageURL %}
+                        <img src="{{ asset(discussion.receiver.ImageURL) }}" alt="Image de {{ discussion.receiver.username }}">
+                    {% endif %}
+                {% else %}
+                    <p><strong>Destinataire inconnu</strong></p>
+                {% endif %}
+            </div>
+        {% endfor %}
     </div>
 
     <a href="{{ path('app_discussion_new') }}">Create new</a>
+
+    <script>
+        $(document).ready(function() {
+            $('#searchForm').submit(function(event) {
+                event.preventDefault();
+
+                var username = $('#username').val();
+
+                $.ajax({
+                    url: "{{ path('search_discussion') }}",
+                    type: "GET",
+                    data: { username: username },
+                    success: function(data) {
+                        $('#discussionList').empty(); /
+
+                        data.forEach(function(discussion) {
+                            $('#discussionList').append('<div>' + discussion.id + ' - ' + discussion.receiver.username + '</div>');
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("Erreur lors de la recherche :", error);
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}

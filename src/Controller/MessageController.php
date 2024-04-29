@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/message')]
 class MessageController extends AbstractController
 {
-    #[Route('/', name: 'app_message_index', methods: ['GET'])]
+    #[Route('', name: 'app_message_index', methods: ['GET'])]
     public function index(MessageRepository $messageRepository): Response
     {
         return $this->render('message/afficherMsg.html.twig', [
@@ -50,7 +50,7 @@ class MessageController extends AbstractController
         ]);
     }
 
-    #[Route('/{idmsg}/edit', name: 'app_message_edit', methods: ['GET', 'POST'])]
+    #[Route('{idmsg}/edit', name: 'app_message_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Message $message, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(MessageType::class, $message);

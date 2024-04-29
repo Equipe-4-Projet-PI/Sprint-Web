@@ -2,12 +2,20 @@
 
 namespace App\Entity;
 
+
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\DiscussionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert ;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity; 
+
+//use App\Entity\ExecutionContextInterface ;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use App\Entity\User; 
 
 #[ORM\Entity(repositoryClass: DiscussionRepository::class)]
+#[UniqueEntity(fields: ['receiver'], message: 'Ce receiver est déjà utilisé pour une autre discussion.')]
 class Discussion
 {
     #[ORM\Id]
@@ -15,8 +23,10 @@ class Discussion
     #[ORM\Column(type: 'integer')]
     private ?int $iddis;
     
-    #[ORM\Column]
-    private ?int $idreciever = null;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'idreciever', referencedColumnName: 'Id_User')]
+    #[Assert\NotBlank(message:"Le contenu de message ne peut pas etre nul")]
+    private ?User $receiver;
 
     #[ORM\Column]
     private ?int $idsender = null;
@@ -39,15 +49,14 @@ class Discussion
         return $this->iddis;
     }
 
-    public function getIdreciever(): ?int
+    public function getReceiver(): ?User
     {
-        return $this->idreciever;
+        return $this->receiver;
     }
 
-    public function setIdreciever(?int $idreciever): self
+    public function setReceiver(?User $receiver): self
     {
-        $this->idreciever = $idreciever;
-
+        $this->receiver = $receiver;
         return $this;
     }
 
@@ -83,5 +92,8 @@ class Discussion
         return $this->messages;
     }
 
+    /**
+     * @Assert\Callback
+     */
 
 }

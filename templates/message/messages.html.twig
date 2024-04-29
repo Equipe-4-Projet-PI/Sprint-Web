@@ -1,15 +1,15 @@
-
-
+{#
 {% extends 'home.html.twig' %}
 
-{% block title %}Messages de la discussion {{ discussion.iddis }}{% endblock %}
+{% block title %}Messages de la discussion  avec {{ discussion.receiver.username }}{% endblock %}
 
 {% block body %}
-    <h1>Messages de la discussion {{ discussion.iddis }}</h1>
+    <h3>Messages de la discussion avec {{ discussion.receiver.username }}</h3>
+    <br>
+    <a href="{{ path('app_discussion_signal', {'iddis': discussion.iddis}) }}" class="btn btn-primary">Signaler</a>
+    <a href="{{ path('app_discussion_delete', {'iddis': discussion.iddis}) }}" class="btn btn-primary">Supprimer</a>
 
-     <a href="{{ path('app_discussion_signal', {'iddis': discussion.iddis}) }}" class="btn btn-primary">Signaler</a>
-
-    <div class="message-container">
+    <div class="message-container" style="margin-top: 50px;">
         {% for message in messages %}
             <div class="message">
                 {% if message.idsender == discussion.idsender %}
@@ -17,7 +17,7 @@
                     <p> Envoyé par {{ discussion.idsender }}</p>
                 {% else %}
                     <p class="receiver-message">{{ message.content }}</p>
-                    <p> Envoyé par {{ discussion.idreciever }}</p>
+                    <p> Envoyé par {{ discussion.receiver.idUser }}</p> 
                 {% endif %}
                 <p><em>Envoyé le {{ message.datasent ? message.datasent|date('Y-m-d H:i:s') : '' }}</em></p>
             </div>
@@ -28,6 +28,38 @@
 
     {{ form(form) }}
 
-{# <a href="{{ path('app_message_index') }}">Retour à la liste des messages</a> #}
+    <a href="{{ path('app_discussion_index') }}">Retour aux discussions</a>
+{% endblock %}
+#}
+{% extends 'home.html.twig' %}
+
+{% block title %}Messages de la discussion avec {{ discussion.receiver.username }}{% endblock %}
+
+{% block body %}
+    <h3>Messages de la discussion avec {{ discussion.receiver.username }}</h3>
+    <br>
+    <a href="{{ path('app_discussion_signal', {'iddis': discussion.iddis}) }}" class="btn btn-primary">Signaler</a>
+    <a href="{{ path('app_discussion_delete', {'iddis': discussion.iddis}) }}" class="btn btn-primary">Supprimer</a>
+
+    <div class="message-container" style="margin-top: 50px;">
+        {% for message in messages %}
+            <div class="message">
+                {% if message.idsender == discussion.idsender %}
+                    <p class="sender-message">{{ message.content }}</p>
+                    <p> Envoyé par {{ discussion.idsender }}</p>
+                {% else %}
+                    <p class="receiver-message">{{ message.content }}</p>
+                    <img src="{{ asset(discussion.receiver.ImageURL) }}" alt="Image de {{ discussion.receiver.username }}">
+                    <p> Envoyé par {{ discussion.receiver.idUser }}</p>
+                {% endif %}
+                <p><em>Envoyé le {{ message.datasent ? message.datasent|date('Y-m-d H:i:s') : '' }}</em></p>
+            </div>
+        {% else %}
+            <p>Aucun message trouvé pour cette discussion.</p>
+        {% endfor %}
+    </div>
+
+    {{ form(form) }}
+
     <a href="{{ path('app_discussion_index') }}">Retour aux discussions</a>
 {% endblock %}

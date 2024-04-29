@@ -21,6 +21,34 @@ class DiscussionRepository extends ServiceEntityRepository
         parent::__construct($registry, Discussion::class);
     }
 
+     /**
+     * Récupère toutes les discussions avec les informations sur le destinataire.
+     * Utilise LEFT JOIN pour inclure les informations sur le destinataire.
+     *
+     * @return Discussion[] Retourne un tableau de discussions avec les informations sur le destinataire.
+     */
+    public function findAllWithReceiver()
+    {
+        return $this->createQueryBuilder('d')
+            ->leftJoin('d.receiver', 'u') // Supposons que la relation entre Discussion et User soit nommée "receiver"
+            ->addSelect('u') // Sélectionnez également les données de l'utilisateur (destinataire)
+            ->getQuery()
+            ->getResult();
+    }
+
+    // Dans DiscussionRepository.php
+
+public function findByReceiverUsername($username)
+{
+    return $this->createQueryBuilder('d')
+        ->join('d.receiver', 'r')
+        ->andWhere('r.username = :username')
+        ->setParameter('username', $username)
+        ->getQuery()
+        ->getResult();
+}
+
+
 //    /**
 //     * @return Discussion[] Returns an array of Discussion objects
 //     */
