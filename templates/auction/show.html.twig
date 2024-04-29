@@ -1,0 +1,122 @@
+{% extends 'Home.html.twig' %}
+
+{% block title %}Auction
+{% endblock %}
+
+{% block body %}
+	<h1>Auction</h1>
+
+	<table class="table">
+		<tbody>
+			<tr>
+				<th>IdAuction</th>
+				<td>{{ auction.idAuction }}</td>
+			</tr>
+			<tr>
+				<th>Nom</th>
+				<td>{{ auction.nom }}</td>
+			</tr>
+			<tr>
+				<th>DateCloture</th>
+				<td>{{ auction.dateCloture ? auction.dateCloture|date('Y-m-d H:i:s') : '' }}</td>
+			</tr>
+			<tr>
+				<th>DateLancement</th>
+				<td>{{ auction.dateLancement ? auction.dateLancement|date('Y-m-d H:i:s') : '' }}</td>
+			</tr>
+			<tr>
+				<th>PrixInitial</th>
+				<td>{{ auction.prixInitial }}</td>
+			</tr>
+			<tr>
+				<th>PrixFinal</th>
+				<td>{{ auction.prixFinal }}</td>
+			</tr>
+			<tr>
+				<th>IdProduit</th>
+				<td>{{ auction.idProduit }}</td>
+			</tr>
+			<tr>
+				<th>IdArtist</th>
+				<td>{{ auction.idArtist }}</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<a href="{{ path('app_auction_index') }}">back to list</a>
+
+	<a href="{{ path('app_auction_edit', {'idAuction': auction.idAuction}) }}">edit</a>
+
+	{{ include('auction/_delete_form.html.twig') }}
+
+	<head>
+
+		<link rel="stylesheet" href="{{ asset('css/ParticiperStyle.css') }}">
+	</head>
+	<div class="container mt-4 mb-4 p-3 d-flex justify-content-center">
+		<div class="card p-4">
+			<div class=" image d-flex flex-column justify-content-center align-items-center">
+				<button class="btn btn-secondary">
+					<img src="https://i.imgur.com/wvxPV9S.png" height="100" width="100"/></button>
+				<span class="name mt-3">Eleanor Pena</span>
+				<span class="idd">@eleanorpena</span>
+				<div class="d-flex flex-row justify-content-center align-items-center gap-2">
+					<span class="idd1">Oxc4c16a645_b21a</span>
+					<span>
+						<i class="fa fa-copy"></i>
+					</span>
+				</div>
+				<div class="d-flex flex-row justify-content-center align-items-center mt-3">
+					<span class="number">1069
+						<span class="follow">Followers</span>
+					</span>
+				</div>
+				<div class=" d-flex mt-2">
+					<button class="btn1 btn-dark" id="participerButton" onclick="showPopup()">Participer</button>
+				</div>
+				<div id="popup" style="display: none;">
+					<form id="priceForm" method="post" action="{{ path('submit_price') }}">
+						<label for="price">Enter the price:</label>
+						<input type="text" id="price" name="price">
+						<button type="submit" id="acheterButton">Acheter</button>
+					</form>
+				</div>
+
+				<div class="text mt-3">
+					<span>Eleanor Pena is a creator of minimalistic x bold graphics and digital artwork.<br><br>
+						Artist/ Creative Director by Day #NFT minting@ with FND night.
+					</span>
+				</div>
+				<div class="gap-3 mt-3 icons d-flex flex-row justify-content-center align-items-center">
+					<span>
+						<i class="fa fa-twitter"></i>
+					</span>
+					<span>
+						<i class="fa fa-facebook-f"></i>
+					</span>
+					<span>
+						<i class="fa fa-instagram"></i>
+					</span>
+					<span>
+						<i class="fa fa-linkedin"></i>
+					</span>
+				</div>
+				<div class=" px-2 rounded mt-4 date ">
+					<span class="join">Joined May,2021</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<script>
+    function showPopup() {
+        document.getElementById('popup').style.display = 'block';
+    }
+
+    document.getElementById('acheterButton').addEventListener('click', function () {
+        document.getElementById('popup').style.display = 'none';
+    });
+</script>
+
+{% endblock %}
+

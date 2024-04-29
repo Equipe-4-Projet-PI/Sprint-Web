@@ -1,0 +1,16 @@
+{# templates/auction/new.html.twig #}
+{% extends 'Home.html.twig' %}
+
+{% block title %}Nouvelle Enchère{% endblock %}
+
+{% block body %}
+<br>
+<br>
+<br>
+<br>
+    <h1>Créer une nouvelle enchère</h1>
+    {#{{ include('auction/_form.html.twig') }}#}
+    {{form(form)}}
+    <a href="{{ path('app_auction_index') }}">Retour à la liste</a>
+{% endblock %}
+    
