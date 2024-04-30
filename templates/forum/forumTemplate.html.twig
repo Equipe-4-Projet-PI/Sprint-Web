@@ -44,13 +44,19 @@
   text-align: left; 
 }
 
+.titleButt2 {
+  color:black;
+  margin : 0px 10px 0px 10px;
+  text-align : left;
+  padding : 0px;
+}
 
 
 
 </style>
 <div class="card">
   <div class="card-header">
-    <h2>{{ f.title }}</h2>
+    <h2><a class="titleButt2" href="{{path('app_list_posts_by_forum',{'idf':f.getIdForum})}}">{{ f.title }}</a></h2>
     <div class="card-meta">
       <span>Posts : {{ f.repliesNumber }}</span>
       <span>Date : {{ f.getDate| date("d/m/Y") }}</span>

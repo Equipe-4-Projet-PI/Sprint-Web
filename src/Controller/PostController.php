@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Forum;
 use App\Entity\Post;
+use App\Entity\Postlikes;
 use App\Entity\User;
 use App\Form\PostType;
 use App\Repository\ForumRepository;
+use App\Repository\PostlikesRepository;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
 use DateTime;
@@ -157,10 +159,31 @@ class PostController extends AbstractController
 
     //Update Post Likes
     #[Route('/postLike{id}',name:'app_update_post_like')]
-    public function updateLikes(PostRepository $rep,$id,ManagerRegistry $manager){
+    public function updateLikes(PostRepository $rep,$id,ManagerRegistry $manager,PostlikesRepository $PLrepo){
         $post = $rep->find($id);
-        $post->setLikeNumber($post->getLikeNumber()+1);
+        
         $forumid = $post->getIdForum()->getIdForum();
+        $postlike = $PLrepo->getPostsLikesByPostQueryBuilder($post->getIdPost(),1);
+        if($postlike != null)
+        {
+            if($postlike->getLikePost() == 1)
+            {
+                $postlike->setLikePost(0);
+                $post->setLikeNumber($post->getLikeNumber()-1);
+            }else{
+                $postlike->setLikePost(1);
+                $post->setLikeNumber($post->getLikeNumber()+1);
+            }
+            
+        }else{
+            $postlike = new Postlikes();
+            $postlike->setUser(1);
+            $postlike->setPost($post);
+            $postlike->setLikePost(1);
+            $post->setLikeNumber($post->getLikeNumber()+1);
+            $manager->getManager()->persist($postlike);
+            $manager->getManager()->flush();
+        }
         $manager->getManager()->persist($post);
         $manager->getManager()->flush();
         return $this->redirectToRoute('app_list_posts_by_forum', [

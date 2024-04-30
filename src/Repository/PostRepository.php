@@ -55,7 +55,8 @@ class PostRepository extends ServiceEntityRepository
 //                    ->getQuery()
 //                    ->getResult(); //[]
 //    }
-//////////=====================================FAILED ATTEMPT=========================/////////
+//////////===========================================================================/////////
+
     public function getPostsByForumQueryBuilder($idforum){
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
