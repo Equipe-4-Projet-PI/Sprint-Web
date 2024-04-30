@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Persistence\ManagerRegistry;
-
+use Knp\Component\Pager\PaginatorInterface;
 
 class ForumController extends AbstractController
 {
@@ -28,6 +28,19 @@ class ForumController extends AbstractController
     #[Route('/forumlist',name:'app_list_forums')]
     public function getAll(ForumRepository $repo){
         $forums = $repo->findAll();
+        return $this->render('forum/displayForums.html.twig',[
+            'forums'=>$forums
+        ]);
+    }
+    ///LIST WITH PAGINATION/////
+    #[Route('/forumslist',name:'app_lists_forum')]
+    public function getsAll(ForumRepository $repo, PaginatorInterface $paginator,Request $req){
+        $data = $repo->findAll();
+        $forums = $paginator->paginate(
+            $data,
+            $req->query->getInt('page',1),
+            4
+        );
         return $this->render('forum/displayForums.html.twig',[
             'forums'=>$forums
         ]);

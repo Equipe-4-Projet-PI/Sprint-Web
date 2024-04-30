@@ -13,6 +13,7 @@ use App\Repository\PostRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -30,16 +31,26 @@ class PostController extends AbstractController
     }
     //List The Posts
     #[Route('/postlist',name:'app_list_posts')]
-    public function getAll(PostRepository $repo){
-        $posts = $repo->findAll();
+    public function getAll(PostRepository $repo, PaginatorInterface $paginator,Request $req){
+        $data = $repo->findAll();
+        $posts = $paginator->paginate(
+            $data,
+            $req->query->getInt('page',1),
+            5
+        );
         return $this->render('post/displayPosts.html.twig',[
             'posts'=>$posts
         ]);
     }
     //List The Posts by Their Respective Forums
     #[Route('/postlist_{idf}',name:'app_list_posts_by_forum')]
-    public function getpostsbyidforum($idf,PostRepository $repo){
-        $posts = $repo->getPostsByForumNormalSQL($idf);
+    public function getpostsbyidforum($idf,PostRepository $repo, PaginatorInterface $paginator,Request $req){
+        $data = $repo->getPostsByForumNormalSQL($idf);
+        $posts = $paginator->paginate(
+            $data,
+            $req->query->getInt('page',1),
+            5
+        );
         return $this->render('post/displayPosts.html.twig',[
             'posts'=>$posts
         ]);
@@ -174,7 +185,6 @@ class PostController extends AbstractController
                 $postlike->setLikePost(1);
                 $post->setLikeNumber($post->getLikeNumber()+1);
             }
-            
         }else{
             $postlike = new Postlikes();
             $postlike->setUser(1);
@@ -206,7 +216,18 @@ class PostController extends AbstractController
 
     //////////////   TESTING  ////////////////////
 
-    
+    #[Route('/postslist_sorted_{idf}',name:'app_list_posts_by_forum_sorted')]
+    public function getpostsbyidforumSorted($idf,PostRepository $repo, PaginatorInterface $paginator,Request $req){
+        $data = $repo->SortByLikesNormalSQL($idf);
+        $posts = $paginator->paginate(
+            $data,
+            $req->query->getInt('page',1),
+            5
+        );
+        return $this->render('post/displayPosts.html.twig',[
+            'posts'=>$posts
+        ]);
+    }
     
     ///////////////////////////////////////////////
 
