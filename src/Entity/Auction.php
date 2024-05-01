@@ -34,7 +34,7 @@ class Auction
     private ?int $idProduit;
 
     #[ORM\Column(type: "integer")]
-    private ?int $idArtist;
+    private ?int $idArtist; 
 
 
     private ?float $moyRating;

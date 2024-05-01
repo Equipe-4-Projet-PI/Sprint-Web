@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Constraints\Date;
 class AuctionParticipant
 {
     #[ORM\Id]
+    #[ORM\GeneratedValue]
     #[ORM\Column(name: "Id_AucPart",type: "integer")]
     private ?int $Id_AucPart=null;
 
@@ -18,7 +19,7 @@ class AuctionParticipant
     private ?float $prix=null;
 
 
-    #[ORM\Column(name: "date", type: "datetime", nullable: false)]
+    #[ORM\Column(name: "date", type: "datetime")]
     private  $date = null;
 
     #[ORM\Column(type: "integer")]
@@ -55,11 +56,11 @@ class AuctionParticipant
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $date): static
+    
+    #[ORM\PrePersist]     
+    public function setDate(): void
     {
-        $this->date = $date;
-
-        return $this;
+        $this->date = new \DateTime();
     }
 
     public function getLove(): ?int

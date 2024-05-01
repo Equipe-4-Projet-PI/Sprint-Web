@@ -35,22 +35,28 @@ class AuctionParticipantRepository extends ServiceEntityRepository
         ;
         return $queryBuilder->getQuery()->getOneOrNullResult();
     }
+
     public function countParticipantsWithRating(int $auctionId): int
     {
-        return $this->createQueryBuilder('ap')
-            ->select('COUNT(ap.id_AucPart) as count')
-            ->andWhere('ap.id_Auction = :auctionId')
-            ->andWhere('ap.rating != 0')
-            ->setParameter('auctionId', $auctionId)
-            ->getQuery()
-            ->getSingleScalarResult();
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder
+            ->select('COUNT(ap.Id_AucPart) as count')
+            ->from('App\Entity\AuctionParticipant', 'ap')
+            ->where('ap.idAuction = :auctionId')
+            ->andWhere('ap.love != 0')
+            ->setParameter('auctionId', $auctionId);
+            ;
+        return $queryBuilder->getQuery()->getSingleScalarResult();
     }
+
 
     public function averageRatingForAuction(int $auctionId): ?float
     {
         $average = $this->createQueryBuilder('ap')
             ->select('AVG(ap.rating) as average')
-            ->andWhere('ap.id_Auction = :auctionId')
+            ->where('ap.idAuction = :auctionId')
             ->andWhere('ap.rating != 0')
             ->setParameter('auctionId', $auctionId)
             ->getQuery()
