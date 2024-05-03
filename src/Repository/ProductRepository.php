@@ -21,6 +21,23 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
+    public function findByPartialTitle($searchText)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.title LIKE :searchText')
+            ->setParameter('searchText', '%'.$searchText.'%')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByPartialDescription($searchText)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.description LIKE :searchText')
+            ->setParameter('searchText', '%'.$searchText.'%')
+            ->getQuery()
+            ->getResult();
+    }
 //    /**
 //     * @return Product[] Returns an array of Product objects
 //     */

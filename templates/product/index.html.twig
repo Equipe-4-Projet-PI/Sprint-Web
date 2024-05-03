@@ -30,13 +30,31 @@
             <h1 class="mb-4">Product index</h1>
             <a href="{{ path('app_product_new') }}" class="btn btn-success mb-4">Create new</a>
             <a href="{{ path('app_orderproduct_index') }}" class="btn btn-success mb-4">View Orders</a>
+            <a href="{{ path('app_product_index') }}" class="btn btn-secondary mb-4" >All Products</a>
+            <a href="{{ path('app_product_forsale') }}" class="btn btn-primary mb-4" >For Sale</a>
+            <a href="{{ path('app_product_notforsale') }}" class="btn btn-primary mb-4" >Not For Sale</a>
 
         </div>
     </div>
 
-    <div class="row">
+     <div class="row mb-4">
+        <div class="col-md-6">
+            <select class="form-select" id="searchBy">
+                <option value="title">Search by Title</option>
+                <option value="description">Search by Description</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <div class="input-group">
+                <input type="text" class="form-control" id="searchText" placeholder="Enter search term">
+                <button class="btn btn-primary" id="searchButton">Search</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="productList">
         {% for product in products %}
-        <div class="col-md-4 mb-4">
+        <div class="col-md-4 mb-4" >
             <div class="card">
                 {% set imagePath = product.productimage %}
                 {% set parts = imagePath|split('/') %}
@@ -63,5 +81,16 @@
         {% endfor %}
     </div>
 </div>
-
+<script>
+    document.getElementById("searchButton").addEventListener("click", function() {
+        var searchBy = document.getElementById("searchBy").value;
+        var searchText = document.getElementById("searchText").value;
+        
+        // Construct the URL with searchBy and searchText
+        var url = "{{ path('app_search') }}?searchby=" + searchBy + "&searchtext=" + searchText;
+        
+        window.location.href = url;
+    });
+</script>
 {% endblock %}
+

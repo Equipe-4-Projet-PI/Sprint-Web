@@ -46,7 +46,7 @@
                     <p class="card-text">Order Date: {{ orderproduct.orderdate }}</p>
                     <div class="button-container">
                         <a href="{{ path('app_orderproduct_show', {'idOrder': orderproduct.idOrder}) }}" class="btn btn-primary">Show</a> 
-                        <a href="" class="btn btn-success">PAY</a>
+                        <a href="{{ path('app_order_checkout', {'idcheck': orderproduct.idOrder}) }}" class="btn btn-success">PAY</a>
                     </div>
                     {{ include('orderproduct/_delete_form.html.twig') }}
                 </div>

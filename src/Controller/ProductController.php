@@ -12,8 +12,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\Persistence\ManagerRegistry;
-
 
 
 class ProductController extends AbstractController
@@ -126,5 +124,42 @@ class ProductController extends AbstractController
             'prods' => $prods ,
         ]);
     }
+    #[Route('/product_forsale', name: 'app_product_forsale', methods: ['GET'])]
+    public function forsaleprod(ProductRepository $productRepository): Response
+    {
+        return $this->render('product/index.html.twig', [
+            'products' => $productRepository->findBy(['forsale' => true]),
+        ]);
+    }
+    #[Route('/product_notforsale', name: 'app_product_notforsale', methods: ['GET'])]
+    public function notforsaleprod(ProductRepository $productRepository): Response
+    {
+        return $this->render('product/index.html.twig', [
+            'products' => $productRepository->findBy(['forsale' => false]),
+        ]);
+    }
+    #[Route('/app_search', name: 'app_search', methods: ['GET'])]
+    public function search(Request $request,ProductRepository $productRepository): Response
+    {
+        $searchBy = $request->query->get('searchby');
+        $searchText = $request->query->get('searchtext');
+        // Query the database based on search criteria
+         if ($searchBy && $searchText) {
+        if ($searchBy === 'title') {
+            $products = $productRepository->findByPartialTitle($searchText);
+        } elseif ($searchBy === 'description') {
+            $products = $productRepository->findByPartialDescription($searchText);
+        } else {
+            // Handle invalid searchBy value
+            $products = [];
+        }
+        } else {
+        // Handle case when searchBy or searchText is not provided
+        $products = $productRepository->findAll(); // Or any default logic you want
+         }
 
+    return $this->render('product/index.html.twig', [
+        'products' => $products,
+    ]);
+    }
 }
