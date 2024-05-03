@@ -1,65 +1,175 @@
-{#
 {% extends 'home.html.twig' %}
 
-{% block title %}Messages de la discussion  avec {{ discussion.receiver.username }}{% endblock %}
+{% block title %}{{ discussion.receiver.username }}{% endblock %}
 
 {% block body %}
+    <style>
+        .message-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .custom-button-extremite {
+            position: fixed; /* ou 'absolute' selon votre besoin */
+            bottom: 20px; /* ajustez la distance du bas selon votre mise en page */
+            right: 20px; /* ajustez la distance de la droite selon votre mise en page */
+        }
+
+        .message {
+            margin-bottom: 10px;
+            max-width: 70%;
+            padding: 10px;
+            border-radius: 15px;
+            word-wrap: break-word;
+        }
+
+        .sender-message {
+            background-color: rgba(39, 167, 118, 0.8);
+            color: white;
+            align-self: flex-end;
+            margin-left: auto; /* Pour aligner à droite */
+        }
+
+        .receiver-message {
+            background-color: rgb(255, 240, 212);
+            color: black;
+            align-self: flex-start;
+            margin-right: auto; /* Pour aligner à gauche */
+        }
+
+        .message p {
+            margin: 0;
+        }
+
+        .message img {
+            width: 50px; /* Ajustez si nécessaire */
+            height: 50px; /* Ajustez si nécessaire */
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .message p em {
+            font-size: 12px;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        /* Style personnalisé pour les boutons */
+        .custom-button {
+            background-color: rgba(39, 167, 118, 0.8); /* Couleur verte */
+            color: white;
+            margin-right: 10px; /* Espace entre les boutons */
+            padding: 5px 10px; /* Ajustez le rembourrage selon vos besoins */
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            opacity: 0.8; /* Ajout de l'effet de transparence */
+        }
+
+        /* Style spécifique pour le bouton "custom-button-retour" */
+        .custom-button-retour {
+            margin-left: true; /* Pour placer le bouton à gauche */
+        }
+
+        .custom-button-envoyer {
+            width: 50px;
+            height: 40px;
+            margin-left: 30px; /* Ajout de la marge à gauche */
+        }
+
+        /*form*/
+
+        .message-form {
+            max-width: 70%;
+            margin: auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative; /* Position relative for centering */
+        }
+
+        .form-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            width: 80%; /* Ajustez la valeur selon vos besoins */
+            max-width: 300px; /* Définissez une largeur maximale en pixels */
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: rgba(39, 167, 118, 0.1); /* Fond vert très clair */
+            height: auto; /* Hauteur réduite */
+            resize: none;
+            font-size: 14px; /* Taille de police réduite */
+        }
+
+        .submit-button {
+            background-color: rgba(39, 167, 118, 0.8); /* Green color */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute; /* Position absolute for positioning */
+            top: 50%; /* Move the button down to the middle */
+            transform: translateY(-50%); /* Adjust vertically to center */
+            right: 0; /* Align to the right of the form group */
+        }
+
+        .submit-button:hover {
+            background-color: rgba(39, 167, 118, 1); /* Darker green color on hover */
+        }
+    </style>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
     <h3>Messages de la discussion avec {{ discussion.receiver.username }}</h3>
     <br>
-    <a href="{{ path('app_discussion_signal', {'iddis': discussion.iddis}) }}" class="btn btn-primary">Signaler</a>
-    <a href="{{ path('app_discussion_delete', {'iddis': discussion.iddis}) }}" class="btn btn-primary">Supprimer</a>
-
+    <!-- Utilisation de la classe personnalisée pour les boutons -->
+    <a href="{{ path('app_discussion_index') }}" class="custom-button custom-button custom-button-extremite custom-button-retour">
+        <img src="{{ asset('img/discussion/bouton-retour.png') }}" alt="Retour aux discussions" style="width: 30px; height: auto;">
+    </a>
+    <a href="{{ path('app_discussion_delete', {'iddis': discussion.iddis}) }}" class="custom-button">Supprimer</a>
+    <a href="{{ path('app_discussion_signal', {'iddis': discussion.iddis}) }}" class="custom-button ">Signaler</a>
     <div class="message-container" style="margin-top: 50px;">
         {% for message in messages %}
-            <div class="message">
-                {% if message.idsender == discussion.idsender %}
-                    <p class="sender-message">{{ message.content }}</p>
-                    <p> Envoyé par {{ discussion.idsender }}</p>
-                {% else %}
-                    <p class="receiver-message">{{ message.content }}</p>
-                    <p> Envoyé par {{ discussion.receiver.idUser }}</p> 
-                {% endif %}
-                <p><em>Envoyé le {{ message.datasent ? message.datasent|date('Y-m-d H:i:s') : '' }}</em></p>
-            </div>
-        {% else %}
-            <p>Aucun message trouvé pour cette discussion.</p>
-        {% endfor %}
-    </div>
-
-    {{ form(form) }}
-
-    <a href="{{ path('app_discussion_index') }}">Retour aux discussions</a>
-{% endblock %}
-#}
-{% extends 'home.html.twig' %}
-
-{% block title %}Messages de la discussion avec {{ discussion.receiver.username }}{% endblock %}
-
-{% block body %}
-    <h3>Messages de la discussion avec {{ discussion.receiver.username }}</h3>
-    <br>
-    <a href="{{ path('app_discussion_signal', {'iddis': discussion.iddis}) }}" class="btn btn-primary">Signaler</a>
-    <a href="{{ path('app_discussion_delete', {'iddis': discussion.iddis}) }}" class="btn btn-primary">Supprimer</a>
-
-    <div class="message-container" style="margin-top: 50px;">
-        {% for message in messages %}
-            <div class="message">
-                {% if message.idsender == discussion.idsender %}
-                    <p class="sender-message">{{ message.content }}</p>
-                    <p> Envoyé par {{ discussion.idsender }}</p>
-                {% else %}
-                    <p class="receiver-message">{{ message.content }}</p>
+            {% if message.idsender == discussion.idsender %}
+                <div class="message sender-message">
+                    <p>{{ message.content }}</p>
+                    <p><em>Envoyé le {{ message.datasent ? message.datasent|date('Y-m-d H:i:s') : '' }}</em></p>
+                </div>
+            {% else %}
+                <div class="message receiver-message">
+                    <p>{{ message.content }}</p>
                     <img src="{{ asset(discussion.receiver.ImageURL) }}" alt="Image de {{ discussion.receiver.username }}">
-                    <p> Envoyé par {{ discussion.receiver.idUser }}</p>
-                {% endif %}
-                <p><em>Envoyé le {{ message.datasent ? message.datasent|date('Y-m-d H:i:s') : '' }}</em></p>
-            </div>
+                    <p><em>Envoyé le {{ message.datasent ? message.datasent|date('Y-m-d H:i:s') : '' }}</em></p>
+                </div>
+            {% endif %}
         {% else %}
             <p>Aucun message trouvé pour cette discussion.</p>
         {% endfor %}
     </div>
 
-    {{ form(form) }}
+    <br>
+    <br>
 
-    <a href="{{ path('app_discussion_index') }}">Retour aux discussions</a>
+    {{ form_start(form, {'attr': {'class': 'message-form'}}) }}
+
+    <div class="form-group" style="display: flex; align-items: center;">
+        {{ form_widget(form.content, {'attr': {'class': 'form-control', 'rows': 3}, 'label': false}) }}
+        <button type="submit" class="custom-button custom-button-envoyer">        
+            <img src="{{ asset('img/discussion/envoyer.png') }}" alt="Retour aux discussions" style="width: 35px; height: auto;">
+        </button>
+    </div>
+
+    {{ form_end(form) }}
+
 {% endblock %}

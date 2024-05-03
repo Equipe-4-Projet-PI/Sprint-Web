@@ -15,13 +15,13 @@ class MessageType extends AbstractType
         $builder
         //    ->add('idsender')
         //    ->add('iddis')
-            ->add('content')
+            ->add('content') ;
         //    ->add('reaction')
         //    ->add('vu')
         //    ->add('datasent')
-             ->add('envoyer', SubmitType::class, [
+        /*     ->add('envoyer', SubmitType::class, [
             'label' => 'Envoyer'
-        ]);
+        ]);*/
 }
     
 

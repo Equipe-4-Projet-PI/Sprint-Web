@@ -34,7 +34,7 @@ class DiscussionController extends AbstractController
         ]);
     }*/
 
-    #[Route('', name: 'app_discussion_index', methods: ['GET'])]
+    #[Route('_', name: 'app_discussion_index', methods: ['GET'])]
 public function index(DiscussionRepository $discussionRepository, UserRepository $userRepository): Response
 {
     // Récupérer les discussions avec les informations sur le destinataire
@@ -53,7 +53,7 @@ public function index(DiscussionRepository $discussionRepository, UserRepository
 }
 
 
-    #[Route('/new', name: 'app_discussion_new', methods: ['GET', 'POST'])]
+    #[Route('_new', name: 'app_discussion_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $discussion = new Discussion();
@@ -76,7 +76,7 @@ public function index(DiscussionRepository $discussionRepository, UserRepository
         ]);
     }
 
-    #[Route('/{iddis}', name: 'app_discussion_show', methods: ['GET'])]
+    #[Route('_{iddis}', name: 'app_discussion_show', methods: ['GET'])]
     public function show(Discussion $discussion): Response
     {
         return $this->render('discussion/show.html.twig', [
@@ -93,7 +93,7 @@ public function index(DiscussionRepository $discussionRepository, UserRepository
         ]);
     }
 
-    #[Route('/{iddis}/edit', name: 'app_discussion_edit', methods: ['GET', 'POST'])]
+    #[Route('-{iddis}_edit', name: 'app_discussion_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Discussion $discussion, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(DiscussionType::class, $discussion);
@@ -111,7 +111,7 @@ public function index(DiscussionRepository $discussionRepository, UserRepository
         ]);
     }
     
-    #[Route('/{iddis}', name: 'app_discussion_delete', methods: ['POST'])]
+    #[Route('_{iddis}', name: 'app_discussion_delete', methods: ['POST'])]
     public function delete(Request $request, Discussion $discussion, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $discussion->getIddis(), $request->request->get('_token'))) {
@@ -122,14 +122,15 @@ public function index(DiscussionRepository $discussionRepository, UserRepository
         return $this->redirectToRoute('app_discussion_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/{iddis}/messages', name: 'app_discussion_show_messages', methods: ['GET', 'POST'])]
-    public function showMessages($iddis, Request $request, MessageRepository $messageRepository, EntityManagerInterface $entityManager): Response
+    #[Route('-messages_{iddis}', name: 'app_discussion_show_messages', methods: ['GET', 'POST'])]
+    public function showMessages($iddis, Request $request, MessageRepository $messageRepository, UserRepository $userRepository , EntityManagerInterface $entityManager): Response
     {
         $discussion = $this->getDoctrine()->getRepository(Discussion::class)->find($iddis);
         
        // $idCurrentUser = User.get_current_user();
         $user = null ;
         $idCurrentUser = 1 ; //$user.getIdUser();
+        //$sender = $userRepository->findUserById($idCurrentUser);
 
         $message = new Message();
         $message->setIdsender($idCurrentUser);
@@ -150,12 +151,13 @@ public function index(DiscussionRepository $discussionRepository, UserRepository
         return $this->render('message/messages.html.twig', [
             'discussion' => $discussion,
             'messages' => $messages,
+            //'sender' => $sender ,
             'form' => $form->createView(),
         ]);
     }
 
 
-    #[Route('/{iddis}/signaler', name: 'app_discussion_signal', methods: ['GET', 'POST'])]
+    #[Route('-{iddis}-signaler', name: 'app_discussion_signal', methods: ['GET', 'POST'])]
     public function signaler(Request $request, Discussion $discussion, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(SignalType::class);
@@ -177,7 +179,7 @@ public function index(DiscussionRepository $discussionRepository, UserRepository
     }
 
 
-    #[Route('/search-discussion', name: 'search_discussion', methods: ['GET'])]
+    #[Route('/search_discussion', name: 'search_discussion', methods: ['GET'])]
     public function searchDiscussionByUsername(Request $request, DiscussionRepository $discussionRepository): JsonResponse
         {
          $username = $request->query->get('username');
