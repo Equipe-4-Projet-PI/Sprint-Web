@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Orderproduct{% endblock %}
+
+{% block body %}
+<section id="hero" class="hero d-flex flex-column justify-content-center align-items-center" data-aos="fade" data-aos-delay="1500">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-6 text-center">
+    <h1>Are you sure you want to order  this product?</h1>
+
+    {{ include('orderproduct/_form.html.twig') }}
+
+    <a href="{{ path('app_product_index') }}">back to list</a>
+           </div>
+      </div>
+    </div>
+  </section><!-- End Hero Section -->
+   
+{% endblock %}

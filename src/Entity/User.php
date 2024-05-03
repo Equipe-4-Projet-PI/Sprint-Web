@@ -57,7 +57,6 @@ class User
     {
         return $this->idUser;
     }
-
     public function getUsername(): ?string
     {
         return $this->username;
