@@ -65,6 +65,14 @@
           <li><a href="services.html">Services</a></li>
           <li><a href="contact.html">Contact</a></li>
           <li><a href="{{path('app_list_forums')}}">Forums</a></li>
+    
+    {% set id_user = app.request.query.get('id_user') %}
+    {% if id_user %}
+        <li><a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a></li>
+    {% endif %}
+    <li><a href="{{path('login')}}">Logout</a></li>
+
+        
         </ul>
       </nav><!-- .navbar -->
 

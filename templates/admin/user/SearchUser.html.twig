@@ -1,4 +1,28 @@
 {% extends 'Admin.html.twig' %}
+
+
+
+{% block path  %} 
+			<div class="head-title">
+				<div class="left">
+					<h1>Dashboard</h1>
+					<ul class="breadcrumb">
+						<li>
+							<a href="{{path('Admin')}}">Dashboard</a>
+						</li>
+						<li><i class='bx bx-chevron-right' ></i></li>
+						<li>
+							<a  href="{{path('Admin')}}">Home</a>
+						</li>
+                        <li><i class='bx bx-chevron-right' ></i></li>
+                        <li>
+							<a class="active" href="Admin">Blocked Users</a>
+						</li>
+					</ul>
+				</div>
+		{% endblock %}
+
+
 {% block content %}
 <li style="
     padding: 24px;
@@ -10,7 +34,7 @@
 <div class="head-title">
 			<div class="left">
 					<h1 style="font-size: 30px;font-weight: 600;margin-bottom: 10px;color: var(--dark);
-                   ">Table of Users</h1>
+                   ">Table of Blocked Users</h1>
 					
 				</div>
 
@@ -35,9 +59,12 @@
 
 
 
-<a  href={{path('Block_Users')}}  style="color: var(--dark);font-size: 20px;font-weight: 600;">Blocked Users<img src="{{asset('img/Blocked.png')}}" style="width: 30px;margin-left: 10px;position: relative;top: 5px;
-"></a>	
-   </div>
+
+				
+			
+
+
+                </div>
 				  
       
         
@@ -64,7 +91,7 @@
     <tbody>
         {% for user in users %}
         <tr>
-            <td style=" width: 10px;">  <a href={{path('userdetail',{id:user.idUser})}}><img src="{{asset('img/UserIcon.png')}}" title="View user"  ></a></td>
+            <td style=" width: 10px;">  <a href={{path('userdetail',{id:user.idUser})}}><img src="{{asset('img/UserIcon.png')}}" title="View user"></a></td>
             <td>{{user.username}}</td>
             <td>{{user.email}}</td>
             <td>{{user.role}}</td>
@@ -75,11 +102,9 @@
             <td>{{user.gender}}</td>
             <td>{{user.dob}}</td>
             <td style=" width: 10px;">
-                <a href={{path('user_delete',{id:user.idUser})}} onclick="return confirm('Are you sure you want to delete this User ?')"><img src="{{asset('img/deleteUser.png')}} " title="Delete user" ></a>
-                 <a href={{path('user_block',{id:user.idUser})}} onclick="return confirm('Are you sure you want to Block this User ?')"><img src="{{asset('img/BlockU.png')}}" title="Block user" style="
-   
-    margin-bottom: 4px;
-"></a>
+                <a href={{path('user_delete',{id:user.idUser})}} onclick="return confirm('Are you sure you want to delete this User ?')"><img src="{{asset('img/deleteUser.png')}} " title="Delete the user"></a>
+                 <a href={{path('user_Unblock',{id:user.idUser})}} onclick="return confirm('Are you sure you want to Unblock this User ?')"><img src="{{asset('img/Valid.png')}}" title="Unblock user" 
+></a>
             </td>
         </tr>
         {% endfor %}

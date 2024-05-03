@@ -15,10 +15,11 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
+use Twilio\Rest\Client;
 
 class UserController extends AbstractController
 {
-    #[Route('/user/login', name: 'login')]
+    #[Route('', name: 'login')]
     public function login(Request $req ): Response
     {
         $error = $req->query->get('error');
@@ -52,9 +53,9 @@ class UserController extends AbstractController
             
             return $this->redirectToRoute('Admin');
         }else{
-            if ($user->getPassword() === $password) {
+            if ($user->getPassword() === $password && $user->getStatus() !== "Blocked") {
             
-                return $this->redirectToRoute('home');
+                return $this->redirectToRoute('home',['id_user' => $user->getIdUser()]);
             } else {
                 
                 return $this->redirectToRoute('login', ['error' => 'Invalid Username or Password']);
@@ -174,12 +175,16 @@ class UserController extends AbstractController
     }
 
     #[Route('/Home', name: 'home')]
-    public function Home(): Response
-    {
+    public function Home(Request $req): Response
+    {  
+        $id_user = $req->query->get('id_user');
         return $this->render('Home.html.twig', [
-            'controller_name' => 'UserController',
+            'id_user' => $id_user
         ]);
     }
+
+
+
     #[Route('/Admin', name: 'Admin')]
     public function Admin( UserRepository $repo): Response
     {
@@ -325,7 +330,7 @@ class UserController extends AbstractController
         "                                </tr>\n" .
         "                                <tr>\n" .
         "                                    <td style=\"padding:0 35px;\">\n" .
-        "                                        <h1 style=\"color:#1e1e2d; font-weight:500; margin:0;font-size:32px;font-family:'Rubik',sans-serif;\">You have\n" .
+        "                                        <h1 style=\"color:#1e1e2d; font-weight:500; margin:0;font-size:32px;font-family:'Rubik',sans-serif;\">\n" .
         "                                           Vous avez demandé de récupérer votre compte</h1>\n" .
         "                                        <span\n" .
         "                                            style=\"display:inline-block; vertical-align:middle; margin:29px 0 26px; border-bottom:1px solid #cecece; width:100px;\"></span>\n" .
@@ -368,7 +373,165 @@ class UserController extends AbstractController
     }
 
 
+    #[Route('/RestPasswordViaPhone', name: 'Reset_PaswordViaPhone')]
+    public function ResetPasswordviaPhone( Request $req,UserRepository $repo): Response
+    {
+        $error = $req->query->get('error');
+        return $this->render('user/Forget_Password/ResetPasswordbyNumber.html.twig', [
+            'error' => $error
+        ]);
+    }
 
+
+
+
+
+
+
+
+
+
+
+
+    #[Route('/sendSMS', name: 'send_SMS')]
+    public function sendSMS( Request $request, UserRepository $repo,ManagerRegistry $manager): Response
+    {
+        $phone = $request->request->get('phone');
+        $user = $repo->findOneByNumber($phone);
+       
+
+
+        //verification
+      
+        if (!$user) {
+           
+            return $this->redirectToRoute('Reset_PaswordViaPhone', ['error' => 'Couldnt find that phone number']);
+        }
+
+
+          // Generate random password
+         $length = 10; // Change the length of the password as needed
+         $password = bin2hex(random_bytes($length / 2)); // Convert random bytes to hexadecimal representation
+     
+     
+         $user->setPassword($password);
+     
+         $manager->getManager()->flush();
+     
+     
+               // Initialize Twilio client
+            $sid = '';
+            $token = '';
+            $twilio = new Client($sid, $token);
+     
+     
+            // Send SMS notification
+            $recipientPhoneNumber = '+21654189162';
+            $message = "Bonjour,\n\n" .
+            "Voici les informations de récupération de votre compte :\n\n" .
+            "Nom d'utilisateur : " . $user->getFirstname(). "\n" .
+            "Mot de passe : " . $password . "\n\n" .
+            "Si vous n'avez pas demandé cette récupération ou si vous avez des préoccupations, veuillez contacter immédiatement notre équipe d'assistance.\n\n" .
+            "Merci,\n" .
+            "ArtyVenci";
+     
+     
+              
+            $twilio->messages->create(
+             $recipientPhoneNumber,
+             [
+                 'from' => '', // Your Twilio phone number
+                 'body' => $message,
+        ]
+    );
+
+    return $this->redirectToRoute('Reset_Password', []);
+           
+     
+    }
+
+
+    #[Route('/user/block/{id}', name: 'user_block')]
+    public function blockUser(ManagerRegistry $manager,UserRepository $repo,$id){
+        $user = $repo->find($id);
+        $user->setStatus('Blocked');
+        $manager->getManager()->flush();
+        return $this->redirectToRoute('Admin');
+    }
+
+    #[Route('/BlockUsers', name: 'Block_Users')]
+    public function BlockedUsers(UserRepository $repo): Response
+    {
+        $users = $repo->findBy(['status' => 'Blocked']);
+        $usernumbers = $repo->numberOfUsers();
+        return $this->render('admin/user/BlockedUser.html.twig', [
+            'users' => $users,
+            'usernumber' => $usernumbers,
+        ]);
+    }
+    #[Route('/user/unblock/{id}', name: 'user_Unblock')]
+    public function UnblockUser(ManagerRegistry $manager,UserRepository $repo,$id){
+        $user = $repo->find($id);
+        $user->setStatus('Unblock');
+        $manager->getManager()->flush();
+        return $this->redirectToRoute('Admin');
+    }
+
+
+
+
+   #[Route('/profile{id_user}', name: 'Profile')]
+    public function Profile(Request $req,UserRepository $repo,$id_user): Response
+    {
+        $user = $repo->find($id_user);
+        return $this->render('user/Profile.html.twig', [
+           'user'=>$user
+        ]);
+    }
+
+    #[Route('/profileupdate/{id}', name: 'update')]
+    public function profileUpdate(Request $request, UserRepository $repo,ManagerRegistry $manager,$id): Response
+    {
+        $firstname = $request->request->get('firstname');
+        $lastname = $request->request->get('lastname');
+        $username = $request->request->get('username');
+        $email = $request->request->get('email');
+        $phone = $request->request->get('phone');
+        $address = $request->request->get('address');
+        $role= $request->request->get('role');
+        $birth= $request->request->get('birthdate');
+        
+        $user = $repo->find($id);
+
+        $user->setUsername($username);
+        $user->setEmail($email);
+        $user->setRole($role);
+        $user->setFirstname($firstname);
+        $user->setLastname($lastname);
+        $user->setAdress($address);
+        $user->setDob($birth);
+        $user->setPhone($phone);
+        
+       
+
+        $manager->getManager()->flush();
+        return $this->redirectToRoute('Admin');
+
+    
+      
+    }
+    #[Route('/search/{username}', name: 'search')]
+    public function search( UserRepository $repo,$username): Response
+    {
+        $usernumbers = $repo->numberOfUsers();
+
+        $users = $repo->findBy(['firstname'=> $username ], ['firstname' => 'ASC']);
+        return $this->render('/admin/user/SearchUser.html.twig',['users'=>$users, 'usernumber' => $usernumbers,]);
+       
+    }
+    
+  
+  
     
    
 

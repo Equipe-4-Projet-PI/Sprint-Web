@@ -56,6 +56,15 @@ class UserRepository extends ServiceEntityRepository
 
     }
 
+    public function findOneByNumber(string $phone): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.phone = :phone')
+            ->setParameter('phone', $phone)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 
 
 
