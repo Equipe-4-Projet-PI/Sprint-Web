@@ -47,7 +47,7 @@ class ProductController extends AbstractController
                     $fileName
                 );
                 // Store the file path in the database
-                $filePath = 'C:/Users/bigal/OneDrive - ESPRIT/Bureau/Sprint-for ali/public/uploads/' . $fileName;
+                $filePath = 'C:/Users/Hei/OneDrive/Documents/GitHub/Sprint-Web/public/uploads/' . $fileName;
                 $product->setProductimage($filePath);
             }
             $entityManager->persist($product);
@@ -91,7 +91,7 @@ class ProductController extends AbstractController
                     $fileName
                 );
                 // Store the file path in the database
-                $filePath = 'C:/Users/bigal/OneDrive - ESPRIT/Bureau/Sprint-for ali/public/uploads/' . $fileName;
+                $filePath = 'C:/Users/Hei/OneDrive/Documents/GitHub/Sprint-Web/public/uploads/' . $fileName;
                 $product->setProductimage($filePath);
             }
             $entityManager->flush();
@@ -116,7 +116,7 @@ class ProductController extends AbstractController
         return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/Adminprods', name: 'Admin')]
+    #[Route('/Adminprods', name: 'AdminProds')]
     public function Admin( ProductRepository $repo): Response
     {
         $prods = $repo->findAll() ; 
