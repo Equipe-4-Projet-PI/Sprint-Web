@@ -159,15 +159,15 @@ public function index(DiscussionRepository $discussionRepository, UserRepository
     public function signaler(Request $request, Discussion $discussion, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(SignalType::class);
+    
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
-
             $data = $form->getData();
             $discussion->setSig($data['motif']);
             $entityManager->flush();
     
-            return $this->redirectToRoute('app_discussion_show', ['iddis' => $discussion->getIddis()]);
+            return $this->redirectToRoute('app_discussion_show_messages', ['iddis' => $discussion->getIddis()]);
         }
     
         return $this->render('discussion/signaler.html.twig', [
