@@ -8,14 +8,14 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Idmsg</th>
-                <th>Idsender</th>
-                <th>Iddis</th>
-                <th>Content</th>
-                <th>Reaction</th>
-                <th>Vu</th>
-                <th>Datasent</th>
-                <th>actions</th>
+                <th>Idmsg   :   </th>
+                <th>Sender  :   </th>
+                <th>Receiver    :   </th>
+                <th>Iddis   :   </th>
+                <th>Content :   </th>
+                <th>Reaction    :   </th>
+                <th>Datasent    :   </th>
+                <th>actions :   </th>
             </tr>
         </thead>
         <tbody>
@@ -23,6 +23,7 @@
             <tr>
                 <td>{{ message.idmsg }}</td>
                 <td>{{ message.idsender }}</td>
+                <td>{{ message.idreceiver }}</td>
                 <td>{{ message.iddis }}</td>
                 <td>{{ message.content }}</td>
                 <td>{{ message.reaction }}</td>

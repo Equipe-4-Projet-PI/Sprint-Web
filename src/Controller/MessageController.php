@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Message;
 use App\Form\MessageType;
+use App\Repository\DiscussionRepository;
 use App\Repository\MessageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -51,11 +52,11 @@ class MessageController extends AbstractController
     }
 
     #[Route('{idmsg}/edit', name: 'app_message_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Message $message, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Message $message, EntityManagerInterface $entityManager ): Response
     {
         $form = $this->createForm(MessageType::class, $message);
         $form->handleRequest($request);
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
@@ -76,6 +77,8 @@ class MessageController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_message_index', [], Response::HTTP_SEE_OTHER);
+        $iddis = $message->getIddis();
+
+        return $this->redirectToRoute('app_discussion_show_messages', ['iddis' => $iddis], Response::HTTP_SEE_OTHER);
     }
 }
