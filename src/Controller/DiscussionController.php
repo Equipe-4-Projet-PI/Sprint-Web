@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 
-use Symfony\Component\HttpFoundation\JsonResponse ;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use App\Entity\Discussion;
 use App\Entity\Message;
@@ -179,16 +179,26 @@ public function index(DiscussionRepository $discussionRepository, UserRepository
     }
 
 
-    #[Route('/search_discussion', name: 'search_discussion', methods: ['GET'])]
-    public function searchDiscussionByUsername(Request $request, DiscussionRepository $discussionRepository): JsonResponse
-        {
-         $username = $request->query->get('username');
 
-          // Recherche des discussions par nom d'utilisateur du destinataire
-           $discussions = $discussionRepository->findByReceiverUsername($username);
+    #[Route('/searchdiscussion', name: 'search_discussion', methods: ['GET'])]    
+    public function searchDiscussionByUsername(Request $request, DiscussionRepository $discussionRepository): Response
+    {
+        $username = $request->query->get('username');
 
-          return $this->json($discussions);
-        }
+        // Recherche des discussions par nom d'utilisateur du destinataire
+        $discussions = $discussionRepository->findByReceiverUsername($username);
+
+        // Redirection vers la page des messages de la première discussion trouvée
+        if (!empty($discussions)) {
+
+            $firstDiscussionId = $discussions[0]->getIddis();
+            return $this->redirectToRoute('app_discussion_show_messages', ['iddis' => $firstDiscussionId]);
+        } else {
+        // Redirection vers une page par défaut si aucune discussion n'a été trouvée
+            return $this->redirectToRoute('app_discussion_index');
+    }
+}
+
 
     
 }

@@ -2,73 +2,162 @@
 
 {% block title %}Discussion{% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('css/discussion.css') }}">
-{% endblock %}
-
 {% block body %}
 
+<style>
+    .container {
+        max-width: 800px;
+        margin: auto;
+    }
+
+    .heading {
+        text-align: center;
+    }
+
+    .search-form {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .search-input {
+        width: 70%;
+        max-width: 300px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-right: 10px;
+    }
+
+    .search-button {
+        background-color: rgba(39, 167, 118, 0.8);
+        color: white;
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        opacity: 0.8;
+    }
+
+    .search-button:hover {
+        background-color: rgba(39, 167, 118, 1);
+    }
+
+    .discussion-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    .discussion-item {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        width: 200px;
+        text-align: center;
+    }
+
+    .user-info img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        margin-bottom: 10px;
+    }
+
+    .username {
+        font-weight: bold;
+    }
+
+    .create-new-link {
+        width: 150px;
+        display: block;
+        text-align: center;
+        margin: 0 auto 20px;
+        background-color: rgba(39, 167, 118, 0.8);
+        color: white;
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        opacity: 0.8;
+    }
+
+    .create-new-link:hover {
+        background-color: rgba(39, 167, 118, 1);
+    }
+
+    .alert {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+</style>
+
+<div class="container">
+
     <br>
     <br>
-    <br>
-    <br>
-    <form id="searchForm">
-        <input type="text" id="username" name="username" placeholder="Nom d'utilisateur">
-        <button type="submit">Rechercher</button>
-    </form>
     <br>
     <br>
 
-    <div id="discussionList">
-        <!-- Les résultats de la recherche seront affichés ici -->
+    <h1 class="heading">Discussions list</h1>
+
+    <br>
+
+    <div class="search-form">
+        <form action="{{ path('search_discussion') }}" method="GET" onsubmit="return confirmSearch()">
+            <input type="text" name="search" class="search-input" placeholder="Rechercher...">
+            <button type="submit" class="search-button">Rechercher</button>
+        </form>
     </div>
-
-    <h1>Discussion index</h1>
-
-    <br>
-    <br>
-
-    <div class="discussion-list">
-        {% for discussion in discussions %}
-            <div class="discussion-item">
-                {% if discussion.receiver %}
-                    <a href="{{ path('app_discussion_show_messages', {'iddis': discussion.iddis}) }}"> <p><strong>{{ discussion.receiver.username }}  <strong><p> <a>
-                    {% if discussion.receiver.ImageURL %}
-                        <img src="{{ asset(discussion.receiver.ImageURL) }}" alt="Image de {{ discussion.receiver.username }}">
-                    {% endif %}
-                {% else %}
-                    <p><strong>Destinataire inconnu</strong></p>
-                {% endif %}
-            </div>
-        {% endfor %}
-    </div>
-
-    <a href="{{ path('app_discussion_new') }}">Create new</a>
 
     <script>
-        $(document).ready(function() {
-            $('#searchForm').submit(function(event) {
-                event.preventDefault();
-
-                var username = $('#username').val();
-
-                $.ajax({
-                    url: "{{ path('search_discussion') }}",
-                    type: "GET",
-                    data: { username: username },
-                    success: function(data) {
-                        $('#discussionList').empty(); /
-
-                        data.forEach(function(discussion) {
-                            $('#discussionList').append('<div>' + discussion.id + ' - ' + discussion.receiver.username + '</div>');
-                        });
-                    },
-                    error: function(xhr, status, error) {
-                        console.log("Erreur lors de la recherche :", error);
-                    }
-                });
-            });
-        });
+        function confirmSearch() {
+            var searchTerm = document.querySelector('.search-input').value;
+            if (searchTerm.trim() === '') {
+                alert('Veuillez entrer un terme de recherche.');
+                return false;
+            }
+            return true;
+        }
     </script>
+
+    <a href="{{ path('app_discussion_new') }}" class="create-new-link">Create new</a>
+
+    <br>
+
+    <div id="discussionList" class="discussion-list">
+        <!-- Les discussions seront affichées ici -->
+        {% if discussions is empty %}
+            <div class="alert">
+                Aucune discussion trouvée pour cet utilisateur.
+            </div>
+        {% else %}
+            <div class="discussion-wrapper">
+                {% for discussion in discussions %}
+                    <div class="discussion-item">
+                        {% if discussion.receiver %}
+                            <a href="{{ path('app_discussion_show_messages', {'iddis': discussion.iddis}) }}">
+                                <div class="user-info">
+                                    {# {% if discussion.receiver.ImageURL %}
+                                    <img src="{{ asset(discussion.receiver.ImageURL) }}" alt="Image de {{ discussion.receiver.username }}">
+                                    {% else %} #}
+                                    <img src="{{ asset('img/discussion/homme.png') }}" alt="Image alternative">
+                                    {# {% endif %} #}
+                                    <p class="username">{{ discussion.receiver.username }}</p>
+                                </div>
+                            </a>
+                        {% else %}
+                            <p class="username"><strong>Destinataire inconnu</strong></p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
 {% endblock %}
