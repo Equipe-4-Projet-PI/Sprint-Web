@@ -48,6 +48,26 @@ public function findByReceiverUsername($username)
         ->getResult();
 }
 
+public function findDiscussionsByUser($userId)
+{
+    return $this->createQueryBuilder('d')
+        ->andWhere('d.idsender = :userId OR d.receiver = :userId')
+        ->setParameter('userId', $userId)
+        ->getQuery()
+        ->getResult();
+}
+
+public function findExistingDiscussion($currentUserId, $receiverId): ?Discussion
+{
+    return $this->createQueryBuilder('d')
+        ->andWhere('(d.idsender = :currentUserId AND d.receiver = :receiverId)')
+        ->orWhere('(d.receiver = :currentUserId AND d.idsender = :receiverId)')
+        ->setParameter('currentUserId', $currentUserId)
+        ->setParameter('receiverId', $receiverId)
+        ->getQuery()
+        ->getOneOrNullResult();
+}
+
 
 //    /**
 //     * @return Discussion[] Returns an array of Discussion objects
@@ -73,4 +93,9 @@ public function findByReceiverUsername($username)
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+public function findDiscussionById(int $id): ?Discussion
+{
+    return $this->find($id);
+}
 }

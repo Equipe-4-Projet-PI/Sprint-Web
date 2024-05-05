@@ -11,10 +11,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\NotificationSender;
+use Joli\JoliNotif\Notification;
+use Joli\JoliNotif\NotifierFactory;
+use App\Service\MessageSender;
+
 
 #[Route('/message')]
 class MessageController extends AbstractController
 {
+    
     #[Route('', name: 'app_message_index', methods: ['GET'])]
     public function index(MessageRepository $messageRepository): Response
     {
@@ -23,7 +29,7 @@ class MessageController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_message_new', methods: ['GET', 'POST'])]
+    /*#[Route('/new', name: 'app_message_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $message = new Message();
@@ -33,6 +39,40 @@ class MessageController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($message);
             $entityManager->flush();
+            return $this->redirectToRoute('app_discussion_show_messages', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('message/new.html.twig', [
+            'message' => $message,
+            'form' => $form,
+        ]);
+    }*/
+
+
+    private $messageSender;
+    private $notificationSender;
+
+    public function __construct(MessageSender $messageSender , NotificationSender $notificationSender)
+    {
+        $this->messageSender = $messageSender;
+        $this->notificationSender = $notificationSender;
+    }
+    
+    #[Route('/new', name: 'app_message_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager , DiscussionRepository $discussionRepository): Response
+    {
+        $message = new Message();
+        $form = $this->createForm(MessageType::class, $message);
+        $form->handleRequest($request);
+
+        $discussion=$discussionRepository->findDiscussionById($message->getIddis());
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($message);
+            $entityManager->flush();
+            
+            // Envoyer la notification
+            $this->notificationSender->sendNotification($discussion->getReceiver(), $message->getContent());
 
             return $this->redirectToRoute('app_discussion_show_messages', [], Response::HTTP_SEE_OTHER);
         }

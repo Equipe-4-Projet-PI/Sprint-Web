@@ -15,7 +15,6 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use App\Entity\User; 
 
 #[ORM\Entity(repositoryClass: DiscussionRepository::class)]
-#[UniqueEntity(fields: ['receiver'], message: 'Ce receiver est déjà utilisé pour une autre discussion.')]
 class Discussion
 {
     #[ORM\Id]
