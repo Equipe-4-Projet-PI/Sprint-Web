@@ -6,6 +6,7 @@ use App\Entity\Forum;
 use App\Form\ForumType;
 use App\Repository\ForumRepository;
 use App\Repository\UserRepository;
+use App\Service\OpenWeatherMapService;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,9 +15,39 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ForumController extends AbstractController
 {
+    ///////////////////////////////////
+    private $weatherService;
+    public function __construct(OpenWeatherMapService $weatherService)
+    {
+        $this->weatherService = $weatherService;
+    }
+    public function getWeather()
+    {
+        $city = 'Gouvernorat de Tunis'; // Example city
+        $weatherData = $this->weatherService->getWeather($city);
+
+        $placeName = $weatherData['name'];
+        $latitude = $weatherData['coord']['lat'];
+        $longitude = $weatherData['coord']['lon'];
+        $currentTempKelvin = $weatherData['main']['temp'];
+
+        $currentTempCelsius = $currentTempKelvin - 273.15;
+
+        $formattedWeatherData = "Place Name: $placeName\n";
+        $formattedWeatherData .= "Latitude: $latitude\n";
+        $formattedWeatherData .= "Longitude: $longitude\n";
+        $formattedWeatherData .= "Current Temperature: $currentTempCelsius °C";
+
+        $Ar =[$placeName,$currentTempCelsius,$latitude,$longitude];
+
+        return $Ar;
+    }
+    
+    ///////////////////////////////////
     #[Route('/forum', name: 'app_forum')]
     public function index(): Response
     {
@@ -41,8 +72,11 @@ class ForumController extends AbstractController
             $req->query->getInt('page',1),
             4
         );
+        $Ar = [];
+        $Ar[] = $this->getWeather();
         return $this->render('forum/displayForums.html.twig',[
-            'forums'=>$forums
+            'forums'=>$forums,
+            'weather'=>$Ar,
         ]);
     }
     //Add a Forum
@@ -82,7 +116,43 @@ class ForumController extends AbstractController
         }
         return $this->render('forum/addForum.html.twig',['f'=>$form->createView()]);
     }
+    //////////////   Search SECTION   //////////////
+    //List The Forums to search
+    #[Route('/forumlistsearchres',name:'forums_search_res')]
+    public function searchfunc(Request $request, ForumRepository $forumRepository) : Response
+    {
+        $query = $request->query->get('query');
+        $forums = $forumRepository->searchByName($query); // Implement this method in your ForumRepository
 
+        if($query != null){
+            $forums = $forumRepository->SEARCH($query);
+        }else{
+            $forums = $forumRepository->findAll();
+        }
+
+        return $this->render('forum/searchResults.html.twig', [
+            'forums' => $forums,
+        ]);
+    }
+    #[Route('/forumlistsearch',name:'forums_search')]
+    public function search(ForumRepository $repo, Request $request) : Response
+    {
+        
+        $searchTerm = $request->query->get('query');
+
+        // Perform search logic here
+        if($searchTerm != null){
+            $searchResults = $repo->SEARCH($searchTerm);
+        }else{
+            $searchResults = $repo->findAll();
+        }
+        
+        
+        
+        return $this->render('forum/search.html.twig', [
+            'forums' => $searchResults
+        ]);
+    }
 
     //////////////   ADMIN SECTION   //////////////
     #[Route('/adminForums', name: 'ForumsAdmin')]

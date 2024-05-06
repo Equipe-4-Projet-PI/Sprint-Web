@@ -1,0 +1,59 @@
+{# templates/search.html.twig #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search</title>
+</head>
+<body>
+    <form id="searchForm">
+        <input type="text" id="searchInput" autocomplete="off" name="q" placeholder="Enter your search query">
+    </form>
+
+    <div id="searchResults">
+        {% for f in forums %}  
+            <br>
+            {{ f.title }}
+        {% endfor %}
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        var isRequestPending = false;
+        var throttleTimeout;
+        $(document).on("keyup", "#searchInput", function(){
+            var input = $(this).val().trim();
+            
+            if (!isRequestPending) {
+                isRequestPending = true;}
+
+            // Send AJAX request
+            $.ajax({
+                url: "{{ path('forums_search_res') }}",
+                method: "GET",
+                data: { query: input },
+                timeout: 5000,
+                success: function(data){
+                    $("#searchResults").html(data); // Update the HTML content
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX request failed. Status:", status);
+                    console.error("Error:", error);
+                    console.error("Response Text:", xhr.responseText);
+                    // Optionally, you can handle the error here or show an error message to the user
+                }
+            });
+
+            clearTimeout(throttleTimeout); // Clear any existing timeout
+                throttleTimeout = setTimeout(function() {
+                    isRequestPending = false;
+                }, 1000);
+        });
+    });
+</script>
+
+</body>
+</html>

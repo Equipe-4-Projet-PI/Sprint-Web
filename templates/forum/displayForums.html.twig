@@ -38,37 +38,43 @@
   cursor: pointer;
 }
 
+
+
 </style>
   <!-- ======= Hero Section ======= -->
   <section id="hero" class="hero d-flex flex-column justify-content-center align-items-center" data-aos="fade" data-aos-delay="1500">
     <div class="container">
       <div class="row justify-content-center">
+        <div>{% include 'weather.html.twig' %}</div>
         <div class="col-lg-6 text-center">
         <a class="fcc-btn" href="{{path('app_add_forum')}}">+</a>
-        <table class="DisplayTable">
-            <tr>
-              <th>Title</th>
-              <th>Description</th>
-              <th>Posts Number</th>
-              <th>Date</th>
-            </tr>
-            {% for f in forums %}
-                <tr>
-                    <td><a class="titleButt" href="{{path('app_list_posts_by_forum',{'idf':f.getIdForum})}}">{{ f.title }}</a></td>    
-                    <td>{{ f.description }}</td>
-                    <td>{{ f.repliesNumber }}</td>
-                    <td>{{ f.getDate| date("d/m/Y") }}</td>
-                </tr>
-            {% endfor %}
-        </table>
+        
         {% for f in forums %}
           {% include 'forum/forumTemplate.html.twig' %}
         {% endfor %}
         </div>
       </div>
     </div>
-    <div>
-      {{ knp_pagination_render(forums) }}
-    </div>
+    
+    <div class="pagination-container d-flex justify-content-center mt-4">
+    <ul class="pagination">
+        {# Previous page link #}
+        <li class="page-item {% if forums.currentPageNumber == 1 %}disabled{% endif %}">
+            <a class="page-link" href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'page': forums.currentPageNumber - 1})) }}">Previous</a>
+        </li>
+
+        {# Page links #}
+        {% for page in 1..forums.pageCount %}
+            <li class="page-item {% if page == forums.currentPageNumber %}active{% endif %}">
+                <a class="page-link" href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'page': page})) }}">{{ page }}</a>
+            </li>
+        {% endfor %}
+
+        {# Next page link #}
+        <li class="page-item {% if forums.currentPageNumber == forums.pageCount %}disabled{% endif %}">
+            <a class="page-link" href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'page': forums.currentPageNumber + 1})) }}">Next</a>
+        </li>
+    </ul>
+</div>
   </section><!-- End Hero Section -->
 {% endblock %}

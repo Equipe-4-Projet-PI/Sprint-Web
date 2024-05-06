@@ -13,6 +13,8 @@ use App\Repository\PostRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -203,9 +205,15 @@ class PostController extends AbstractController
 
     //List The Posts by Their Respective Forums & Connected User
     #[Route('/postlists_{idf}_{idU}',name:'app_list_posts_by_forum_user')]
-    public function getpostsbyidforumAndUser($idU,$idf,PostRepository $repo,UserRepository $Urepo){
-        $posts = $repo->getPostsByForumNormalSQL($idf);
+    public function getpostsbyidforumAndUser($idU,$idf,PostRepository $repo,UserRepository $Urepo , PaginatorInterface $paginator,Request $req){
         $User = $Urepo->find($idU);
+
+        $data = $repo->getPostsByForumNormalSQL($idf);
+        $posts = $paginator->paginate(
+            $data,
+            $req->query->getInt('page',1),
+            5
+        );
         return $this->render('post/displayPosts.html.twig',[
             'posts'=>$posts,
             'idU'=>$User
@@ -248,6 +256,34 @@ class PostController extends AbstractController
             'NameForum'=>$ForumName,
             'users' => $users ,
             'usernumber'=> $usernumbers,
+        ]);
+    }
+
+
+    ///////////////// BUNDLEPDF //////////////////////////
+
+    #[Route('/exportPdf/{id}', name: 'app_pdf', methods: ['GET', 'POST'])]
+    public function ExportPdf($id,PostRepository $repo) :Response
+    {
+        
+        $posts = $repo->getPostsByForumNormalSQL($id);
+
+        $options = new Options();
+        $options->set('defaultFont', 'Arial');
+
+        $dompdf = new Dompdf($options);
+        $html = $this->renderView('post/pdf.html.twig', [
+            
+            'posts'=>$posts,
+        ]);
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+
+        
+        return new Response($dompdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
         ]);
     }
 }
