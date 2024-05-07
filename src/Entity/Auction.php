@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Repository\AuctionParticipantRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AuctionRepository;
@@ -34,12 +33,7 @@ class Auction
     private ?int $idProduit;
 
     #[ORM\Column(type: "integer")]
-    private ?int $idArtist; 
-
-
-    private ?float $moyRating;
-
-    private ?int $nbreRating;
+    private ?int $idArtist;
 
     public function getIdAuction(): ?int
     {
@@ -54,6 +48,7 @@ class Auction
     public function setNom(string $nom): static
     {
         $this->nom = $nom;
+
         return $this;
     }
 
@@ -128,9 +123,6 @@ class Auction
 
         return $this;
     }
-    
-
-
 
 
 }
