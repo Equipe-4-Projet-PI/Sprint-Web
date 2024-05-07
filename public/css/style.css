@@ -39,6 +39,14 @@ body, html {
   height: 650px;
   box-shadow: 1px 1px 108.8px 19.2px rgb(25,31,53);
 }
+.container1{
+  margin: 0;
+  top: 200px;
+  left: 25%;
+  position: absolute;
+  text-align: center;
+ 
+}
 
 .box h4 {
   font-family: 'Source Sans Pro', sans-serif;
