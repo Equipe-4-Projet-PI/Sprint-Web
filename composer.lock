@@ -1518,6 +1518,11 @@
             "autoload": {
                 "psr-4": {
                     "Knp\\Component\\": "src/Knp/Component"
+                }
+            }
+
+        },
+        {
             "name": "jolicode/jolinotif",
             "version": "v2.6.0",
             "source": {

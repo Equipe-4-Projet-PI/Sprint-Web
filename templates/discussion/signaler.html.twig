@@ -1,23 +1,84 @@
-{% extends 'home.html.twig' %}
+{% extends 'Home.html.twig' %}
 
 {% block title %}Signaler la discussion{% endblock %}
 
 {% block body %}
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-     <h1>Signaler la discussion {{ discussion.receiver.username }}</h1>
-    <br>
-    <form method="post" action="{{ path('app_discussion_signal', {'iddis': discussion.iddis}) }}">
-        {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <button type="submit">Signaler</button>
-        {{ form_end(form) }}
-    </form>
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-        <a href="{{ path('app_discussion_index') }}">Retour aux discussions</a>
+        .heading {
+            text-align: center;
+            margin-bottom: 20px;
+            color: rgba(39, 167, 118, 0.8); /* Couleur verte avec transparence */
+        }
 
+        .signal-form {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            background-color: rgba(39, 167, 118, 0.8); /* Couleur verte avec transparence */
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: rgba(39, 167, 118, 1); /* Couleur verte plus foncée au survol */
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: rgba(39, 167, 118, 0.8); /* Couleur verte avec transparence */
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Ajout du style pour les labels */
+        .green-label {
+            color: rgba(39, 167, 118, 0.8); /* Couleur verte avec transparence */
+        }
+    </style>
+
+
+<br>
+<br>
+<br>
+<br>
+    <div class="container">
+        <h1 class="heading">Signaler la discussion avec {{ discussion.receiver.username }}</h1>
+        <form method="post" action="{{ path('app_discussion_signal', {'iddis': discussion.iddis}) }}" class="signal-form">
+            {{ form_start(form) }}
+            <div class="form-group">
+                {% for choice in form.motif %}
+                    <div>
+                        {{ form_widget(choice) }}
+                        {{ form_label(choice, null, {label_attr: {'class': 'green-label'}}) }} {# Ajout de la classe green-label #}
+                    </div>
+                {% endfor %}
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Signaler la discussion</button> 
+            {{ form_end(form) }}
+        </form>
+        <a href="{{ path('app_discussion_index') }}" class="back-link">Retour aux discussions</a>
+    </div>
 {% endblock %}

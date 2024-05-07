@@ -1,4 +1,4 @@
-{% extends 'home.html.twig' %}
+{% extends 'Home.html.twig' %}
 
 {% block title %}Discussion{% endblock %}
 
@@ -103,29 +103,14 @@
     <br>
     <br>
     <br>
+    <br>
+    <br>
 
     <h1 class="heading">Discussions list</h1>
 
     <br>
-
-    <div class="search-form">
-        <form action="{{ path('search_discussion') }}" method="GET" onsubmit="return confirmSearch()">
-            <input type="text" name="search" class="search-input" placeholder="Rechercher...">
-            <button type="submit" class="search-button">Rechercher</button>
-        </form>
-    </div>
-
-    <script>
-        function confirmSearch() {
-            var searchTerm = document.querySelector('.search-input').value;
-            if (searchTerm.trim() === '') {
-                alert('Veuillez entrer un terme de recherche.');
-                return false;
-            }
-            return true;
-        }
-    </script>
-
+    
+    <a href="{{ path('discussions_search') }}" class="create-new-link search-button">Rechercher</a>
     <a href="{{ path('app_discussion_new') }}" class="create-new-link">Create new</a>
 
     <br>

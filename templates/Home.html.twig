@@ -56,6 +56,7 @@
     {% if id_user %}
       <li><a href="{{path('app_auction_index',{ 'id_user': id_user })}}">Auction</a></li>
         <li><a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a></li>
+        <li><a href="{{ path('app_discussion_index', { 'id_user': id_user }) }}">Messenger</a></li>
     {% endif %}
     <li><a href="{{path('login')}}">Logout</a></li>
 
