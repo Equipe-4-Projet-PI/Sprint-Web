@@ -4,38 +4,29 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Form\ProductType;
-use App\Repository\ForumRepository;
 use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
 class ProductController extends AbstractController
 {
-    private $id_user;
-
-   
-
     #[Route('/product', name: 'app_product_index', methods: ['GET'])]
-    public function index(ProductRepository $productRepository , Request $req): Response
+    public function index(ProductRepository $productRepository): Response
     {
-        
-        $this->id_user = $req->query->get('id_user');
         return $this->render('product/index.html.twig', [
             'products' => $productRepository->findAll(),
         ]);
     }
 
-    #[Route('/addprod{id_user}', name: 'app_product_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager,UserRepository $repoUser,$id_user): Response
+    #[Route('/addprod', name: 'app_product_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager,UserRepository $repoUser): Response
     {
-     
         $product = new Product();
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
@@ -44,7 +35,7 @@ class ProductController extends AbstractController
             $formattedDate = $today->format('d-m-Y');
             $product->setCreationdate($formattedDate);
             //setting User
-            $User = $repoUser->find($id_user);
+            $User = $repoUser->find(4);
             $product->setIdUser($User);
         if ($form->isSubmitted() && $form->isValid()) {
             $file = $form->get('productimage')->getData();
@@ -61,8 +52,7 @@ class ProductController extends AbstractController
             }
             $entityManager->persist($product);
             $entityManager->flush();
-           // return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
-            return $this->redirectToRoute('app_product_index',['id_user' => $id_user]);
+            return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('product/new.html.twig', [
@@ -127,18 +117,11 @@ class ProductController extends AbstractController
     }
 
     #[Route('/Adminprods', name: 'AdminProds')]
-    public function Admin( ProductRepository $repo , UserRepository $repoU , ForumRepository $repoF): Response
-
+    public function Admin( ProductRepository $repo): Response
     {
-        $usernumbers = $repoU ->numberOfUsers();
-        $NumForums = $repoF ->numberOfForums();
-        $productsnumbers= $repo -> numberOfProducts();
         $prods = $repo->findAll() ; 
         return $this->render('admin/ProdsAdmin.html.twig', [
             'prods' => $prods ,
-            'usernumber'=> $usernumbers,
-            'NumForms'=> $NumForums,
-            'productnumber'=> $productsnumbers
         ]);
     }
     #[Route('/product_forsale', name: 'app_product_forsale', methods: ['GET'])]
@@ -146,7 +129,6 @@ class ProductController extends AbstractController
     {
         return $this->render('product/index.html.twig', [
             'products' => $productRepository->findBy(['forsale' => true]),
-           
         ]);
     }
     #[Route('/product_notforsale', name: 'app_product_notforsale', methods: ['GET'])]
@@ -154,7 +136,6 @@ class ProductController extends AbstractController
     {
         return $this->render('product/index.html.twig', [
             'products' => $productRepository->findBy(['forsale' => false]),
-            
         ]);
     }
     #[Route('/app_search', name: 'app_search', methods: ['GET'])]

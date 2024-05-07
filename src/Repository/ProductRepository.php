@@ -38,15 +38,6 @@ class ProductRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-
-
-    public function numberOfProducts(){
-        $entitymanager=$this->getEntityManager();
-        $query= $entitymanager->createQuery("SELECT COUNT(p) FROM APP\Entity\Product p");
-        return $query->getSingleScalarResult();
-    
-    }
-
 //    /**
 //     * @return Product[] Returns an array of Product objects
 //     */

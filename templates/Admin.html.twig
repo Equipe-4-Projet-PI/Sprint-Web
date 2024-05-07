@@ -16,8 +16,6 @@
 
 
 	<!-- SIDEBAR -->
-
-	{% block sidebar  %} 
 	<section id="sidebar">
 		<a href={{path('Admin')}} class="brand">
 			<i class='bx bxs-smile'></i>
@@ -31,7 +29,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="{{path('AdminProds')}}">
+				<a href="#">
 					<i class='bx bxl-product-hunt' ></i>
 					<span class="text">Products</span>
 				</a>
@@ -70,8 +68,6 @@
 			</li>
 		</ul>
 	</section>
-
-	{% endblock %}
 	<!-- SIDEBAR -->
 
 
@@ -143,10 +139,10 @@
 				<li>
 					 <img src="{{asset('img/ProduitArt.png')}}">
 					<span class="text">
-						<h3>{% if productnumber is defined %}
-								{{productnumber}}
+						<h3>{% if NumProducts is defined %}
+								{{NumProducts}}
 							{% else %}
-								0
+								$2543
 							{% endif %}
 						</h3>
 						<p>Products</p>

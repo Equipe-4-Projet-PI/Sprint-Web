@@ -1,4 +1,4 @@
-{% extends 'Home.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}Product index{% endblock %}
 
@@ -28,12 +28,11 @@
     <div class="row">
         <div class="col-md-12">
             <h1 class="mb-4">Product index</h1>
-            
-            <a href="{{ path('app_product_new',{ 'id_user': id_user }) }}" class="btn btn-success mb-4">Create new</a>
+            <a href="{{ path('app_product_new') }}" class="btn btn-success mb-4">Create new</a>
             <a href="{{ path('app_orderproduct_index') }}" class="btn btn-success mb-4">View Orders</a>
-            <a href="{{ path('app_product_index',{ 'id_user': id_user }) }}" class="btn btn-secondary mb-4" >All Products</a>
-            <a href="{{ path('app_product_forsale',{ 'id_user': id_user }) }}" class="btn btn-primary mb-4" >For Sale</a>
-            <a href="{{ path('app_product_notforsale',{ 'id_user': id_user }) }}" class="btn btn-primary mb-4" >Not For Sale</a>
+            <a href="{{ path('app_product_index') }}" class="btn btn-secondary mb-4" >All Products</a>
+            <a href="{{ path('app_product_forsale') }}" class="btn btn-primary mb-4" >For Sale</a>
+            <a href="{{ path('app_product_notforsale') }}" class="btn btn-primary mb-4" >Not For Sale</a>
 
         </div>
     </div>
@@ -88,7 +87,7 @@
         var searchText = document.getElementById("searchText").value;
         
         // Construct the URL with searchBy and searchText
-        var url = "{{ path('app_search',{ 'id_user': id_user }) }}?searchby=" + searchBy + "&searchtext=" + searchText;
+        var url = "{{ path('app_search') }}?searchby=" + searchBy + "&searchtext=" + searchText;
         
         window.location.href = url;
     });

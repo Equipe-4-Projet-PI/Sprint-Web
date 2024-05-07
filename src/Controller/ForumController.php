@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Forum;
 use App\Form\ForumType;
 use App\Repository\ForumRepository;
-use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -74,11 +73,10 @@ class ForumController extends AbstractController
 
     //////////////   ADMIN SECTION   //////////////
     #[Route('/adminForums', name: 'ForumsAdmin')]
-    public function AdminForums(UserRepository $Urepo,ForumRepository $repo,ProductRepository $repoP): Response
+    public function AdminForums(UserRepository $Urepo,ForumRepository $repo): Response
     {
         $forums = $repo->findAll() ; 
         $NumForums = $repo ->numberOfForums();
-        $productsnumbers= $repoP -> numberOfProducts();
 
         $users = $Urepo->findAll() ; 
         $usernumbers = $Urepo ->numberOfUsers();
@@ -88,7 +86,6 @@ class ForumController extends AbstractController
             'NumForms'=> $NumForums,
             'users' => $users ,
             'usernumber'=> $usernumbers,
-            'productnumber'=> $productsnumbers
         ]);
     }
 }

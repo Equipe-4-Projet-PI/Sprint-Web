@@ -5,8 +5,6 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\LoginType;
 use App\Form\SignupType;
-use App\Repository\ForumRepository;
-use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
@@ -21,9 +19,6 @@ use Twilio\Rest\Client;
 
 class UserController extends AbstractController
 {
-
-
-    
     #[Route('', name: 'login')]
     public function login(Request $req ): Response
     {
@@ -60,7 +55,7 @@ class UserController extends AbstractController
         }else{
             if ($user->getPassword() === $password && $user->getStatus() !== "Blocked") {
             
-                return $this->redirectToRoute('app_product_index',['id_user' => $user->getIdUser()]);
+                return $this->redirectToRoute('home',['id_user' => $user->getIdUser()]);
             } else {
                 
                 return $this->redirectToRoute('login', ['error' => 'Invalid Username or Password']);
@@ -191,18 +186,13 @@ class UserController extends AbstractController
 
 
     #[Route('/Admin', name: 'Admin')]
-    public function Admin( UserRepository $repo,ForumRepository $repoF,ProductRepository $repoP): Response
+    public function Admin( UserRepository $repo): Response
     {
-        $users = $repo->findAll() ;
-        $NumForums = $repoF ->numberOfForums(); 
+        $users = $repo->findAll() ; 
         $usernumbers = $repo ->numberOfUsers();
-        $productsnumbers= $repoP -> numberOfProducts();
-
         return $this->render('admin/user/UsersAdmin.html.twig', [
             'users' => $users ,
             'usernumber'=> $usernumbers,
-            'NumForms'=> $NumForums,
-            'productnumber'=> $productsnumbers
         ]);
     }
     #[Route('/user/delete/{id}', name: 'user_delete')]
