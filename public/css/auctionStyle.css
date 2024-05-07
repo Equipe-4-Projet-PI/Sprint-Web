@@ -115,3 +115,6 @@ p {
   filter: drop-shadow(0 10px 5px rgba(0,0,0,0.125));
   transition: all .3s ease;    
 }
+#heartIcon.active i {
+  color: red; /* Change to desired color */
+}
