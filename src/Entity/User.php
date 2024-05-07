@@ -53,6 +53,9 @@ class User
     #[ORM\Column(length: 255)]
     private ?string $imageurl = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $status = null;
+
     public function getIdUser(): ?int
     {
         return $this->idUser;
@@ -185,6 +188,18 @@ class User
     public function setImageurl(string $imageurl): static
     {
         $this->imageurl = $imageurl;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }

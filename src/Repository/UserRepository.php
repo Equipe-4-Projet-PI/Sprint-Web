@@ -39,12 +39,30 @@ class UserRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    public function findOneByEmail(string $email): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.email = :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     
     public function numberOfUsers(){
         $entitymanager=$this->getEntityManager();
         $query= $entitymanager->createQuery("SELECT COUNT(u) FROM APP\Entity\User u");
         return $query->getSingleScalarResult();
 
+    }
+
+    public function findOneByNumber(string $phone): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.phone = :phone')
+            ->setParameter('phone', $phone)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
 
