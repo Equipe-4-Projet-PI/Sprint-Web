@@ -55,7 +55,8 @@ class PostRepository extends ServiceEntityRepository
 //                    ->getQuery()
 //                    ->getResult(); //[]
 //    }
-//////////=====================================FAILED ATTEMPT=========================/////////
+//////////===========================================================================/////////
+
     public function getPostsByForumQueryBuilder($idforum){
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
@@ -74,4 +75,30 @@ class PostRepository extends ServiceEntityRepository
         return $req->getResult();
     
     }
+
+    public function SortByLikes($idforum){
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder
+            ->select('p')
+            ->from('App\Entity\Post', 'p')
+            ->where('p.idForum = :idF')
+            ->setParameter('idF', $idforum)
+            ->orderBy('p.likeNumber', 'DESC');
+        ;
+        return $queryBuilder->getQuery()->getResult();
+    }
+    public function SortByLikesNormalSQL($idforum)
+    {
+        $manager = $this->getEntityManager();
+        $query = $manager->createQuery('
+            SELECT p 
+            FROM App\Entity\Post p 
+            WHERE p.idForum = :idF
+            ORDER BY p.likeNumber DESC'
+        )->setParameter('idF', $idforum);
+
+        return $query->getResult();
+    }
+
 }
