@@ -19,7 +19,7 @@ class AuctionParticipant
     private ?float $prix=null;
 
 
-    #[ORM\Column(name: "date", type: "datetime")]
+    #[ORM\Column(name: "date", type: "datetime" , nullable:true)]
     private  $date = null;
 
     #[ORM\Column(type: "integer")]
@@ -57,7 +57,6 @@ class AuctionParticipant
     }
 
     
-    #[ORM\PrePersist]     
     public function setDate(): void
     {
         $this->date = new \DateTime();

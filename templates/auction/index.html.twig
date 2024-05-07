@@ -98,8 +98,9 @@
 						<!--/.section-header-->
 						<div class="explore-content">
 							<div class="row">
-							{% set i = 1 %}
+
 								{% for item in auctions %}
+									{% set i = (auctions.currentPageNumber - 1) * auctions.getItemNumberPerPage() + loop.index %}
 									<div class=" col-md-4 col-sm-6">
 										<div class="single-explore-item">
 											<div class="single-explore-img">
@@ -117,11 +118,13 @@
 														{% if AvgRating[i] != null %}
 															{{ AvgRating[i] }}<i class="fa fa-star"></i>
 														{% else %}
-															0 <i class="fa fa-star"></i>
+															0
+															<i class="fa fa-star"></i>
 														{% endif %}
 													</span>
 													<a href="#">
-														{{ PartsRating[i] }} Love</a>
+														{{ PartsRating[i] }}
+														Love</a>
 													<span class="explore-price-box">
 														form
 														<span class="explore-price">{{ item.prixInitial }}</span>
@@ -167,7 +170,7 @@
 																<a href="#">
 																	<i data-feather="upload"></i>
 																</a>
-																<a href="#">
+																<a href="#" id="heartIcon" data-id="{{ item.idAuction }}">
 																	<i data-feather="heart"></i>
 																</a>
 															</div>
@@ -181,13 +184,16 @@
 									</div>
 									<div class="row">
 									{% endif %}
-								{% set i = i + 1  %}
+									{% set i = i + 1  %}
 								{% endfor %}
 							</div>
+							<div>{{ knp_pagination_render(auctions)}}</div>
 						</div>
 					</div>
 				</div>
 				<!--/.container-->
+				<a href="{{ path('api_character', {'id': 6 }) }}">TEST HERE !
+				</a>
 
 			</section>
 			<!--/.explore-->
@@ -618,6 +624,36 @@
 
 			<!--Custom JS-->
 			<script src="{{ asset('js/custom.js') }}"></script>
+			<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the heart icon element
+        var heartIcon = document.getElementById('heartIcon');
+
+        // Add click event listener to the heart icon
+        heartIcon.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            // Toggle the 'active' class to change the heart color
+            heartIcon.classList.toggle('active');
+
+            // Get the character ID from the data-id attribute
+            var characterId = heartIcon.getAttribute('data-id');
+
+            // Send an AJAX request to your Symfony controller
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST',"{{ path('save_love_click', {'idUser': 13 }) }}", true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // Handle the response if needed
+                    console.log('Love click registered successfully');
+                }
+            };
+            xhr.send();
+        });
+    });
+</script>
+
 		</body>
 	</body>
 </html>{% endblock %}
