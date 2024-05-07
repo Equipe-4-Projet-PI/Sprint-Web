@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Auction;
-use Knp\Component\Pager\PaginatorInterface;
 use App\Entity\AuctionParticipant;
 use App\Form\AuctionType;
 use App\Repository\AuctionParticipantRepository;
@@ -11,9 +10,6 @@ use App\Repository\AuctionRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Id;
-use App\Service\SwapiService;
-
-
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,14 +19,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class AuctionController extends AbstractController
 {
     #[Route('_', name: 'app_auction_index', methods: ['GET'])]
-    public function index(AuctionRepository $auctionRepository, AuctionParticipantRepository $apRepo , PaginatorInterface $pi , Request $req): Response
+    public function index(AuctionRepository $auctionRepository, AuctionParticipantRepository $apRepo): Response
     {
-        $data =$auctionRepository->findAll();
-        $auctions = $pi->paginate(
-            $data,
-            $req->query->getInt('page',1),
-            3
-    );
+        $auctions = $auctionRepository->findAll();
         $participants = $apRepo->findAll();
 
         $participantWithRating = [];
@@ -125,7 +116,6 @@ class AuctionController extends AbstractController
         
         if ($participant) {
             $participant->setPrix($price);
-            $participant->setDate();
         } else {
             $participant = new AuctionParticipant();
             $user = $uRepo -> find($idUser);
@@ -137,75 +127,6 @@ class AuctionController extends AbstractController
         }
         $entityManager->flush();
 
-        return $this->redirectToRoute('app_auction_show', [
-            'idAuction' => $auction->getIdArtist(),
-        ]);
-    }
-
-    #[Route('/api/character/{id}', name: 'api_character')]
-    public function character(SwapiService $swapiService, $id): Response
-    {
-        $character = $swapiService->getCharacter($id);
-        return $this->render('character_template.html.twig', [
-            'character' => $character
-        ]);
-    }
-
-    #[Route("/save-rating_{idUser}", name: "save_rating", methods: ["GET", "POST"])]
-    public function saveRating(AuctionRepository $aRepo, EntityManagerInterface $entityManager, Request $request ,  $idUser , AuctionParticipantRepository $apRepo , UserRepository $uRepo): Response
-    {
-        $idAuction = $request->request->get('idAuction');
-        $ratingValue = $request->request->get('rating');
-
-        $auction = $aRepo->find($idAuction);
-        $participant = $apRepo->findOneBy(['idParticipant' => $idUser, 'idAuction' => $idAuction]);
-
-        if (!$auction) {
-            throw $this->createNotFoundException('Auction not found');
-        }
-
-        if ($participant !== null) {
-            $participant->setRating($ratingValue);
-        } else {
-            $auctionParticipant = new AuctionParticipant();
-            $auctionParticipant->setRating($ratingValue);
-            $auctionParticipant->setDate(new \DateTime());
-            $auctionParticipant->setIdAuction($auction);
-            $auctionParticipant->setIdParticipant($uRepo->find($idUser));
-            $entityManager->persist($auctionParticipant);
-        }
-        
-        $entityManager->flush();
-        return $this->redirectToRoute('app_auction_show', [
-            'idAuction' => $auction->getIdArtist(),
-        ]);
-    }
-
-    #[Route('/save-love-click/{idUser}', name: 'save_love_click', methods: ['GET','POST'])]
-    public function saveLoveClick( AuctionRepository $aRepo, EntityManagerInterface $entityManager, Request $request ,  $idUser , AuctionParticipantRepository $apRepo , UserRepository $uRepo): Response
-    {
-        $idAuction = $request->request->get('idAuction');
-
-
-        $auction = $aRepo->find($idAuction);
-        $participant = $apRepo->findOneBy(['idParticipant' => $idUser, 'idAuction' => $idAuction]);
-
-        if (!$auction) {
-            throw $this->createNotFoundException('Auction not found');
-        }
-
-        if ($participant !== null) {
-            $participant->setLove(1);
-        } else {
-            $auctionParticipant = new AuctionParticipant();
-            $auctionParticipant->setDate(new \DateTime()); 
-            $auctionParticipant->setLove(1);
-            $auctionParticipant->setIdAuction($auction);
-            $auctionParticipant->setIdParticipant($uRepo->find($idUser));
-            $entityManager->persist($auctionParticipant);
-        }
-        
-        $entityManager->flush();
         return $this->redirectToRoute('app_auction_show', [
             'idAuction' => $auction->getIdArtist(),
         ]);

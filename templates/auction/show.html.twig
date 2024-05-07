@@ -9,7 +9,6 @@
 	<head>
 
 		<link rel="stylesheet" href="{{ asset('css/ParticiperStyle.css') }}">
-		<link rel="stylesheet" href="{{ asset('css/stars.css') }}">
 	</head>
 	<div class="container mt-4 mb-4 p-3 d-flex justify-content-center">
 		<div class="card p-4">
@@ -34,8 +33,8 @@
 					<button class="btn1 btn-dark" id="participerButton" onclick="showPopup()">Participer</button>
 				</div>
 				<div id="popup" style="display: none;">
-					<form id="priceForm" method="post" action="{{ path('submit_price' , {'idUser': 13}) }}">
-						<input type="hidden" name="idAuction" value="{{ auction.idAuction }}">
+					<form id="priceForm" method="post" action="{{ path('submit_price' , {'idUser': 6}) }}">
+					<input type="hidden" name="idAuction" value="{{ auction.idAuction }}">
 						<label for="price">Enter the price:</label>
 						<input type="text" id="price" name="price">
 						<button type="submit" id="acheterButton">Effectuer</button>
@@ -58,26 +57,7 @@
 				</div>
 			</div>
 
-			<h3>Give a rating please!</h3>
-
-			<form id="ratingForm" action="{{ path('save_rating', {'idUser': 13}) }}" method="post">
-				<div class="star-group">
-					<input type="hidden" name="idAuction" value="{{ auction.idAuction }}">
-					<input type="radio" class="star" id="one" name="rating" value="1">
-					<label for="one"></label>
-					<input type="radio" class="star" id="two" name="rating" value="2">
-					<label for="two"></label>
-					<input type="radio" class="star" id="three" name="rating" value="3">
-					<label for="three"></label>
-					<input type="radio" class="star" id="four" name="rating" value="4">
-					<label for="four"></label>
-					<input type="radio" class="star" id="five" name="rating" value="5">
-					<label for="five"></label>
-				</div>
-				<button type="submit">Submit Rating</button>
-			</form>
-
-
+			
 			<a href="{{ path('app_auction_index') }}">back to list</a>
 
 			<a href="{{ path('app_auction_edit', {'idAuction': auction.idAuction}) }}">edit</a>
@@ -89,46 +69,12 @@
 
 	<script>
 		function showPopup() {
-document.getElementById('popup').style.display = 'block';
-}
+			document.getElementById('popup').style.display = 'block';
+		}
 
-document.getElementById('acheterButton').addEventListener('click', function () {
-document.getElementById('popup').style.display = 'none';
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-const submitBtn = document.getElementById("submitRating");
-
-submitBtn.addEventListener("click", function (event) {
-event.preventDefault(); // Prevent default link behavior
-
-const selectedStar = document.querySelector(".star:checked");
-if (selectedStar) {
-const ratingValue = selectedStar.value;
-// Get the value directly from the selected input
-
-// Construct the JSON data
-const jsonData = JSON.stringify({rating: ratingValue});
-
-// Send the AJAX request
-const xhr = new XMLHttpRequest();
-xhr.open("POST", "{{ path('save_rating', {'idUser': 13 }) }}", true);
-xhr.setRequestHeader("Content-Type", "application/json");
-xhr.onreadystatechange = function () {
-if (xhr.readyState === XMLHttpRequest.DONE) {
-if (xhr.status === 200) { // Afficher un message de succès ou effectuer d'autres actions si nécessaire
-console.log("Rating saved successfully.");
-} else {
-console.error("Failed to save rating.");
-}
-}
-};
-xhr.send(jsonData); // Send JSON data in the request body
-} else {
-console.error("No star selected.");
-}
-});
-});
+		document.getElementById('acheterButton').addEventListener('click', function () {
+			document.getElementById('popup').style.display = 'none';
+		});
 	</script>
 
 {% endblock %}

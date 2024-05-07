@@ -81,7 +81,6 @@ class AuctionParticipantController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $entityManager->flush();
 
             return $this->redirectToRoute('app_auction_participant_index', [], Response::HTTP_SEE_OTHER);
@@ -103,7 +102,4 @@ class AuctionParticipantController extends AbstractController
 
         return $this->redirectToRoute('app_auction_participant_index', [], Response::HTTP_SEE_OTHER);
     }
-
-    
 }
-
