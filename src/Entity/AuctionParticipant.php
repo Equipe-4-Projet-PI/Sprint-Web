@@ -10,26 +10,33 @@ use Symfony\Component\Validator\Constraints\Date;
 #[ORM\Entity(repositoryClass: AuctionParticipantRepository::class)]
 class AuctionParticipant
 {
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(name: "Id_AucPart",type: "integer")]
+    private ?int $Id_AucPart=null;
+
     #[ORM\Column(type: "float")]
-    private ?float $prix;
+    private ?float $prix=null;
 
 
-    #[ORM\Column(name: "date", type: "date", nullable: false)]
-    private ?Date $date = null;
+    #[ORM\Column(name: "date", type: "datetime" , nullable:true)]
+    private  $date = null;
 
     #[ORM\Column(type: "integer")]
     private $love = '0';
-    #[ORM\Column(type: "integer")]
+    
 
-    private $Ratingove = '0';
-
-    #[ORM\Id]
     #[ORM\Column(type: "integer")]
-    #[ORM\OneToOne(targetEntity : "User", inversedBy : 'id_User')]
+    private $rating = '0';
+
+    
+    #[ORM\JoinColumn(name:"Id_Participant", referencedColumnName:"Id_User")]
+    #[ORM\OneToOne(targetEntity :"User")]
     private ?User $idParticipant;
 
-    #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity : "Auction", inversedBy: '$idAuction' )]
+    
+    #[ORM\ManyToOne(targetEntity : "Auction")]
+    #[ORM\JoinColumn(name:"Id_Auction", referencedColumnName:"id_Auction")]
     private ?Auction $idAuction;
 
     public function getPrix(): ?float
@@ -49,11 +56,10 @@ class AuctionParticipant
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $date): static
+    
+    public function setDate(): void
     {
-        $this->date = $date;
-
-        return $this;
+        $this->date = new \DateTime();
     }
 
     public function getLove(): ?int
@@ -68,14 +74,14 @@ class AuctionParticipant
         return $this;
     }
 
-    public function getRatingove(): ?int
+    public function getRating(): ?int
     {
-        return $this->Ratingove;
+        return $this->rating;
     }
 
-    public function setRatingove(int $Ratingove): static
+    public function setRating(int $rating): static
     {
-        $this->Ratingove = $Ratingove;
+        $this->rating = $rating;
 
         return $this;
     }
@@ -104,6 +110,12 @@ class AuctionParticipant
         return $this;
     }
 
+    public function getIdAucPart(): ?int
+    {
+        return $this->Id_AucPart;
+    }
+
+    
    
 
    

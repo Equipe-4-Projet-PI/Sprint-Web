@@ -22,8 +22,8 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/auction')]
 class AuctionController extends AbstractController
 {
-    #[Route('_', name: 'app_auction_index', methods: ['GET'])]
-    public function index(AuctionRepository $auctionRepository, AuctionParticipantRepository $apRepo , PaginatorInterface $pi , Request $req): Response
+    #[Route('_{id_user}', name: 'app_auction_index', methods: ['GET'])]
+    public function index(AuctionRepository $auctionRepository, AuctionParticipantRepository $apRepo , PaginatorInterface $pi , Request $req,$id_user): Response
     {
         $data =$auctionRepository->findAll();
         $auctions = $pi->paginate(
@@ -46,6 +46,7 @@ class AuctionController extends AbstractController
             'participants' => $participants,
             'PartsRating' => $participantWithRating,
             'AvgRating' => $averageRating,
+            'id_user'=>$id_user
         ]);
     }
 
