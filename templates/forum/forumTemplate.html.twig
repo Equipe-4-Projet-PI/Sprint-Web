@@ -56,7 +56,12 @@
 </style>
 <div class="card">
   <div class="card-header">
+  {% if idu is defined %}
+    <h2><a class="titleButt2" href="{{path('app_list_posts_by_forum_user',{'idf':f.getIdForum , 'idu':idu.idUser })}}">{{ f.title }}</a></h2>
+  {% else %}
     <h2><a class="titleButt2" href="{{path('app_list_posts_by_forum',{'idf':f.getIdForum})}}">{{ f.title }}</a></h2>
+  {% endif %}
+    
     <div class="card-meta">
       <span>Posts : {{ f.repliesNumber }}</span>
       <span>Date : {{ f.getDate| date("d/m/Y") }}</span>

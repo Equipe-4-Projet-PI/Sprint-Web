@@ -55,17 +55,9 @@ class ForumController extends AbstractController
             'controller_name' => 'ForumController',
         ]);
     }
-    //List The Forums
-    #[Route('/forumlist',name:'app_list_forums')]
-    public function getAll(ForumRepository $repo){
-        $forums = $repo->findAll();
-        return $this->render('forum/displayForums.html.twig',[
-            'forums'=>$forums
-        ]);
-    }
     ///LIST WITH PAGINATION/////
-    #[Route('/forumslist',name:'app_lists_forum')]
-    public function getsAll(ForumRepository $repo, PaginatorInterface $paginator,Request $req){
+    #[Route('/forumlist',name:'app_list_forums')]
+    public function getAll(ForumRepository $repo, PaginatorInterface $paginator,Request $req){
         $data = $repo->findAll();
         $forums = $paginator->paginate(
             $data,
@@ -79,6 +71,9 @@ class ForumController extends AbstractController
             'weather'=>$Ar,
         ]);
     }
+   
+
+    ///////////////////////////  ADDDDDDINNNNNNNNNGGGGGGG ////////////////////////////////////
     //Add a Forum
     #[Route('/forumadd',name:'app_add_forum')]
     public function AddForum(Request $req,ManagerRegistry $manager){
@@ -95,6 +90,25 @@ class ForumController extends AbstractController
         }
         return $this->render('forum/addForum.html.twig',['f'=>$form->createView()]);
     }
+    //Add a Forum keep User ID connected
+    #[Route('/forumadds_{idu}',name:'app_add_forum_user')]
+    public function AddForumWithUserConnected($idu,Request $req,ManagerRegistry $manager){
+        $Newforum = new Forum();
+        $user = $idu;
+        $form = $this->createForm(ForumType::class,$Newforum);
+        $form->handleRequest($req);
+        if($form->isSubmitted()){
+            $Newforum->setRepliesNumber(0);
+            $today = new DateTime();
+            $Newforum->setDate($today);
+            $manager->getManager()->persist($Newforum);
+            $manager->getManager()->flush();
+            return $this->redirectToRoute('app_lists_forum_user', ['idu' => $user]);
+        }
+        return $this->render('forum/addForum.html.twig',['f'=>$form->createView()]);
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////
+
     //Delete the Forums
     #[Route('/forum/delete/{id}',name:'app_delete_forum')]
     public function delete($id,ManagerRegistry $manager,ForumRepository $repo){
@@ -118,8 +132,8 @@ class ForumController extends AbstractController
     }
     //////////////   Search SECTION   //////////////
     //List The Forums to search
-    #[Route('/forumlistsearchres',name:'forums_search_res')]
-    public function searchfunc(Request $request, ForumRepository $forumRepository) : Response
+    #[Route('/forumlistsearchres_{idu}',name:'forums_search_res')]
+    public function searchfunc($idu,Request $request, ForumRepository $forumRepository,UserRepository $Urepo) : Response
     {
         $query = $request->query->get('query');
         $forums = $forumRepository->searchByName($query); // Implement this method in your ForumRepository
@@ -130,12 +144,16 @@ class ForumController extends AbstractController
             $forums = $forumRepository->findAll();
         }
 
+        //keep user
+        $user = $Urepo -> find($idu);
+
         return $this->render('forum/searchResults.html.twig', [
             'forums' => $forums,
+            'idu' => $user,
         ]);
     }
-    #[Route('/forumlistsearch',name:'forums_search')]
-    public function search(ForumRepository $repo, Request $request) : Response
+    #[Route('/forumlistsearch_{idu}',name:'forums_search')]
+    public function search($idu,ForumRepository $repo, Request $request,UserRepository $Urepo) : Response
     {
         
         $searchTerm = $request->query->get('query');
@@ -147,10 +165,12 @@ class ForumController extends AbstractController
             $searchResults = $repo->findAll();
         }
         
-        
+        //keep user
+        $user = $Urepo -> find($idu);
         
         return $this->render('forum/search.html.twig', [
-            'forums' => $searchResults
+            'forums' => $searchResults,
+            'idu' => $user,
         ]);
     }
 
@@ -180,4 +200,37 @@ class ForumController extends AbstractController
         $manager->getManager()->flush();
         return $this->redirectToRoute('ForumsAdmin');
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //                _    _  _____ ______ _____  
+    //               | |  | |/ ____|  ____|  __ \ 
+    //               | |  | | (___ | |__  | |__) |
+    //               | |  | |\___ \|  __| |  _  / 
+    //               | |__| |____) | |____| | \ \ 
+    //                \____/|_____/|______|_|  \_\
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+
+     ///LIST WITH PAGINATION WITH USER CONNECTED/////
+     #[Route('/forumslist_{idu}',name:'app_lists_forum_user')]
+     public function getsAll($idu,UserRepository $Urepo,ForumRepository $repo, PaginatorInterface $paginator,Request $req){
+         //Pagination Section
+         $data = $repo->findAll();
+         $forums = $paginator->paginate(
+             $data,
+             $req->query->getInt('page',1),
+             4
+         );
+         //Weather Section
+         $Ar = [];
+         $Ar[] = $this->getWeather();
+         // User Section//
+         $user = $Urepo->find($idu);
+         /////////////////
+         return $this->render('forum/displayForums.html.twig',[
+             'forums'=>$forums,
+             'weather'=>$Ar,
+             'idu'=>$user,
+         ]);
+     }
 }

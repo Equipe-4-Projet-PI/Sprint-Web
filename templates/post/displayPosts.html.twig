@@ -25,6 +25,20 @@
     position : absolute;
     right : 1em;
   }
+  .fcc-btn-pdf {
+    background-color: lightblue;
+    color: white;
+    padding: 15px 25px;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    display: inline-block;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position : absolute;
+    right : 1em;
+    top :13em;
+  }
 
 </style>
   <!-- ======= Hero Section ======= -->
@@ -34,16 +48,23 @@
         <div class="col-lg-6 text-center">
         {% if posts is empty %}
           <p>No Records</p>
+          <a class="fcc-btn" href="{{path('app_add_post_diff_user&forum',{'idf':idf,'idu':idu.idUser})}}">+</a>
         {% else %}
           {% set firstPost = posts[0] %}
-          <a class="fcc-btn" href="{{path('app_add_post_diff_forum',{'idf':firstPost.idForum.getIdForum})}}">+</a>
+          {% if (idu is defined and idu != null) %}
+            <a class="fcc-btn" href="{{path('app_add_post_diff_user&forum',{'idf':firstPost.idForum.getIdForum,'idu':idu.idUser})}}">+</a>
+            {% else %}
+            <a class="fcc-btn" href="{{path('app_add_post_diff_forum',{'idf':firstPost.idForum.getIdForum})}}">+</a>
+          {% endif %}
+          
+          <a class="fcc-btn-pdf" href="{{path('app_pdf',{'id':firstPost.idForum.getIdForum})}}">PDF</a>
         {% endif %}
         </div>
       </div>
       <div>
         {% for p in posts %}
-          {% if (idU is defined and idU != null) %}
-            {% if p.idUser.idUser == idU.idUser %}
+          {% if (idu is defined and idu != null) %}
+            {% if p.idUser.idUser == idu.idUser %}
               {% include 'post/MypostTemplate.html.twig' %}
             {% else %}
               {% include 'post/postTemplate.html.twig' %}

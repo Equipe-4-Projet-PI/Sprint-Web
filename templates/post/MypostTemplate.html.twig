@@ -74,6 +74,7 @@
         <div class="like-container">
             <p>{{ p.likeNumber }}</p>
             <p> Can't Like it's mine </p>
+            <a href="{{path('app_delete_post_user',{'idp':p.idPost , 'idu':p.idUser.idUser})}}">Delete</a>
         </div>
     </div>
 </div>

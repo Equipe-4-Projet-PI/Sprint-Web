@@ -67,7 +67,12 @@ class ForumRepository extends ServiceEntityRepository
         $result = $req->getResult();
     
         if (empty($result)) {
-            return [];
+            //$manager = $this->getEntityManager();
+            //$req = $manager->createQuery('SELECT f FROM App\Entity\Forum f');
+            //$result = $req->getResult();
+            $forum = new Forum();
+            $forum->setTitle("No records");
+            $result[] = $forum;
         }
 
         return $result;

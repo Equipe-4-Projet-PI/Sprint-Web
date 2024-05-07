@@ -64,7 +64,11 @@
           </li>
           <li><a href="services.html">Services</a></li>
           <li><a href="contact.html">Contact</a></li>
-          <li><a href="{{path('app_list_forums')}}">Forums</a></li>
+          {% if idu is defined %}
+            <li><a href="{{path('app_lists_forum_user',{'idu':idu.idUser })}}">Forums</a></li>
+          {% else %}
+            <li><a href="{{path('app_lists_forum_user',{'idu':1 })}}">Forums</a></li>
+          {% endif %} 
         </ul>
       </nav><!-- .navbar -->
 

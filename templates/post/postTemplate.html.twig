@@ -73,7 +73,7 @@
         <p class="date">Date: {{ p.timeofcreation| date("d/m/Y H:i:s") }}</p>
         <div class="like-container">
             <p>{{ p.likeNumber }}</p>
-            <a href={{path('app_update_post_like',{id:p.idPost} )}}>Like</a>
+            <a href={{path('app_update_post_like_user',{'idp':p.idPost,'idu':idu.idUser} )}}>Like</a>
         </div>
     </div>
 </div>
