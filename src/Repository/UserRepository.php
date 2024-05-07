@@ -63,6 +63,15 @@ class UserRepository extends ServiceEntityRepository
             ->setParameter('phone', $phone)
             ->getQuery()
             ->getOneOrNullResult();
+
+    /**
+     * @param int $id L'ID de l'utilisateur à rechercher
+     * @return User|null L'utilisateur trouvé ou null si non trouvé
+     */
+    }
+    public function findUserById(int $id): ?User
+    {
+        return $this->findOneBy(['id' => $id]);
     }
 
 

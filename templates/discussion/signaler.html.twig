@@ -1,0 +1,23 @@
+{% extends 'home.html.twig' %}
+
+{% block title %}Signaler la discussion{% endblock %}
+
+{% block body %}
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+     <h1>Signaler la discussion {{ discussion.receiver.username }}</h1>
+    <br>
+    <form method="post" action="{{ path('app_discussion_signal', {'iddis': discussion.iddis}) }}">
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit">Signaler</button>
+        {{ form_end(form) }}
+    </form>
+
+        <a href="{{ path('app_discussion_index') }}">Retour aux discussions</a>
+
+{% endblock %}

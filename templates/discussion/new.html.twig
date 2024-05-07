@@ -1,0 +1,19 @@
+{% extends 'home.html.twig' %}
+
+{% block title %}New Discussion{% endblock %}
+
+{% block body %}
+
+<br>
+<br>
+<br>
+<br>
+
+<h1>Create new Discussion</h1>
+
+{{ include('discussion/_form.html.twig') }}
+
+<a href="{{ path('app_discussion_index') }}" class="custom-button custom-button-extremite custom-button-retour">
+    <img src="{{ asset('img/discussion/bouton-retour.png') }}" alt="Retour aux discussions" style="width: 30px; height: auto;">
+</a>
+{% endblock %}
