@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\LoginType;
 use App\Form\SignupType;
+use App\Repository\EventRepository;
 use App\Repository\ForumRepository;
 use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
@@ -191,18 +192,19 @@ class UserController extends AbstractController
 
 
     #[Route('/Admin', name: 'Admin')]
-    public function Admin( UserRepository $repo,ForumRepository $repoF,ProductRepository $repoP): Response
+    public function Admin( UserRepository $repo,ForumRepository $repoF,ProductRepository $repoP,EventRepository $repoE): Response
     {
         $users = $repo->findAll() ;
         $NumForums = $repoF ->numberOfForums(); 
         $usernumbers = $repo ->numberOfUsers();
         $productsnumbers= $repoP -> numberOfProducts();
-
+        $eventnumbers = $repoE->numberOfEvents();
         return $this->render('admin/user/UsersAdmin.html.twig', [
             'users' => $users ,
             'usernumber'=> $usernumbers,
             'NumForms'=> $NumForums,
-            'productnumber'=> $productsnumbers
+            'productnumber'=> $productsnumbers,
+            'NumEvents'=> $eventnumbers,
         ]);
     }
     #[Route('/user/delete/{id}', name: 'user_delete')]

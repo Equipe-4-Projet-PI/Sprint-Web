@@ -1,9 +1,24 @@
-{% extends 'base.html.twig' %}
+{% extends 'Home.html.twig' %}
 
 {% block title %}Events index{% endblock %}
-
-{% block content %}
-    <div id="pricing" class="pricing">
+ {% block navbar %}
+   
+    {% if id_user %}
+	    <li><a href="{{path('app_product_index',{'id_user': id_user })}}" >Gallery</a> 
+        <li><a href="{{path('app_lists_forum_user',{'idu': id_user })}}" >Forums</a>
+        <li><a href="{{path('app_auction_index',{ 'id_user': id_user })}}">Auction</a></li> 
+        <li><a href="{{ path('app_discussion_index', { 'id_user': id_user }) }}">Messenger</a></li> 
+		<li><a href="{{ path('app_event_index_front', { 'id_user': id_user }) }}"class="active" >Events</a></li> 
+        <li><a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a></li>
+    {% endif %}
+    {% endblock %}
+{% block body %}
+ <section id="hero" class="hero d-flex flex-column justify-content-center align-items-center" data-aos="fade" data-aos-delay="1500">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-6 text-center">
+         
+ <div id="pricing" class="pricing">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -25,7 +40,7 @@
                                 <a class="btn-get-started" href="#" onclick="confirmParticipation({{ event.idEvent }})">Participer</a>
                             </div>
                            
-                            <a class="details-link" href="{{ path('app_workshop_index_front', {'idEvent': event.idEvent}) }}"><i class="bi bi-link-45deg"></i>Workshops</a>
+                            <a class="details-link" href="{{ path('app_workshop_index_front', {'idEvent': event.idEvent , 'id_user':id_user}) }}"><i class="bi bi-link-45deg"></i>Workshops</a>
                               <div id="qr-code-{{ event.idEvent }}" class="event-qr-code"></div>
                         </div>
                     </div>
@@ -39,7 +54,7 @@
     <script>
         function confirmParticipation(eventId) {
             if (confirm("Are you sure you want to participate?")) {
-                var participationUrl = "{{ path('app_event_participation', {'idEvent': 'eventId'}) }}".replace('eventId', eventId);
+                var participationUrl = "{{ path('app_event_participation', {'idEvent': 'eventId','id_user' : id_user}) }}".replace('eventId', eventId);
                 window.location.href = participationUrl;
             }
         }
@@ -60,4 +75,29 @@ document.addEventListener('DOMContentLoaded', function() {
     {% endfor %}
 });
 </script>
+
+        </div>
+      </div>
+    </div>
+  </section><!-- End Hero Section -->
 {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

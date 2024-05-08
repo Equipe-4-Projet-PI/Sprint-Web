@@ -26,8 +26,8 @@ class WorkshopController extends AbstractController
             'event'=>$event,
         ]);
     }
-    #[Route('/front/{idEvent}', name: 'app_workshop_index_front', methods: ['GET'])]
-    public function indexFront(EntityManagerInterface $entityManager,Event $event): Response
+    #[Route('front_{idEvent}-{id_user}', name: 'app_workshop_index_front', methods: ['GET'])]
+    public function indexFront(EntityManagerInterface $entityManager,Event $event,$id_user): Response
     {
         $workshops = $entityManager
             ->getRepository(Workshop::class)
@@ -36,6 +36,7 @@ class WorkshopController extends AbstractController
         return $this->render('workshop/indexFront.html.twig', [
             'workshops' => $workshops,
             'event'=>$event,
+            'id_user'=>$id_user
         ]);
     }
     #[Route('/new/{idEvent}', name: 'app_workshop_new', methods: ['GET', 'POST'])]

@@ -7,6 +7,10 @@ use App\Entity\Workshop;
 use App\Entity\User;
 use App\Entity\Participation;
 use App\Form\EventType;
+use App\Repository\EventRepository;
+use App\Repository\ForumRepository;
+use App\Repository\ProductRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +23,7 @@ use Dompdf\Options;
 class EventController extends AbstractController
 {
     #[Route('/', name: 'app_event_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    public function index(EntityManagerInterface $entityManager,UserRepository $repo,ForumRepository $repoF,ProductRepository $repoP,EventRepository $repoE): Response
     {
         $events = $entityManager
             ->getRepository(Event::class)
@@ -27,10 +31,19 @@ class EventController extends AbstractController
             $workshops = $entityManager
             ->getRepository(Workshop::class)
             ->findAll();
+            $NumForums = $repoF ->numberOfForums(); 
+            $usernumbers = $repo ->numberOfUsers();
+            $productsnumbers= $repoP -> numberOfProducts();
+            $eventnumbers = $repoE->numberOfEvents();
 
         return $this->render('event/index.html.twig', [
             'events' => $events,
             'workshops'=>$workshops,
+            'usernumber'=> $usernumbers,
+            'NumForms'=> $NumForums,
+            'productnumber'=> $productsnumbers,
+            'NumEvents'=> $eventnumbers,
+
         ]);
     }
     #[Route('/pdfcatalog', name: 'app_event_pdf', methods: ['GET'])]
@@ -101,8 +114,8 @@ class EventController extends AbstractController
             'participations' => $parts,
         ]);
     }
-    #[Route('/Front', name: 'app_event_index_front', methods: ['GET'])]
-    public function indexFront(EntityManagerInterface $entityManager): Response
+    #[Route('Front{id_user}', name: 'app_event_index_front', methods: ['GET'])]
+    public function indexFront(EntityManagerInterface $entityManager,$id_user): Response
     {
         $events = $entityManager
             ->getRepository(Event::class)
@@ -110,19 +123,20 @@ class EventController extends AbstractController
 
         return $this->render('event/indexFront.html.twig', [
             'events' => $events,
+            'id_user' =>$id_user
         ]);
     }
-    #[Route('/participer/{idEvent}', name: 'app_event_participation', methods: ['GET'])]
-    public function participer(EntityManagerInterface $entityManager,Event $e): Response
+    #[Route('/participer/{idEvent}_{id_user}', name: 'app_event_participation', methods: ['GET'])]
+    public function participer(EntityManagerInterface $entityManager,Event $e,UserRepository $uREPO,$id_user): Response
     {
         $p=new participation();
         $p->setIdEvent($e);
         $repository = $entityManager->getRepository(User::class);
-        $user = $repository->find(5);
+        $user = $uREPO->find($id_user);
         $p->setIdUser($user);
         $entityManager->persist($p);
         $entityManager->flush();
-        return $this->redirectToRoute('app_event_index_front', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_event_index_front', ['id_user'=>$id_user], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/new', name: 'app_event_new', methods: ['GET', 'POST'])]
