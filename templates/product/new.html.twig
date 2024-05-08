@@ -1,5 +1,14 @@
 {% extends 'Home.html.twig' %}
-
+{% block navbar %}
+   
+    {% if id_user %}
+	    <li><a href="{{path('app_product_index',{'id_user': id_user })}}"class="active" >Gallery</a> 
+        <li><a href="{{path('app_lists_forum_user',{'idu': id_user })}}" >Forums</a>
+        <li><a href="{{path('app_auction_index',{ 'id_user': id_user })}}">Auction</a></li>
+        <li><a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a></li>
+        <li><a href="{{ path('app_discussion_index', { 'id_user': id_user }) }}">Messenger</a></li> 
+    {% endif %}
+    {% endblock %}
 {% block title %}New Product{% endblock %}
 
 {% block body %}
@@ -10,7 +19,7 @@
         <div class="col-lg-6 text-center">
             <h1>Create new Product</h1>
              {{ include('product/_form.html.twig') }}
-             <a href="{{ path('app_product_index') }}">back to list</a>
+             <a href="{{ path('app_product_index' , { 'id_user': id_user }) }}">back to list</a>
         </div>
       </div>
     </div>

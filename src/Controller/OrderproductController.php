@@ -17,11 +17,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class OrderproductController extends AbstractController
 {
-    #[Route('/orderproduct', name: 'app_orderproduct_index', methods: ['GET'])]
-    public function index(OrderRepository $orderRepository): Response
+    #[Route('/orderproduct_{id_user}', name: 'app_orderproduct_index', methods: ['GET'])]
+    public function index(OrderRepository $orderRepository,$id_user): Response
     {
         return $this->render('orderproduct/index.html.twig', [
             'orderproducts' => $orderRepository->findAll(),
+            'id_user'=>$id_user
         ]);
     }
 

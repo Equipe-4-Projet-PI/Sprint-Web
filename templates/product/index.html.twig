@@ -2,6 +2,17 @@
 
 {% block title %}Product index{% endblock %}
 
+ {% block navbar %}
+   
+    {% if id_user %}
+	    <li><a href="{{path('app_product_index',{'id_user': id_user })}}"class="active" >Gallery</a> 
+        <li><a href="{{path('app_lists_forum_user',{'idu': id_user })}}" >Forums</a>
+        <li><a href="{{path('app_auction_index',{ 'id_user': id_user })}}">Auction</a></li>
+        <li><a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a></li>
+        <li><a href="{{ path('app_discussion_index', { 'id_user': id_user }) }}">Messenger</a></li> 
+    {% endif %}
+    {% endblock %}
+
 {% block stylesheets %}
     <style>
         .card {
@@ -28,13 +39,13 @@
     <div class="row">
         <div class="col-md-12">
             <h1 class="mb-4">Product index</h1>
-            
+             {% if id_user %}
             <a href="{{ path('app_product_new',{ 'id_user': id_user }) }}" class="btn btn-success mb-4">Create new</a>
-            <a href="{{ path('app_orderproduct_index') }}" class="btn btn-success mb-4">View Orders</a>
+            <a href="{{ path('app_orderproduct_index',{ 'id_user': id_user }) }}" class="btn btn-success mb-4">View Orders</a>
             <a href="{{ path('app_product_index',{ 'id_user': id_user }) }}" class="btn btn-secondary mb-4" >All Products</a>
-            <a href="{{ path('app_product_forsale',{ 'id_user': id_user }) }}" class="btn btn-primary mb-4" >For Sale</a>
+            <a href="{{ path('app_product_forsale') }}" class="btn btn-primary mb-4" >For Sale</a>
             <a href="{{ path('app_product_notforsale',{ 'id_user': id_user }) }}" class="btn btn-primary mb-4" >Not For Sale</a>
-
+{% endif %}
         </div>
     </div>
 

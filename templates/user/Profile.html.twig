@@ -1,5 +1,15 @@
 {% extends 'Home.html.twig' %}
 {% block title %}Profile{% endblock %}
+{% block navbar %}
+   {% set id_user = user.idUser %}
+    {% if id_user %}
+	    <li><a href="{{path('app_product_index',{'id_user': id_user })}}" >Gallery</a> 
+        <li><a href="{{path('app_lists_forum_user',{'idu': id_user })}}" >Forums</a>
+        <li><a href="{{path('app_auction_index',{ 'id_user': id_user })}}" >Auction</a></li>
+        <li><a href="{{ path('Profile', { 'id_user': id_user }) }}"class="active" >Profile</a></li>
+        <li><a href="{{ path('app_discussion_index', { 'id_user': id_user }) }}">Messenger</a></li> 
+    {% endif %}
+{% endblock %}
 {% block body %}
 
 

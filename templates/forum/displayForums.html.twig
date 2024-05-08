@@ -3,6 +3,20 @@
 {% block title %}Display Forums
 {% endblock %}
 
+  {% block navbar %}
+    {% set id_user = idu.idUser %}
+    {% if id_user %}
+	    <li><a href="{{path('app_product_index',{'id_user': id_user })}}" >Gallery</a> 
+        <li><a href="{{path('app_lists_forum_user',{'idu': id_user })}}" class="active">Forums</a>
+        <li><a href="{{path('app_auction_index',{ 'id_user': id_user })}}">Auction</a></li>
+        <li><a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a></li>
+        <li><a href="{{ path('app_discussion_index', { 'id_user': id_user }) }}">Messenger</a></li> 
+    {% endif %}
+    {% endblock %}
+
+
+
+
 {% block body %}
 	<style>
 		.DisplayTable {

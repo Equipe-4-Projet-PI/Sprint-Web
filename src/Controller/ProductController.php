@@ -22,13 +22,12 @@ class ProductController extends AbstractController
 
    
 
-    #[Route('/product', name: 'app_product_index', methods: ['GET'])]
-    public function index(ProductRepository $productRepository , Request $req): Response
+    #[Route('/product_{id_user}', name: 'app_product_index', methods: ['GET'])]
+    public function index(ProductRepository $productRepository , Request $req,$id_user): Response
     {
-        
-        $this->id_user = $req->query->get('id_user');
         return $this->render('product/index.html.twig', [
             'products' => $productRepository->findAll(),
+            'id_user' =>$id_user
         ]);
     }
 
@@ -68,6 +67,7 @@ class ProductController extends AbstractController
         return $this->renderForm('product/new.html.twig', [
             'product' => $product,
             'form' => $form,
+            'id_user' => $id_user
         ]);
     }
 
@@ -142,23 +142,24 @@ class ProductController extends AbstractController
         ]);
     }
     #[Route('/product_forsale', name: 'app_product_forsale', methods: ['GET'])]
-    public function forsaleprod(ProductRepository $productRepository): Response
+    public function forsaleprod(ProductRepository $productRepository , $id_user): Response
     {
         return $this->render('product/index.html.twig', [
             'products' => $productRepository->findBy(['forsale' => true]),
-           
-        ]);
-    }
-    #[Route('/product_notforsale', name: 'app_product_notforsale', methods: ['GET'])]
-    public function notforsaleprod(ProductRepository $productRepository): Response
-    {
-        return $this->render('product/index.html.twig', [
-            'products' => $productRepository->findBy(['forsale' => false]),
             
         ]);
     }
-    #[Route('/app_search', name: 'app_search', methods: ['GET'])]
-    public function search(Request $request,ProductRepository $productRepository): Response
+    #[Route('/product_notforsale_{id_user}', name: 'app_product_notforsale', methods: ['GET'])]
+    public function notforsaleprod(ProductRepository $productRepository, $id_user): Response
+    {
+        return $this->render('product/index.html.twig', [
+            'products' => $productRepository->findBy(['forsale' => false]),
+            'id_user' =>$id_user
+            
+        ]);
+    }
+    #[Route('/app_search_{id_user}', name: 'app_search', methods: ['GET'])]
+    public function search(Request $request,ProductRepository $productRepository,$id_user): Response
     {
         $searchBy = $request->query->get('searchby');
         $searchText = $request->query->get('searchtext');
@@ -179,6 +180,7 @@ class ProductController extends AbstractController
 
     return $this->render('product/index.html.twig', [
         'products' => $products,
+        'id_user'=>$id_user
     ]);
     }
 }
