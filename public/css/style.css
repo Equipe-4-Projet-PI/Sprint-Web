@@ -39,14 +39,6 @@ body, html {
   height: 650px;
   box-shadow: 1px 1px 108.8px 19.2px rgb(25,31,53);
 }
-.container1{
-  margin: 0;
-  top: 200px;
-  left: 25%;
-  position: absolute;
-  text-align: center;
- 
-}
 
 .box h4 {
   font-family: 'Source Sans Pro', sans-serif;
@@ -149,27 +141,11 @@ label span {
   transition: 0.3s;
   cursor: pointer;
 }
-.btn3 {
-  border:0;
-  background: #7f5feb;
-  color: #dfdeee;
-  border-radius: 100px;
-  width: 340px;
-  height: 49px;
-  font-size: 16px;
-  position: absolute;
-  top: 75%;
-  left: 8%;
-  transition: 0.3s;
-  cursor: pointer;
-}
+
 .btn1:hover {
   background: #5d33e6;
 }
 .btn2:hover {
-  background: #5d33e6;
-}
-.btn3:hover {
   background: #5d33e6;
 }
 

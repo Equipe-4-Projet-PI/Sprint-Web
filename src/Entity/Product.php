@@ -3,43 +3,88 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\ProductRepository;
 
-#[ORM\Entity(repositoryClass: ProductRepository::class)]
+/**
+ * Product
+ *
+ * @ORM\Table(name="product", indexes={@ORM\Index(name="Id_User", columns={"Id_User"})})
+ * @ORM\Entity
+ */
 class Product
 {
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="Id_Product", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idProduct;
 
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(name: "Id_Product", type: "integer", nullable: false)]
-    private ?int $idProduct=null;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="Id_User", type="integer", nullable=false)
+     */
+    private $idUser;
 
-    #[ORM\Column(length: 255)]
-    private ?string $title=null;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Title", type="string", length=255, nullable=false)
+     */
+    private $title;
 
-    #[ORM\Column(length: 255)]
-    private ?string $description=null;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Description", type="string", length=255, nullable=false)
+     */
+    private $description;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="ForSale", type="boolean", nullable=false)
+     */
+    private $forsale;
 
-    #[ORM\Column(name: "ForSale", type: "boolean")]
-    private ?bool $forsale=null;
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="Price", type="float", precision=10, scale=0, nullable=false)
+     */
+    private $price;
 
-    #[ORM\Column(name: "Price", type: "float", precision: 10, scale: 0)]
-    private ?float $price=null;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="CreationDate", type="string", length=255, nullable=false)
+     */
+    private $creationdate;
 
-    #[ORM\Column(name:"CreationDate", type:"string", length:255)]
-    private ?String $creationdate=null;
-
-    #[ORM\Column(name: "ProductImage", type: "string", length: 255, nullable: false)]
-    private string $productimage;
-
-    #[ORM\ManyToOne(targetEntity: "User")]
-    #[ORM\JoinColumn(name: "Id_User", referencedColumnName: "Id_User")]
-    private ?User $idUser=null;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ProductImage", type="string", length=255, nullable=false)
+     */
+    private $productimage;
 
     public function getIdProduct(): ?int
     {
         return $this->idProduct;
+    }
+
+    public function getIdUser(): ?int
+    {
+        return $this->idUser;
+    }
+
+    public function setIdUser(int $idUser): static
+    {
+        $this->idUser = $idUser;
+
+        return $this;
     }
 
     public function getTitle(): ?string
@@ -110,18 +155,6 @@ class Product
     public function setProductimage(string $productimage): static
     {
         $this->productimage = $productimage;
-
-        return $this;
-    }
-
-    public function getIdUser(): ?User
-    {
-        return $this->idUser;
-    }
-
-    public function setIdUser(?User $idUser): static
-    {
-        $this->idUser = $idUser;
 
         return $this;
     }

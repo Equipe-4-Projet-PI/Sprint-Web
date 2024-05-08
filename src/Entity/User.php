@@ -4,68 +4,112 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints\Date;
-use App\Repository\UserRepository;
-use DateTime;
-use Symfony\Bundle\MakerBundle\Str;
 
-#[ORM\Entity(repositoryClass: UserRepository::class)]
+/**
+ * User
+ *
+ * @ORM\Table(name="user")
+ * @ORM\Entity
+ */
 class User
 {
-   
-     #[ORM\Id]
-     #[ORM\GeneratedValue]
-     #[ORM\Column(name:"Id_User", type:"integer", nullable:false)]
-    private ?int $idUser = null;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="Id_User", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idUser;
 
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="Username", type="string", length=255, nullable=true)
+     */
+    private $username;
 
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="Email", type="string", length=255, nullable=true)
+     */
+    private $email;
 
-     #[ORM\Column(length: 255)]
-    private ?string $username = null;
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="Password", type="string", length=255, nullable=true)
+     */
+    private $password;
 
-    #[ORM\Column(length: 255)]
-    private ?string $email = null ;
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="Role", type="string", length=255, nullable=true)
+     */
+    private $role;
 
-    #[ORM\Column(length: 255)]
-    private ?string $password = null;   
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="FirstName", type="string", length=255, nullable=true)
+     */
+    private $firstname;
 
-    #[ORM\Column(length: 255)]
-    private ?string $role = null;
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="Lastname", type="string", length=255, nullable=true)
+     */
+    private $lastname;
 
-    #[ORM\Column(length: 255)]
-    private ?string $firstname = null;
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="Adress", type="string", length=255, nullable=true)
+     */
+    private $adress;
 
-    #[ORM\Column(length: 255)]
-    private ?string  $lastname = null;  
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="Phone", type="string", length=255, nullable=true)
+     */
+    private $phone;
 
-    #[ORM\Column(length: 255)]
-    private ?string  $adress = null;
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="Gender", type="string", length=255, nullable=true)
+     */
+    private $gender;
 
-    #[ORM\Column(length: 255)]
-    private ?string $phone = null;
+    /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="DOB", type="date", nullable=true)
+     */
+    private $dob;
 
-    #[ORM\Column(length: 255)]
-    private ?string $gender  = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $dob = null ;
-
-    #[ORM\Column(length: 255)]
-    private ?string $imageurl = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $status = null;
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="ImageURL", type="string", length=255, nullable=true)
+     */
+    private $imageurl;
 
     public function getIdUser(): ?int
     {
         return $this->idUser;
     }
+
     public function getUsername(): ?string
     {
         return $this->username;
     }
 
-    public function setUsername(string $username): static
+    public function setUsername(?string $username): static
     {
         $this->username = $username;
 
@@ -77,7 +121,7 @@ class User
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(?string $email): static
     {
         $this->email = $email;
 
@@ -89,7 +133,7 @@ class User
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(?string $password): static
     {
         $this->password = $password;
 
@@ -101,7 +145,7 @@ class User
         return $this->role;
     }
 
-    public function setRole(string $role): static
+    public function setRole(?string $role): static
     {
         $this->role = $role;
 
@@ -113,7 +157,7 @@ class User
         return $this->firstname;
     }
 
-    public function setFirstname(string $firstname): static
+    public function setFirstname(?string $firstname): static
     {
         $this->firstname = $firstname;
 
@@ -125,7 +169,7 @@ class User
         return $this->lastname;
     }
 
-    public function setLastname(string $lastname): static
+    public function setLastname(?string $lastname): static
     {
         $this->lastname = $lastname;
 
@@ -137,9 +181,9 @@ class User
         return $this->adress;
     }
 
-    public function setAdress(string $address): static
+    public function setAdress(?string $adress): static
     {
-        $this->adress = $address;
+        $this->adress = $adress;
 
         return $this;
     }
@@ -149,7 +193,7 @@ class User
         return $this->phone;
     }
 
-    public function setPhone(string $phone): static
+    public function setPhone(?string $phone): static
     {
         $this->phone = $phone;
 
@@ -161,19 +205,19 @@ class User
         return $this->gender;
     }
 
-    public function setGender(string $gender): static
+    public function setGender(?string $gender): static
     {
         $this->gender = $gender;
 
         return $this;
     }
 
-    public function getDob(): ?string
+    public function getDob(): ?\DateTimeInterface
     {
         return $this->dob;
     }
 
-    public function setDob(string $dob): static
+    public function setDob(?\DateTimeInterface $dob): static
     {
         $this->dob = $dob;
 
@@ -185,21 +229,9 @@ class User
         return $this->imageurl;
     }
 
-    public function setImageurl(string $imageurl): static
+    public function setImageurl(?string $imageurl): static
     {
         $this->imageurl = $imageurl;
-
-        return $this;
-    }
-
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): static
-    {
-        $this->status = $status;
 
         return $this;
     }

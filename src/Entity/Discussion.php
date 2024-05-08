@@ -2,60 +2,60 @@
 
 namespace App\Entity;
 
-
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\DiscussionRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Symfony\Component\Validator\Constraints as Assert ;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity; 
 
-//use App\Entity\ExecutionContextInterface ;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use App\Entity\User; 
-
-#[ORM\Entity(repositoryClass: DiscussionRepository::class)]
+/**
+ * Discussion
+ *
+ * @ORM\Table(name="discussion", indexes={@ORM\Index(name="idSender", columns={"idSender"}), @ORM\Index(name="idReciever", columns={"idReciever"})})
+ * @ORM\Entity
+ */
 class Discussion
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private ?int $iddis;
-    
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(name: 'idreciever', referencedColumnName: 'Id_User')]
-    #[Assert\NotBlank(message:"Le contenu de message ne peut pas etre nul")]
-    private ?User $receiver;
-
-    #[ORM\Column]
-    private ?int $idsender = null;
-
-    #[ORM\Column]
-    private ?string $sig = null;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="idDis", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $iddis;
 
     /**
-     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="discussion")
+     * @var int
+     *
+     * @ORM\Column(name="idReciever", type="integer", nullable=false)
      */
-    private $messages;
+    private $idreciever;
 
-    public function __construct()
-    {
-        $this->messages = new ArrayCollection();
-    }
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="idSender", type="integer", nullable=false)
+     */
+    private $idsender;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="Sig", type="string", length=255, nullable=true)
+     */
+    private $sig;
 
     public function getIddis(): ?int
     {
         return $this->iddis;
     }
 
-    public function getReceiver(): ?User
+    public function getIdreciever(): ?int
     {
-        return $this->receiver;
+        return $this->idreciever;
     }
 
-    public function setReceiver(?User $receiver): self
+    public function setIdreciever(int $idreciever): static
     {
-        $this->receiver = $receiver;
+        $this->idreciever = $idreciever;
+
         return $this;
     }
 
@@ -64,7 +64,7 @@ class Discussion
         return $this->idsender;
     }
 
-    public function setIdsender(?int $idsender): self
+    public function setIdsender(int $idsender): static
     {
         $this->idsender = $idsender;
 
@@ -76,23 +76,12 @@ class Discussion
         return $this->sig;
     }
 
-    public function setSig(?string $sig): self
+    public function setSig(?string $sig): static
     {
         $this->sig = $sig;
 
         return $this;
     }
 
-    /**
-     * @return Collection|Message[]
-     */
-    public function getMessages(): Collection
-    {
-        return $this->messages;
-    }
-
-    /**
-     * @Assert\Callback
-     */
 
 }

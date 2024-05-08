@@ -1,0 +1,47 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Workshops{% endblock %}
+
+{% block content %}
+<div class="row">
+						<div class="col-12 col-lg-8 col-xxl-9 d-flex">
+							<div class="card flex-fill">
+								<div class="card-header">
+
+									<h5 class="card-title mb-0">Workshops for {{event.eName}}</h5>
+								</div>
+								<table class="table table-hover my-0">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Details</th>
+                <th>Image</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for workshop in workshops %}
+            <tr>
+                
+                <td>{{ workshop.title }}</td>
+                <td>{{ workshop.details }}</td>
+                <td>><img src="{{asset(workshop.image)}}" width="100" height="150" /></td>
+                
+                <td>
+                   
+                    <a href="{{ path('app_workshop_edit', {'idWorkshop': workshop.idWorkshop}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+    </div>
+						</div>
+                         <a href="{{ path('app_workshop_new', {'idEvent': event.idEvent}) }}">Create new</a>
+					
+					</div>
+{% endblock %}

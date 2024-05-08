@@ -2,48 +2,78 @@
 
 namespace App\Entity;
 
-use App\Repository\AuctionParticipantRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\AuctionRepository;
 
-#[ORM\Entity(repositoryClass: AuctionRepository::class)]
+/**
+ * Auction
+ *
+ * @ORM\Table(name="auction")
+ * @ORM\Entity
+ */
 class Auction
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: "integer" , name:"id_Auction")]
-    private ?int $idAuction = null;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
 
-    #[ORM\Column(length: 150)]
-    private ?string $nom = null;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nom", type="string", length=255, nullable=false)
+     */
+    private $nom;
 
-    #[ORM\Column(type: "datetime")]
-    private ?\DateTimeInterface $dateCloture = null;
+    /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="date_cloture", type="date", nullable=true)
+     */
+    private $dateCloture;
 
-    #[ORM\Column(type: "datetime")]
-    private ?\DateTimeInterface $dateLancement = null;
+    /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="date_lancement", type="date", nullable=true)
+     */
+    private $dateLancement;
 
-    #[ORM\Column(type: "float")]
-    private ?float $prixInitial = null;
+    /**
+     * @var float|null
+     *
+     * @ORM\Column(name="prix_initial", type="float", precision=10, scale=0, nullable=true)
+     */
+    private $prixInitial;
 
-    #[ORM\Column(name: "prix_final", type: "float", precision: 10, scale: 0, nullable: true)]
-    private ?float $prixFinal = null;
+    /**
+     * @var float|null
+     *
+     * @ORM\Column(name="prix_final", type="float", precision=10, scale=0, nullable=true)
+     */
+    private $prixFinal;
 
-    #[ORM\Column(type: "integer")]
-    private ?int $idProduit;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id_produit", type="integer", nullable=false)
+     */
+    private $idProduit;
 
-    #[ORM\Column(type: "integer")]
-    private ?int $idArtist; 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id_artist", type="integer", nullable=false)
+     */
+    private $idArtist;
 
-
-    private ?float $moyRating;
-
-    private ?int $nbreRating;
-
-    public function getIdAuction(): ?int
+    public function getId(): ?int
     {
-        return $this->idAuction;
+        return $this->id;
     }
 
     public function getNom(): ?string
@@ -54,6 +84,7 @@ class Auction
     public function setNom(string $nom): static
     {
         $this->nom = $nom;
+
         return $this;
     }
 
@@ -128,9 +159,6 @@ class Auction
 
         return $this;
     }
-    
-
-
 
 
 }

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Workshop
@@ -25,6 +26,7 @@ class Workshop
      * @var string
      *
      * @ORM\Column(name="Title", type="string", length=255, nullable=false)
+     * @Assert\NotBlank
      */
     private $title;
 
@@ -32,6 +34,7 @@ class Workshop
      * @var string
      *
      * @ORM\Column(name="Details", type="string", length=255, nullable=false)
+     * @Assert\NotBlank
      */
     private $details;
 
@@ -48,6 +51,59 @@ class Workshop
      * @ORM\Column(name="Id_Event", type="integer", nullable=false)
      */
     private $idEvent;
+
+    public function getIdWorkshop(): ?int
+    {
+        return $this->idWorkshop;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): static
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getDetails(): ?string
+    {
+        return $this->details;
+    }
+
+    public function setDetails(string $details): static
+    {
+        $this->details = $details;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): static
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function getIdEvent(): ?int
+    {
+        return $this->idEvent;
+    }
+
+    public function setIdEvent(int $idEvent): static
+    {
+        $this->idEvent = $idEvent;
+
+        return $this;
+    }
 
 
 }

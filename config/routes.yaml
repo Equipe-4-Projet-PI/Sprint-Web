@@ -1,7 +1,3 @@
-index:
-   path: /signup
-   controller: App\Controller\UserController::index
-search_discussion:
-    path: /searchdiscussion
-    controller: App\Controller\DiscussionController::searchDiscussionByUsername
-    methods: [GET]
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
