@@ -3,61 +3,32 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\OrderRepository;
 
-/**
- * Orderproduct
- *
- * @ORM\Table(name="orderproduct", indexes={@ORM\Index(name="Id_Product", columns={"Id_Product"}), @ORM\Index(name="Id_Product_2", columns={"Id_Product"})})
- * @ORM\Entity
- */
+#[ORM\Entity(repositoryClass: OrderRepository::class)]
 class Orderproduct
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="Id_Order", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $idOrder;
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: "IDENTITY")]
+    #[ORM\Column(name: "Id_Order", type: "integer", nullable: false)]
+    private ?int $idOrder;
 
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="Price", type="float", precision=10, scale=0, nullable=false)
-     */
-    private $price;
+    #[ORM\Column(name: "Price", type: "float", precision: 10, scale: 0, nullable: false)]
+    private ?float $price;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Title", type="string", length=255, nullable=false)
-     */
-    private $title;
+    #[ORM\Column(name: "Title", type: "string", length: 255, nullable: false)]
+    private ?string $title;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="OrderDate", type="string", length=255, nullable=false)
-     */
-    private $orderdate;
+    #[ORM\Column(name: "OrderDate", type: "string", length: 255, nullable: false)]
+    private ?string $orderdate;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Prod_img", type="string", length=255, nullable=false)
-     */
-    private $prodImg;
+    #[ORM\Column(name: "Prod_img", type: "string", length: 255, nullable: false)]
+    private ?string $prodImg;
 
-    /**
-     * @var \Product
-     *
-     * @ORM\ManyToOne(targetEntity="Product")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="Id_Product", referencedColumnName="Id_Product")
-     * })
-     */
-    private $idProduct;
+    #[ORM\ManyToOne(targetEntity: "Product")]
+    #[ORM\JoinColumn(name: "Id_Product", referencedColumnName: "Id_Product")]
+    private ?Product $idProduct;
+
 
     public function getIdOrder(): ?int
     {

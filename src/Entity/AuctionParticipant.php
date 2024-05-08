@@ -4,76 +4,47 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\AuctionParticipantRepository ;
+use Symfony\Component\Validator\Constraints\Date;
 
-/**
- * AuctionParticipant
- *
- * @ORM\Table(name="auction_participant", indexes={@ORM\Index(name="Id_Auction", columns={"Id_Auction"}), @ORM\Index(name="Id_Participant", columns={"Id_Participant"})})
- * @ORM\Entity
- */
+#[ORM\Entity(repositoryClass: AuctionParticipantRepository::class)]
 class AuctionParticipant
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(name: "Id_AucPart",type: "integer")]
+    private ?int $Id_AucPart=null;
 
-    /**
-     * @var float|null
-     *
-     * @ORM\Column(name="prix", type="float", precision=10, scale=0, nullable=true)
-     */
-    private $prix;
+    #[ORM\Column(type: "float")]
+    private ?float $prix=null;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
-     */
-    private $date = 'CURRENT_TIMESTAMP';
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="Love", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: "date", type: "datetime" , nullable:true)]
+    private  $date = null;
+
+    #[ORM\Column(type: "integer")]
     private $love = '0';
+    
 
-    /**
-     * @var \Auction
-     *
-     * @ORM\ManyToOne(targetEntity="Auction")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="Id_Auction", referencedColumnName="id")
-     * })
-     */
-    private $idAuction;
+    #[ORM\Column(type: "integer")]
+    private $rating = '0';
 
-    /**
-     * @var \User
-     *
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="Id_Participant", referencedColumnName="Id_User")
-     * })
-     */
-    private $idParticipant;
+    
+    #[ORM\JoinColumn(name:"Id_Participant", referencedColumnName:"Id_User")]
+    #[ORM\OneToOne(targetEntity :"User")]
+    private ?User $idParticipant;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    
+    #[ORM\ManyToOne(targetEntity : "Auction")]
+    #[ORM\JoinColumn(name:"Id_Auction", referencedColumnName:"id_Auction")]
+    private ?Auction $idAuction;
 
     public function getPrix(): ?float
     {
         return $this->prix;
     }
 
-    public function setPrix(?float $prix): static
+    public function setPrix(float $prix): static
     {
         $this->prix = $prix;
 
@@ -85,11 +56,10 @@ class AuctionParticipant
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $date): static
+    
+    public function setDate(): void
     {
-        $this->date = $date;
-
-        return $this;
+        $this->date = new \DateTime();
     }
 
     public function getLove(): ?int
@@ -100,6 +70,30 @@ class AuctionParticipant
     public function setLove(int $love): static
     {
         $this->love = $love;
+
+        return $this;
+    }
+
+    public function getRating(): ?int
+    {
+        return $this->rating;
+    }
+
+    public function setRating(int $rating): static
+    {
+        $this->rating = $rating;
+
+        return $this;
+    }
+
+    public function getIdParticipant(): ?User
+    {
+        return $this->idParticipant;
+    }
+
+    public function setIdParticipant(?User $idParticipant): static
+    {
+        $this->idParticipant = $idParticipant;
 
         return $this;
     }
@@ -116,17 +110,15 @@ class AuctionParticipant
         return $this;
     }
 
-    public function getIdParticipant(): ?User
+    public function getIdAucPart(): ?int
     {
-        return $this->idParticipant;
+        return $this->Id_AucPart;
     }
 
-    public function setIdParticipant(?User $idParticipant): static
-    {
-        $this->idParticipant = $idParticipant;
+    
+   
 
-        return $this;
-    }
+   
 
 
 }

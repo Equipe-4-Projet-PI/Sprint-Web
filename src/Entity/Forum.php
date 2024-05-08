@@ -4,55 +4,42 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ForumRepository;
+use Symfony\Component\Validator\Constraints\Date;
 
-/**
- * Forum
- *
- * @ORM\Table(name="forum")
- * @ORM\Entity
- */
+use Symfony\Component\Validator\Constraints as Assert;
+
+#[ORM\Entity(repositoryClass: ForumRepository::class)]
 class Forum
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id_forum", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $idForum;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $idForum=null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="title", type="string", length=255, nullable=false)
-     */
-    private $title;
+    #[Assert\NotBlank(message: "Le titre ne peut pas etre null")]
+    #[ORM\Column(length: 255)]
+    private ?string $title=null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="description", type="string", length=255, nullable=false)
-     */
-    private $description;
+    #[Assert\NotBlank(message: "La description ne peut pas etre null")]
+    #[ORM\Column(length: 255)]
+    private ?string $description=null;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="Replies_Number", type="integer", nullable=false)
-     */
-    private $repliesNumber;
+    #[ORM\Column]
+    private ?int $repliesNumber=null;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date", type="date", nullable=false)
-     */
-    private $date;
+    #[ORM\Column(name: "date", type: "date", nullable: false)]
+    private $date = null;
 
     public function getIdForum(): ?int
     {
         return $this->idForum;
+    }
+    public function setIdForum(int $id): static
+    {
+        $this->idForum = $id;
+        
+        return $this;
     }
 
     public function getTitle(): ?string
@@ -91,7 +78,7 @@ class Forum
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getDate():\DateTimeInterface
     {
         return $this->date;
     }
@@ -102,6 +89,5 @@ class Forum
 
         return $this;
     }
-
 
 }
