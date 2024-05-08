@@ -98,4 +98,46 @@ public function findDiscussionById(int $id): ?Discussion
 {
     return $this->find($id);
 }
+public function SEARCH(string $name): array {
+    $manager = $this->getEntityManager();
+    $query = $manager->createQuery('SELECT d FROM App\Entity\Discussion d JOIN App\Entity\User u WHERE u.username LIKE :name AND ((d.idsender = u.idUser) OR (d.receiver = u.idUser))')
+                    ->setParameter('name', '%' . $name . '%');
+    $result = $query->getResult();
+
+    if (empty($result)) {
+        $discussion = new Discussion();
+        $discussion->setIdsender(0);
+        $result[] = $discussion;
+    }
+
+    return $result;
+}
+
+    public function findByNonEmptySig(): array
+        {
+        return $this->createQueryBuilder('d')
+            ->where('d.sig IS NOT NULL')
+            ->getQuery()
+            ->getResult();
+        }   
+/*public function SEARCH(string $name): array {
+    $manager = $this->getEntityManager();
+    $query = $manager->createQuery('SELECT d 
+    FROM App\Entity\Discussion d 
+    JOIN App\Entity\User u 
+    WHERE ( (d.idsender = :currentUserId) 
+    AND ( (u.username LIKE :name AND (d.idsender = u.idUser OR d.receiver = u.idUser) ) ) )
+    ')
+                    ->setParameter('name', '%' . $name . '%');
+    $result = $query->getResult();
+
+    if (empty($result)) {
+        $discussion = new Discussion();
+        $discussion->setIdsender(0);
+        $result[] = $discussion;
+    }
+
+    return $result;
+}*/
+
 }

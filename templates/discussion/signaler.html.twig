@@ -2,6 +2,17 @@
 
 {% block title %}Signaler la discussion{% endblock %}
 
+{% block navbar %}
+   
+    {% if id_user %}
+	    <li><a href="{{path('app_product_index',{'id_user': id_user })}}" >Gallery</a> 
+        <li><a href="{{path('app_lists_forum_user',{'idu': id_user })}}" >Forums</a>
+        <li><a href="{{path('app_auction_index',{ 'id_user': id_user })}}" >Auction</a></li>
+        <li><a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a></li>
+        <li><a href="{{ path('app_discussion_index', { 'id_user': id_user }) }}"class="active" >Messenger</a></li> 
+    {% endif %}
+{% endblock %}
+
 {% block body %}
     <style>
         .container {
@@ -65,7 +76,7 @@
 <br>
     <div class="container">
         <h1 class="heading">Signaler la discussion avec {{ discussion.receiver.username }}</h1>
-        <form method="post" action="{{ path('app_discussion_signal', {'iddis': discussion.iddis}) }}" class="signal-form">
+        <form method="post" action="{{ path('app_discussion_signal', {'iddis': discussion.iddis , 'id_user': id_user }) }}" class="signal-form">
             {{ form_start(form) }}
             <div class="form-group">
                 {% for choice in form.motif %}
@@ -79,6 +90,6 @@
             <button type="submit" class="btn btn-primary">Signaler la discussion</button> 
             {{ form_end(form) }}
         </form>
-        <a href="{{ path('app_discussion_index') }}" class="back-link">Retour aux discussions</a>
+<a href="{{ path('app_discussion_index', {'id_user': id_user }) }}" class="back-link">Retour aux discussions</a>
     </div>
 {% endblock %}

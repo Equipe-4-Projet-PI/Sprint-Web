@@ -11,6 +11,27 @@
 	<link rel="stylesheet" href="{{asset('css/Table.css')}}">
 
 	<title>ArtyVenci | Admin  Dashboard</title>
+
+	    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
 </head>
 <body>
 
@@ -53,7 +74,7 @@
 				</a>
 			</li>
       <li>
-        <a href="{{ path('app_list_disc') }}">
+        <a href="{{ path('app_list_disc' , { 'id_user': id_user }) }}">
         <i class='bx bx-chat'></i>
         <span class="text">Discussion</span>
     </a>
@@ -69,7 +90,7 @@
 				</a>
 			</li>
 			<li>
-				<a href={{path('login')}} class="logout">
+				<a href={{path('login' , { 'id_user': id_user })}} class="logout">
 					<i class='bx bxs-log-out-circle' ></i>
 					<span class="text">Logout</span>
 				</a>
@@ -130,6 +151,37 @@
 <br>
 {% block  content %}
 
+		<h2 style="text-align: center;">Liste des Discussions Signalées</h2>
+<br>
+<br>
+<table>
+    <thead>
+        <tr>
+            <th style="text-align: center;">ID Discussion</th>
+            <th style="text-align: center;">Receiver</th>
+            <th style="text-align: center;">Sender</th>
+            <th style="text-align: center;">Raison de Signalement</th>
+			<th style="text-align: center;">Annuler le Signalement</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for discussion in discussions %}
+            <tr>
+                <td style="text-align: center;">{{ discussion.iddis }}</td>
+                <td style="text-align: center;">{{ discussion.receiver.username }}</td>
+                <td style="text-align: center;">{{ discussion.idsender }}</td>
+                <td style="text-align: center;">{{ discussion.sig }}</td>
+
+				<td style="text-align: center;" ><a href="{{ path('app_discussion_annul_signal', {'iddis': discussion.iddis ,  'id_user': id_user }) }}">
+						<img src="{{ asset('img/discussion/annulerSig.png') }}" alt="Annuler" width="30" height="30">				
+					</a>
+				</td> 
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</body>
 	{% endblock %}
 
 	</section>

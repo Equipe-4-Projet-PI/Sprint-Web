@@ -2,6 +2,17 @@
 
 {% block title %}Message index{% endblock %}
 
+{% block navbar %}
+   
+    {% if id_user %}
+	    <li><a href="{{path('app_product_index',{'id_user': id_user })}}" >Gallery</a> 
+        <li><a href="{{path('app_lists_forum_user',{'idu': id_user })}}" >Forums</a>
+        <li><a href="{{path('app_auction_index',{ 'id_user': id_user })}}" >Auction</a></li>
+        <li><a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a></li>
+        <li><a href="{{ path('app_discussion_index', { 'id_user': id_user }) }}"class="active" >Messenger</a></li> 
+    {% endif %}
+{% endblock %}
+
 {% block body %}
     <h1>Message index</h1>
 
@@ -30,8 +41,8 @@
                 <td>{{ message.vu }}</td>
                 <td>{{ message.datasent ? message.datasent|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
-                    <a href="{{ path('app_message_show', {'idmsg': message.idmsg}) }}">show</a>
-                    <a href="{{ path('app_message_edit', {'idmsg': message.idmsg}) }}">edit</a>
+                    <a href="{{ path('app_message_show', {'idmsg': message.idmsg , 'id_user': id_user }) }}">show</a>
+                    <a href="{{ path('app_message_edit', {'idmsg': message.idmsg , 'id_user': id_user }) }}">edit</a>
                 </td>
             </tr>
         {% else %}

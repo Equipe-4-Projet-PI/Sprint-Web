@@ -2,6 +2,19 @@
 
 {% block title %}Message{% endblock %}
 
+{% block navbar %}
+   
+    {% if id_user %}
+	    <li><a href="{{path('app_product_index',{'id_user': id_user })}}" >Gallery</a> 
+        <li><a href="{{path('app_lists_forum_user',{'idu': id_user })}}" >Forums</a>
+        <li><a href="{{path('app_auction_index',{ 'id_user': id_user })}}" >Auction</a></li>
+        <li><a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a></li>
+        <li><a href="{{ path('app_discussion_index', { 'id_user': id_user }) }}"class="active" >Messenger</a></li> 
+    {% endif %}
+{% endblock %}
+
+
+
 {% block body %}
     <div class="container">
         <h1 class="text-center mt-4" style="color: rgba(39, 167, 118, 0.8) ;">Message</h1>
@@ -44,8 +57,8 @@
         </div>
 
         <div class="text-center mt-4">
-            <a href="{{ path('app_message_index') }}" class="btn btn-secondary">Retour à la liste</a>
-            <a href="{{ path('app_message_edit', {'idmsg': message.idmsg}) }}" class="btn btn-primary">Modifier</a>
+            <a href="{{ path('app_message_index' , { 'id_user': id_user }) }}" class="btn btn-secondary">Retour à la liste</a>
+            <a href="{{ path('app_message_edit', {'idmsg': message.idmsg , 'id_user': id_user}) }}" class="btn btn-primary">Modifier</a>
         </div>
 
         {{ include('message/_delete_form.html.twig') }}

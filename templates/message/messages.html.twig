@@ -2,6 +2,18 @@
 
 {% block title %}{{ discussion.receiver.username }}{% endblock %}
 
+{% block navbar %}
+   
+    {% if id_user %}
+	    <li><a href="{{path('app_product_index',{'id_user': id_user })}}" >Gallery</a> 
+        <li><a href="{{path('app_lists_forum_user',{'idu': id_user })}}" >Forums</a>
+        <li><a href="{{path('app_auction_index',{ 'id_user': id_user })}}" >Auction</a></li>
+        <li><a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a></li>
+        <li><a href="{{ path('app_discussion_index', { 'id_user': id_user }) }}"class="active" >Messenger</a></li> 
+    {% endif %}
+{% endblock %}
+
+
 {% block body %}
     <style>
         body {
@@ -163,39 +175,16 @@
     <h1 class="title-container">{{ discussion.receiver.username }}</h1>
     <br>
     <br>
-    <a href="{{ path('app_discussion_index') }}" class="custom-button custom-button-extremite custom-button-retour">
+    <a href="{{ path('app_discussion_index' , { 'id_user': id_user })}}" class="custom-button custom-button-extremite custom-button-retour">
         <img src="{{ asset('img/discussion/bouton-retour.png') }}" alt="Retour aux discussions" style="width: 50px; height: auto;">
     </a>
-    <a href="{{ path('app_discussion_delete', {'iddis': discussion.iddis}) }}" class="custom-button">Supprimer</a>
-    <a href="{{ path('app_discussion_signal', {'iddis': discussion.iddis}) }}" class="custom-button">Signaler</a>
+    <a href="{{ path('app_discussion_show', {'iddis': discussion.iddis, 'id_user': id_user }) }}" class="custom-button">Supprimer</a>
+    <a href="{{ path('app_discussion_signal', {'iddis': discussion.iddis , 'id_user': id_user }) }}" class="custom-button">Signaler</a>
     <br>
     <br>
     <br>
     <div class="message-container">
-        {#{% for message in messages %}
-            {% if message.idsender == discussion.idsender %}
-                <div class="message sender-message">
-                    <div style="display: flex; align-items: center;">
-                        <p>{{ message.content }}</p>
-                        <p><em>Envoyé le {{ message.datasent ? message.datasent|date('Y-m-d H:i:s') : '' }}</em></p>
-                    </div>
-                    <img src="{{ asset('img/discussion/homme.png') }}" alt="Image de {{ discussion.receiver.username }}" class="sender-img">
-                </div>
-                <button class="delete-button">
-                    <a href="{{ path('app_message_delete', {'idmsg': message.idmsg}) }}" class="custom-button"><img src="{{ asset('img/discussion/annuler.png') }}" alt="Supprimer" style="width: 20px; height: auto;"></a>
-                </button>
-            {% else %}
-                <div class="message receiver-message">
-                    <img src="{{ asset('img/discussion/femme.png') }}" alt="Image de {{ discussion.receiver.username }}" class="image_de_receiver">
-                    <div class="message-content">
-                        <p>{{ message.content }}</p>
-                        <p><em>Envoyé le {{ message.datasent ? message.datasent|date('Y-m-d H:i:s') : '' }}</em></p>
-                    </div>
-                </div>
-            {% endif %}
-        {% else %}
-            <p>Aucun message trouvé pour cette discussion.</p>
-        {% endfor %}#}
+{% set currentUserId = id_user %}
 {% for message in messages %}
     {% if message.idsender is not null and message.idsender == currentUserId %}
         <div class="message sender-message">
@@ -206,7 +195,7 @@
             <img src="{{ asset('img/discussion/homme.png') }}" alt="Image de {{ discussion.receiver.username }}" class="sender-img">
         </div>
         <button class="delete-button">
-            <a href="{{ path('app_message_delete', {'idmsg': message.idmsg}) }}" class="custom-button"><img src="{{ asset('img/discussion/annuler.png') }}" alt="Supprimer" style="width: 20px; height: auto;"></a>
+            <a href="{{ path('app_message_delete', {'idmsg': message.idmsg ,'id_user': id_user }) }}" class="custom-button"><img src="{{ asset('img/discussion/annuler.png') }}" alt="Supprimer" style="width: 20px; height: auto;"></a>
         </button>
     {% elseif message.idsender is not null %}
         <div class="message receiver-message">

@@ -66,7 +66,7 @@
                             <div class="discussion-wrapper">
                                 {% for discussion in discussions %}
                                     <div class="discussion-item">
-                                        <a href="{{ path('app_discussion_show_messages', {'iddis': discussion.iddis}) }}" class="user-info">
+                                        <a href="{{ path('app_discussion_show_messages', {'iddis': discussion.iddis , 'id_user': id_user }) }}" class="user-info">
                                             <img src="{{ asset('img/discussion/homme.png') }}" alt="Image alternative">
                                             <p class="username">{{ discussion.receiver ? discussion.receiver.username : 'Destinataire inconnu' }}</p>
                                         </a>
