@@ -277,53 +277,28 @@ public function newDis(Request $request, EntityManagerInterface $entityManager ,
 
     //Admin
 
-    #[Route('annulersignaler-{iddis}-{id_user}', name: 'app_discussion_annul_signal', methods: ['GET', 'POST'])]
-    public function AnuulerSignaler(Request $request,DiscussionRepository $repo , Discussion $discussion, EntityManagerInterface $entityManager , $id_user): Response
+    #[Route('annulersignaler-{iddis}', name: 'app_discussion_annul_signal', methods: ['GET', 'POST'])]
+    public function AnuulerSignaler(Request $request,DiscussionRepository $repo , Discussion $discussion, EntityManagerInterface $entityManager ): Response
     {
         $discussion->setSig(null);
         $discussions = $repo->findByNonEmptySig();
 
         return $this->render('discussion/Admin.html.twig', [
             'discussion' => $discussion,
-            'id_user' => $id_user,
             'discussions' => $discussions ,
         ]);
     }
 
-    #[Route('discussionlist_{id_user}', name: 'app_list_disc')]
-    public function getAll(DiscussionRepository $repo , $id_user): Response
+    #[Route('discussionlist', name: 'app_list_disc')]
+    public function getAll(DiscussionRepository $repo): Response
     {
-        $this->SetcurrUser($id_user);
         $discussions = $repo->findByNonEmptySig();
         return $this->render('discussion/Admin.html.twig', [
-            'id_user' => $this->currentUserId,
             'discussions' => $discussions
         ]);
     }
 
-    #[Route('_Admin-{iddis}-{id_user}', name: 'app_discussion_show_Admin', methods: ['GET'])]
-    public function showAdmin(Discussion $discussion , $id_user): Response
-    {
-        $this->SetcurrUser($id_user);
-
-        return $this->render('discussion/show_Admin.html.twig', [
-            'discussion' => $discussion,
-            'id_user'=>$id_user,
-        ]);
-    }
-
-    #[Route('deletedisadmin-{iddis}-{id_user}', name: 'app_discussion_delete_Admin', methods: ['GET', 'POST'])]
-    public function deleteAdmin(Request $request, Discussion $discussion, EntityManagerInterface $entityManager , $id_user): Response
-    {
-        $this->SetcurrUser($id_user);
-        if ($this->isCsrfTokenValid('delete' . $discussion->getIddis(), $request->request->get('_token'))) {
-            $entityManager->remove($discussion);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_list_disc', ['id_user' => $id_user], Response::HTTP_SEE_OTHER);
-    }
-
+    
     
 
     //Recherche
