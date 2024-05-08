@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Form\ProductType;
+use App\Repository\EventRepository;
 use App\Repository\ForumRepository;
 use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
@@ -127,18 +128,20 @@ class ProductController extends AbstractController
     }
 
     #[Route('/Adminprods', name: 'AdminProds')]
-    public function Admin( ProductRepository $repo , UserRepository $repoU , ForumRepository $repoF): Response
+    public function Admin( ProductRepository $repo , UserRepository $repoU , ForumRepository $repoF,EventRepository $repoE): Response
 
     {
         $usernumbers = $repoU ->numberOfUsers();
         $NumForums = $repoF ->numberOfForums();
         $productsnumbers= $repo -> numberOfProducts();
         $prods = $repo->findAll() ; 
+        $eventnumbers = $repoE->numberOfEvents();
         return $this->render('admin/ProdsAdmin.html.twig', [
             'prods' => $prods ,
             'usernumber'=> $usernumbers,
             'NumForms'=> $NumForums,
-            'productnumber'=> $productsnumbers
+            'productnumber'=> $productsnumbers,
+            'NumEvents'=> $eventnumbers,
         ]);
     }
     #[Route('/product_forsale', name: 'app_product_forsale', methods: ['GET'])]

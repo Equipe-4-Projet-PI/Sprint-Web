@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\LoginType;
 use App\Form\SignupType;
+use App\Repository\EventRepository;
 use App\Repository\ForumRepository;
 use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
@@ -191,18 +192,19 @@ class UserController extends AbstractController
 
 
     #[Route('/Admin', name: 'Admin')]
-    public function Admin( UserRepository $repo,ForumRepository $repoF,ProductRepository $repoP): Response
+    public function Admin( UserRepository $repo,ForumRepository $repoF,ProductRepository $repoP,EventRepository $repoE): Response
     {
         $users = $repo->findAll() ;
         $NumForums = $repoF ->numberOfForums(); 
         $usernumbers = $repo ->numberOfUsers();
         $productsnumbers= $repoP -> numberOfProducts();
-
+        $eventnumbers = $repoE->numberOfEvents();
         return $this->render('admin/user/UsersAdmin.html.twig', [
             'users' => $users ,
             'usernumber'=> $usernumbers,
             'NumForms'=> $NumForums,
-            'productnumber'=> $productsnumbers
+            'productnumber'=> $productsnumbers,
+            'NumEvents'=> $eventnumbers,
         ]);
     }
     #[Route('/user/delete/{id}', name: 'user_delete')]
@@ -539,8 +541,37 @@ class UserController extends AbstractController
         return $this->render('/admin/user/SearchUser.html.twig',['users'=>$users, 'usernumber' => $usernumbers,]);
        
     }
+    #[Route('/profileUp/{id}', name: 'update_profile')]
+    public function profileUp(Request $request, UserRepository $repo,ManagerRegistry $manager,$id): Response
+    {
+        $firstname = $request->request->get('firstname');
+        $lastname = $request->request->get('lastname');
+        $username = $request->request->get('username');
+        $email = $request->request->get('email');
+        $phone = $request->request->get('phone');
+        $address = $request->request->get('address');
+        $role= $request->request->get('role');
+        $birth= $request->request->get('birthdate');
+        
+        $user = $repo->find($id);
+
+        $user->setUsername($username);
+        $user->setEmail($email);
+        $user->setRole($role);
+        $user->setFirstname($firstname);
+        $user->setLastname($lastname);
+        $user->setAdress($address);
+        $user->setDob($birth);
+        $user->setPhone($phone);
+        
+       
+
+        $manager->getManager()->flush();
+        return $this->redirectToRoute('Admin');
+
     
-  
+      
+    }
   
     
    
