@@ -1,0 +1,177 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Event index{% endblock %}
+
+{% block search %}
+    <form action="{{ path('app_event_search') }}" method="POST">
+        <div class="form-input">
+            <input type="search" name="search" placeholder="Search...">
+            <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+        </div>
+    </form>
+{% endblock %}
+
+{% block events %}
+    {{ events|length }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-12 col-lg-8 col-xxl-9 d-flex">
+            <div class="card flex-fill">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Latest Events</h5>
+                </div>
+                <table class="table table-hover my-0">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th class="d-none d-xl-table-cell">Place</th>
+                            <th class="d-none d-xl-table-cell">Date</th>
+                            <th>Price</th>
+                            <th class="d-none d-md-table-cell">Image</th>
+                            <th class="d-none d-md-table-cell">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event in events %}
+                            <tr>
+                                <td><a href="{{ path('app_workshop_index', {'idEvent': event.idEvent}) }}">{{ event.eName }}</a></td>
+                                <td class="d-none d-xl-table-cell">{{ event.place }}</td>
+                                <td class="d-none d-xl-table-cell">{{ event.eDate ? event.eDate|date('Y-m-d') : '' }}</td>
+                                <td><span class="badge bg-success">{{ event.ticketPrice }} $</span></td>
+                                <td class="d-none d-md-table-cell"><img src="{{ asset(event.image) }}" width="100" height="150" /></td>
+                                <td>
+                                    <a href="{{ path('app_event_edit', {'idEvent': event.idEvent}) }}">edit</a>
+                                    <a href="{{ path('app_workshop_new', {'idEvent': event.idEvent}) }}">Add Workshop</a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="7">no records found</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <a href="{{ path('app_event_new')}}">Create new</a>
+            </div>
+        </div>
+		</div>
+        <div class="col-sm-12 col-lg-4 col-xxl-3">
+            <div class="row">
+			<br>
+			<br>
+                <div class="col-sm-6">
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-header">
+                           
+                        </div>
+                        <canvas style="margin-top:40px;" id="stat1"></canvas>
+                    </div>
+                </div>
+                 <div class="col-sm-6">
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-header">
+                            
+                        </div>
+						<br>
+						<br>
+                        <canvas style="margin-left:200px" id="stat2"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.css" integrity="sha512-BrXUJgxzXt4hYFhwL52b5XvIoU3N8rFn1K9MfocvzULUHhtUOjXYXH3I/RqRmDd6PA1CrsAmxiZ2HQcyD1VwOQ==" crossorigin="anonymous" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Bar chart
+        var ctx1 = document.getElementById('stat1').getContext('2d');
+        var labels1 = [];
+        var data1 = [];
+
+        {% for e in events %}
+            labels1.push('{{ e.eName }}');
+            data1.push({{ e.ticketPrice }});
+        {% endfor %}
+
+        var chart1 = new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: labels1,
+                datasets: [{
+                    label: 'Price Per Event',
+                    backgroundColor: 'rgba(52, 152, 219, 0.8)',
+                    borderColor: 'rgba(52, 152, 219, 1)',
+                    borderWidth: 1,
+                    data: data1
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: true
+						
+                    }
+                },
+                scales: {
+                    y: {
+                        ticks: {
+                            color: '#bdc3c7'
+                        },
+                        grid: {
+                            color: '#34495e'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#bdc3c7'
+                        },
+                        grid: {
+                            color: '#34495e'
+                        }
+                    }
+                },
+                // Adjust size
+                responsive: false,
+                maintainAspectRatio: false,
+                aspectRatio: 1
+            }
+        });
+
+        // Pie chart
+        var ctx2 = document.getElementById('stat2').getContext('2d');
+        var chart2 = new Chart(ctx2, {
+            type: 'pie',
+            data: {
+                labels: ['Events', 'Workshops'],
+                datasets: [{
+                    backgroundColor: ['#3498db', '#2ecc71'],
+                    borderColor: '#2c3e50',
+                    borderWidth: 1,
+                    data: [{{ events|length }}, {{ workshops|length }}]
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Events vs Workshops',
+                        color: '#000000'
+                    },
+                    legend: {
+                        labels: {
+                            color: '#000000'
+                        }
+                    }
+                },
+                // Adjust size
+                responsive: false,
+                maintainAspectRatio: false,
+                aspectRatio: 1
+            }
+        });
+    </script>
+{% endblock %}

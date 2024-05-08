@@ -1,0 +1,39 @@
+ {% extends 'base.html.twig' %}
+
+{% block title %}Workshops index{% endblock %}
+
+{% block content %}
+
+ <div id="pricing" class="pricing">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="title">
+                                <h2>Our<strong class="black"> Workshops for {{event.eName}}</strong></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                    {% for w in workshops %}
+                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
+                            <div class="pricing_box">
+                               <img src="{{asset(w.image)}}" width="200" height="250" />
+                                <h3>{{w.title}}</h3>
+                               
+                                <p> {{ w.details }}</p>
+                               
+                                <div>
+                              
+                            </div>
+                        </div>
+                      {% else %}
+        
+               <p>no records found</p>
+          
+        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+
+            {% endblock %}
