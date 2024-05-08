@@ -539,8 +539,37 @@ class UserController extends AbstractController
         return $this->render('/admin/user/SearchUser.html.twig',['users'=>$users, 'usernumber' => $usernumbers,]);
        
     }
+    #[Route('/profileUp/{id}', name: 'update_profile')]
+    public function profileUp(Request $request, UserRepository $repo,ManagerRegistry $manager,$id): Response
+    {
+        $firstname = $request->request->get('firstname');
+        $lastname = $request->request->get('lastname');
+        $username = $request->request->get('username');
+        $email = $request->request->get('email');
+        $phone = $request->request->get('phone');
+        $address = $request->request->get('address');
+        $role= $request->request->get('role');
+        $birth= $request->request->get('birthdate');
+        
+        $user = $repo->find($id);
+
+        $user->setUsername($username);
+        $user->setEmail($email);
+        $user->setRole($role);
+        $user->setFirstname($firstname);
+        $user->setLastname($lastname);
+        $user->setAdress($address);
+        $user->setDob($birth);
+        $user->setPhone($phone);
+        
+       
+
+        $manager->getManager()->flush();
+        return $this->redirectToRoute('Admin');
+
     
-  
+      
+    }
   
     
    
