@@ -1,4 +1,67 @@
 {% extends 'Admin.html.twig' %}
+
+{% block sidebar  %} 
+	<section id="sidebar">
+		<a href={{path('Admin')}} class="brand">
+			<i class='bx bxs-smile'></i>
+			<span class="text">ArtyVenci_Admin</span>
+		</a>
+		<ul class="side-menu top">
+			<li >
+				<a href="{{path('Admin')}}">
+					<i class='bx bx-user' ></i>
+					<span class="text">Users</span>
+				</a>
+			</li>
+			<li>
+				<a href="{{path('AdminProds')}}">
+					<i class='bx bxl-product-hunt' ></i>
+					<span class="text">Products</span>
+				</a>
+			</li>
+			<li>
+				<a href="{{path('ForumsAdmin')}}">
+					<i class='bx bx-message-square-detail' ></i>
+					<span class="text">Forums</span>
+				</a>
+			</li>
+			<li>
+			<a href="{{path('app_event_index')}}">
+					<i class='bx bx-calendar-event'></i>
+					<span class="text">Events</span>
+				</a>
+			</li>
+			<li class="active" >
+				<a href="{{ path('AdminAuc') }}">
+
+					<i class='bx bx-edit-alt' ></i>
+					<span class="text">Auction</span>
+				</a>
+			</li>
+			<li  >
+				<a href="{{ path('app_list_disc') }}">
+					<i class='bx bx-chat'></i>
+					<span class="text">Discussion</span>
+				</a>
+			</li>
+		</ul>
+		<ul class="side-menu">
+			<li>
+				<a href="#">
+					<i class='bx bxs-cog' ></i>
+					<span class="text">Settings</span>
+				</a>
+			</li>
+			<li>
+				<a href={{path('login')}} class="logout">
+					<i class='bx bxs-log-out-circle' ></i>
+					<span class="text">Logout</span>
+				</a>
+			</li>
+		</ul>
+	</section>
+
+	{% endblock %}
 {% block content %}
 <li style="
     padding: 24px;
@@ -27,11 +90,7 @@
 				</div>
 			</form>
 
-              <select aria-placeholder="Select your role.." name="role" id="role" style="background-color: #262e49; color: #fafafa; padding: 12px; border: none; font-size: 20px; box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2); appearance: button; outline: none; border-radius: 5px; background-color: #144CCC; margin-right: 70px;">
-    <option style="padding: 30px;" value="" disabled selected>Select your role</option>
-    <option style="padding: 30px;" value="member">Member</option>
-    <option style="padding: 30px;" value="artist">Artist</option>
-</select>
+              
 
 
                 </div>
@@ -45,34 +104,27 @@
     <thead>
         <tr>
             <th style="background:#144CCC;"></th>
-            <th style="background:#144CCC;">Username</th>
-            <th style="background:#144CCC;">Email</th>
-            <th style="background:#144CCC;">Role</th>
-            <th style="background:#144CCC;">FirstName</th>
-            <th style="background:#144CCC;">LastName</th>
-            <th style="background:#144CCC;">Address</th>
-            <th style="background:#144CCC;">Phone</th>
-            <th style="background:#144CCC;">Gender</th>
-            <th style="background:#144CCC;">Birthday</th>
+            <th style="background:#144CCC;">Nom Action</th>
+            <th style="background:#144CCC;">Start Date</th>
+            <th style="background:#144CCC;">End Date</th>
+            <th style="background:#144CCC;">initial Price</th>
+            <th style="background:#144CCC;">Price</th>
+           
             <th style="background:#144CCC;"></th>
         </tr>
     </thead>
     <!-- Table body -->
     <tbody>
-        {% for user in users %}
+        {% for auction in Auctions %}
         <tr>
             <td style=" width: 10px;"><img src="{{asset('img/UserIcon.png')}}"></td>
-            <td>{{user.username}}</td>
-            <td>{{user.email}}</td>
-            <td>{{user.role}}</td>
-            <td>{{user.firstname}}</td>
-            <td>{{user.lastname}}</td>
-            <td>{{user.adress}}</td>
-            <td>{{user.phone}}</td>
-            <td>{{user.gender}}</td>
-            <td>{{user.dob}}</td>
+            <td>{{auction.nom}}</td>
+            <td>{{auction.dateLancement|date('Y-m-d H:i:s')}}</td>
+            <td>{{auction.dateCloture|date('Y-m-d H:i:s')}}</td>
+            <td>{{auction.prixInitial}}</td>
+            <td>{{auction.prixFinal}}</td>
             <td style=" width: 10px;">
-                <a href={{path('user_delete',{id:user.idUser})}}><img src="{{asset('img/deleteUser.png')}}"></a>
+                <a href={{path('user_delete',{id:auction.idAuction})}}><img src="{{asset('img/deleteUser.png')}}"></a>
             </td>
         </tr>
         {% endfor %}
@@ -102,26 +154,7 @@
 	</li> 
 
     <script>
-    // te5ith element
-    const roleSelect = document.getElementById('role');
-    const userTable = document.getElementById('userTable');
-
-    //fonction lkol fil kol 
-    roleSelect.addEventListener('change', function() {
-        // el valeur mil select
-        const selectedRole = this.value;
-        // yboucli les ligne mte3 tableaux
-        const rows = userTable.getElementsByTagName('tr');
-        for (let i = 1; i < rows.length; i++) {
-            const row = rows[i];
-            const roleCell = row.cells[3]; //hethi el column eli feha 'role ' 
-            if (roleCell.textContent.toLowerCase() === selectedRole || selectedRole === '') {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        }
-    });
+  
 
 
     document.getElementById('searchButton').addEventListener('click', function() {

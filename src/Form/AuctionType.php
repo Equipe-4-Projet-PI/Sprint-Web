@@ -21,7 +21,7 @@ class AuctionType extends AbstractType
             ->add('dateLancement')
             ->add('prixInitial')
             ->add('idProduit')
-            ->add('ajouter', SubmitType::class, ['label' => 'Ajouter']);
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

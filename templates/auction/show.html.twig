@@ -7,29 +7,38 @@
     {% if id_user %}
 	    <li><a href="{{path('app_product_index',{'id_user': id_user })}}" >Gallery</a> 
         <li><a href="{{path('app_lists_forum_user',{'idu': id_user })}}" >Forums</a>
-        <li><a href="{{path('app_auction_index',{ 'id_user': id_user })}}"class="active" >Auction</a></li>
-        <li><a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a></li>
+        <li><a href="{{path('app_auction_index',{ 'id_user': id_user })}}"class="active">Auction</a></li>
         <li><a href="{{ path('app_discussion_index', { 'id_user': id_user }) }}">Messenger</a></li> 
+        <li><a href="{{ path('app_event_index_front', { 'id_user': id_user }) }}">Events</a></li> 
+        <li><a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a></li>
+        
     {% endif %}
 {% endblock %}
-{% block body %}
-	<h1>Auction</h1>
 
-	<head>
+{% block body %}
 
 		<link rel="stylesheet" href="{{ asset('css/ParticiperStyle.css') }}">
 		<link rel="stylesheet" href="{{ asset('css/stars.css') }}">
-	</head>
-	<div class="container mt-4 mb-4 p-3 d-flex justify-content-center">
-		<div class="card p-4">
+
+	
+
+
+
+	<div class="main-container">
+		
+			<div class="card p-4"style="
+    margin-top: 150px;
+    position: relative;
+    left: 41%;
+">
 			<div class=" image d-flex flex-column justify-content-center align-items-center">
-				<button class="btn btn-secondary">
+				
 				{% set imagePath = produit.productimage %}
                 {% set parts = imagePath|split('/') %}
                 {% set relativeImagePath = '/uploads/' ~ parts|last %}
-					<img src="{{ relativeImagePath }}" height="100" width="100"/></button>
+					<img src="{{ relativeImagePath }}" height="300" width="300"/></button>
 				<span class="name mt-3">{{auction.nom}}</span>
-				<span class="idd">Un produit à
+				<span class="idd">{{produit.title}}
 				</span>
 				<div class="d-flex flex-row justify-content-center align-items-center gap-2">
 					<span class="idd1">Nom Artist</span>
@@ -45,12 +54,16 @@
 				<div class=" d-flex mt-2">
 					<button class="btn1 btn-dark" id="participerButton" onclick="showPopup()">Participer</button>
 				</div>
-				<div id="popup" style="display: none;">
-					<form id="priceForm" method="post" action="{{ path('submit_price' , {'id_user': id_user}) }}">
+				<div id="popup" style="display: none;margin-top: 10px;">
+
+					<form id="priceForm" method="post" action="{{ path('submit_price' , {'id_user': id_user}) }}" >
 						<input type="hidden" name="idAuction" value="{{ auction.idAuction }}">
 						<label for="price">Enter the price:</label>
 						<input type="text" id="price" name="price">
-						<button type="submit" id="acheterButton">Effectuer</button>
+						<button type="submit" id="acheterButton" class="btn1 btn-dark" style="
+    margin-top: 10px;
+    margin-left: 75px;
+">Effectuer</button>
 					</form>
 				</div>
 
@@ -66,7 +79,9 @@
 				</div>
 			</div>
 
-			<h3>Give a rating please!</h3>
+			<h3 style="
+    margin-left: 50;
+">Rate this ART!</h3>
 
 			<form id="ratingForm" action="{{ path('save_rating', {'id_user': id_user}) }}" method="post">
 				<div class="star-group">
@@ -82,7 +97,10 @@
 					<input type="radio" class="star" id="five" name="rating" value="5">
 					<label for="five"></label>
 				</div>
-				<button type="submit">Submit Rating</button>
+				<button class="btn1 btn-dark" type="submit" style="
+    margin-top: 10px;
+    margin-left: 75px;
+">Submit Rating</button>
 			</form>
 
 
@@ -139,4 +157,4 @@ console.error("No star selected.");
 });
 	</script>
 
-{% endblock %}
+</html>{% endblock %}

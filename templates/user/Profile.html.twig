@@ -3,13 +3,13 @@
 {% block navbar %}
    {% set id_user = user.idUser %}
 
-    {% if id_user %}
+  {% if id_user %}
 	    <li><a href="{{path('app_product_index',{'id_user': id_user })}}" >Gallery</a> 
-        <li><a href="{{path('app_lists_forum_user',{'idu': id_user })}}" class="active">Forums</a>
+        <li><a href="{{path('app_lists_forum_user',{'idu': id_user })}}" >Forums</a>
         <li><a href="{{path('app_auction_index',{ 'id_user': id_user })}}">Auction</a></li>
-        <li><a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a></li>
         <li><a href="{{ path('app_discussion_index', { 'id_user': id_user }) }}">Messenger</a></li> 
 		<li><a href="{{ path('app_event_index_front', { 'id_user': id_user }) }}">Events</a></li> 
+         <li><a href="{{ path('Profile', { 'id_user': id_user }) }}"class="active">Profile</a></li>
     {% endif %}
    
 
@@ -31,7 +31,7 @@ body{
 }
 
 .profile-header .profile-header-cover {
-    background-color: #00b5ec;
+    background-color: black;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

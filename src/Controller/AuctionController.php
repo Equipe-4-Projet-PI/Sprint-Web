@@ -16,8 +16,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Id;
 use App\Service\SwapiService;
-
-
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -272,22 +271,38 @@ public function new(Request $request, EntityManagerInterface $entityManager, $id
         ]);
     }
 
-    #[Route('/AdminAuc', name: 'Admin')]
-    public function Admin( UserRepository $repo,ForumRepository $repoF,ProductRepository $repoP,EventRepository $repoE,AuctionRepository $repoAuc): Response
+    #[Route('/AdminAuc', name: 'AdminAuc')]
+    public function AdminAuc( AuctionRepository $repoAuc,UserRepository $repo,ForumRepository $repoF,ProductRepository $repoP,EventRepository $repoE): Response
     {
         $Auctions = $repoAuc->findAll() ;
         $NumForums = $repoF ->numberOfForums(); 
         $usernumbers = $repo ->numberOfUsers();
         $productsnumbers= $repoP -> numberOfProducts();
         $eventnumbers = $repoE->numberOfEvents();
-        $auctiontnumbers = $repoAuc->numberOfAuctions();
-        return $this->render('admin/user/UsersAdmin.html.twig', [
+        $auctionnumbers = $repoAuc->numberOfAuctions();
+        return $this->render('admin/AuctionAdmin.html.twig', [
             'Auctions' => $Auctions ,
             'usernumber'=> $usernumbers,
             'NumForms'=> $NumForums,
             'productnumber'=> $productsnumbers,
             'NumEvents'=> $eventnumbers,
-            'NumAuctions'=> $Auctions
+            'NumAuctions'=> $auctionnumbers,
         ]);
+
+
     }
+
+    #[Route('delete/{id}', name: 'Admin_delete')]
+    public function deleteAuthor(ManagerRegistry $manager,AuctionRepository $repo,$id){
+        $auction = $repo->find($id);
+        $manager->getManager()->remove($auction);
+        $manager->getManager()->flush();
+        return $this->redirectToRoute('AdminAuc');
+    }
+
+
+
+
+
+
 }

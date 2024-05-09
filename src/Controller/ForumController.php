@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Forum;
 use App\Form\ForumType;
+use App\Repository\AuctionRepository;
 use App\Repository\EventRepository;
 use App\Repository\ForumRepository;
 use App\Repository\ProductRepository;
@@ -178,12 +179,12 @@ class ForumController extends AbstractController
 
     //////////////   ADMIN SECTION   //////////////
     #[Route('/adminForums', name: 'ForumsAdmin')]
-    public function AdminForums(UserRepository $Urepo,ForumRepository $repo,ProductRepository $repoP,EventRepository $repoE): Response
+    public function AdminForums(UserRepository $Urepo,ForumRepository $repo,ProductRepository $repoP,EventRepository $repoE,AuctionRepository $repoAuc): Response
     {
         $forums = $repo->findAll() ; 
         $NumForums = $repo ->numberOfForums();
         $productsnumbers= $repoP -> numberOfProducts();
-
+        $auctionnumbers = $repoAuc->numberOfAuctions();
         $users = $Urepo->findAll() ; 
         $usernumbers = $Urepo ->numberOfUsers();
         $eventnumbers = $repoE->numberOfEvents();
@@ -194,6 +195,7 @@ class ForumController extends AbstractController
             'usernumber'=> $usernumbers,
             'productnumber'=> $productsnumbers,
             'NumEvents'=> $eventnumbers,
+            'NumAuctions'=> $auctionnumbers,
         ]);
     }
 

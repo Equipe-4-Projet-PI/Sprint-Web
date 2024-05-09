@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Form\ProductType;
+use App\Repository\AuctionRepository;
 use App\Repository\EventRepository;
 use App\Repository\ForumRepository;
 use App\Repository\ProductRepository;
@@ -131,9 +132,10 @@ class ProductController extends AbstractController
     }
 
     #[Route('/Adminprods', name: 'AdminProds')]
-    public function Admin( ProductRepository $repo , UserRepository $repoU , ForumRepository $repoF,EventRepository $repoE): Response
+    public function Admin( AuctionRepository $repoAuc,ProductRepository $repo , UserRepository $repoU , ForumRepository $repoF,EventRepository $repoE): Response
 
     {
+        $auctionnumbers = $repoAuc->numberOfAuctions();
         $usernumbers = $repoU ->numberOfUsers();
         $NumForums = $repoF ->numberOfForums();
         $productsnumbers= $repo -> numberOfProducts();
@@ -145,6 +147,7 @@ class ProductController extends AbstractController
             'NumForms'=> $NumForums,
             'productnumber'=> $productsnumbers,
             'NumEvents'=> $eventnumbers,
+            'NumAuctions'=> $auctionnumbers,
         ]);
     }
     #[Route('/productforsale{id_user}', name: 'app_product_forsale', methods: ['GET'])]

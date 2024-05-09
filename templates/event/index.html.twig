@@ -10,12 +10,6 @@
 
 
 
-
-
-
-
-
-
 {% block sidebar  %} 
 	<section id="sidebar">
 		<a href={{path('Admin')}} class="brand">
@@ -29,28 +23,35 @@
 					<span class="text">Users</span>
 				</a>
 			</li>
-			<li>
+			<li >
 				<a href="{{path('AdminProds')}}">
 					<i class='bx bxl-product-hunt' ></i>
 					<span class="text">Products</span>
 				</a>
 			</li>
-			<li >
+			<li  >
 				<a href="{{path('ForumsAdmin')}}">
 					<i class='bx bx-message-square-detail' ></i>
 					<span class="text">Forums</span>
 				</a>
 			</li>
-			<li class="active"  >
-				<a href="{{path('app_event_index')}}">
+			<li class="active" >
+			<a href="{{path('app_event_index')}}">
 					<i class='bx bx-calendar-event'></i>
 					<span class="text">Events</span>
 				</a>
 			</li>
-			<li>
-				<a href="#">
+			<li >
+				<a href="{{ path('AdminAuc') }}">
+
 					<i class='bx bx-edit-alt' ></i>
 					<span class="text">Auction</span>
+				</a>
+			</li>
+			<li  >
+				<a href="{{ path('app_list_disc') }}">
+					<i class='bx bx-chat'></i>
+					<span class="text">Discussion</span>
 				</a>
 			</li>
 		</ul>
@@ -69,8 +70,7 @@
 			</li>
 		</ul>
 	</section>
-
-	{% endblock %}
+{% endblock %}
 
 {% block content %}
 <li style="

@@ -7,6 +7,7 @@ use App\Entity\Workshop;
 use App\Entity\User;
 use App\Entity\Participation;
 use App\Form\EventType;
+use App\Repository\AuctionRepository;
 use App\Repository\EventRepository;
 use App\Repository\ForumRepository;
 use App\Repository\ProductRepository;
@@ -23,7 +24,7 @@ use Dompdf\Options;
 class EventController extends AbstractController
 {
     #[Route('/', name: 'app_event_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager,UserRepository $repo,ForumRepository $repoF,ProductRepository $repoP,EventRepository $repoE): Response
+    public function index(EntityManagerInterface $entityManager,UserRepository $repo,ForumRepository $repoF,ProductRepository $repoP,EventRepository $repoE,AuctionRepository $repoAuc): Response
     {
         $events = $entityManager
             ->getRepository(Event::class)
@@ -35,7 +36,7 @@ class EventController extends AbstractController
             $usernumbers = $repo ->numberOfUsers();
             $productsnumbers= $repoP -> numberOfProducts();
             $eventnumbers = $repoE->numberOfEvents();
-
+            $auctionnumbers = $repoAuc->numberOfAuctions();
         return $this->render('event/index.html.twig', [
             'events' => $events,
             'workshops'=>$workshops,
@@ -43,6 +44,7 @@ class EventController extends AbstractController
             'NumForms'=> $NumForums,
             'productnumber'=> $productsnumbers,
             'NumEvents'=> $eventnumbers,
+            'NumAuctions'=> $auctionnumbers,
 
         ]);
     }

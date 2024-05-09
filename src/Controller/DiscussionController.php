@@ -21,6 +21,10 @@ use App\Repository\MessageRepository;
 use phpDocumentor\Reflection\Types\Integer;
 use phpDocumentor\Reflection\Types\This;
 use App\Form\SignalType;
+use App\Repository\AuctionRepository;
+use App\Repository\EventRepository;
+use App\Repository\ForumRepository;
+use App\Repository\ProductRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 #[Route('/discussion')]
@@ -290,11 +294,21 @@ public function newDis(Request $request, EntityManagerInterface $entityManager ,
     }
 
     #[Route('discussionlist', name: 'app_list_disc')]
-    public function getAll(DiscussionRepository $repo): Response
+    public function getAll(DiscussionRepository $repo,AuctionRepository $repoAuc,UserRepository $repoU,ForumRepository $repoF,ProductRepository $repoP,EventRepository $repoE): Response
     {
+        $NumForums = $repoF ->numberOfForums(); 
+        $usernumbers = $repoU ->numberOfUsers();
+        $productsnumbers= $repoP -> numberOfProducts();
+        $eventnumbers = $repoE->numberOfEvents();
+        $auctionnumbers = $repoAuc->numberOfAuctions();
         $discussions = $repo->findByNonEmptySig();
         return $this->render('discussion/Admin.html.twig', [
-            'discussions' => $discussions
+            'discussions' => $discussions,
+            'usernumber'=> $usernumbers,
+            'NumForms'=> $NumForums,
+            'productnumber'=> $productsnumbers,
+            'NumEvents'=> $eventnumbers,
+            'NumAuctions'=> $auctionnumbers,
         ]);
     }
 
