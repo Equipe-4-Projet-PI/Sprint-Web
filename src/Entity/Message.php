@@ -3,65 +3,110 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\MessageRepository;
+use Symfony\Component\Validator\Constraints as Assert ;
 
-/**
- * Message
- *
- * @ORM\Table(name="message", indexes={@ORM\Index(name="idsender", columns={"idsender"}), @ORM\Index(name="iddis", columns={"iddis"})})
- * @ORM\Entity
- */
+#[ORM\Entity(repositoryClass: MessageRepository::class)]
 class Message
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="idmsg", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $idmsg;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $idmsg;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="idsender", type="integer", nullable=false)
-     */
-    private $idsender;
+    #[ORM\Column(nullable: true)]
+    private ?int $idsender;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="iddis", type="integer", nullable=false)
-     */
-    private $iddis;
+    #[ORM\Column(nullable: true)]
+    private ?int $iddis;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="content", type="string", length=255, nullable=false)
-     */
-    private $content;
+    #[Assert\NotBlank(message:"Le contenu de message ne peut pas etre nul")]
+    #[ORM\Column(nullable: true)]
+    private ?string $content;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="reaction", type="string", length=255, nullable=true)
-     */
-    private $reaction;
+    #[ORM\Column(nullable: true)]
+    private ?string $reaction;
 
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(name="vu", type="integer", nullable=true)
-     */
-    private $vu;
+    #[ORM\Column(nullable: true)]
+    private ?int $vu;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="datasent", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
-     */
-    private $datasent = 'CURRENT_TIMESTAMP';
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $datasent;
 
+    public function getIdmsg(): ?int
+    {
+        return $this->idmsg;
+    }
 
+    public function getIdsender(): ?int
+    {
+        return $this->idsender;
+    }
+
+    public function setIdsender(?int $idsender): self
+    {
+        $this->idsender = $idsender;
+
+        return $this;
+    }
+
+    public function getIddis(): ?int
+    {
+        return $this->iddis;
+    }
+
+    public function setIddis(?int $iddis): self
+    {
+        $this->iddis = $iddis;
+
+        return $this;
+    }
+
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
+    public function setContent(?string $content): self
+    {
+        $this->content = $content;
+
+        return $this;
+    }
+
+    public function getReaction(): ?string
+    {
+        return $this->reaction;
+    }
+
+    public function setReaction(?string $reaction): self
+    {
+        $this->reaction = $reaction;
+
+        return $this;
+    }
+
+    public function getVu(): ?int
+    {
+        return $this->vu;
+    }
+
+    public function setVu(?int $vu): self
+    {
+        $this->vu = $vu;
+
+        return $this;
+    }
+
+    public function getDatasent(): ?\DateTimeInterface
+    {
+        return $this->datasent;
+    }
+
+    public function setDatasent(?\DateTimeInterface $datasent): self
+    {
+        $this->datasent = $datasent;
+
+        return $this;
+    }
 }

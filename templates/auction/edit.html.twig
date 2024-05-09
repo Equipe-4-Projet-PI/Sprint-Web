@@ -1,0 +1,14 @@
+{% extends 'Home.html.twig' %}
+
+{% block title %}Edit Auction{% endblock %}
+
+{% block body %}
+    <h1>Edit Auction</h1>
+
+    {#{{ include('auction/_form.html.twig', {'button_label': 'Update'}) }}#}
+    {{form(form)}}
+
+    <a href="{{ path('app_auction_index') }}">back to list</a>
+
+    {{ include('auction/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,4 +1,5 @@
-var pwd = document.getElementById('pwd');
+var pwd = document.getElementById('password');
+
 var Cpwd = document.getElementById('Cpwd');
 var eye = document.getElementById('eye');
 var eye1 = document.getElementById('eye1');
@@ -12,7 +13,10 @@ function togglePass(){
 
    eye.classList.toggle('active');
    (pwd.type == 'password') ? pwd.type = 'text' : pwd.type = 'password';
+   
+
 }
+
 
 function togglePass1(){
   eye1.classList.toggle('active');
@@ -20,39 +24,33 @@ function togglePass1(){
 }
 
 
-
 // Form Validation
 
 function checkStuff() {
-  var email = document.form1.email;
+  var username = document.form1.username;
   var password = document.form1.password;
   var msg = document.getElementById('msg');
+  var user = document.getElementById('username');
   
-  if (email.value == "") {
+  if (username.value == "") {
     msg.style.display = 'block';
-    msg.innerHTML = "Please enter your email";
-    email.focus();
+    msg.innerHTML = "Please enter your username";
+    user.focus();
     return false;
-  } else {
-    msg.innerHTML = "";
   }
   
-   if (password.value == "") {
-    msg.innerHTML = "Please enter your password";
+  if (password.value == "") {
+    msg.innerHTML = "Please enter your email";
     password.focus();
     return false;
-  } else {
-    msg.innerHTML = "";
   }
-   var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  if (!re.test(email.value)) {
-    msg.innerHTML = "Please enter a valid email";
-    email.focus();
-    return false;
-  } else {
-    msg.innerHTML = "";
-  }
+  
+    return  true
 }
+
+
+
+
 
 // ParticlesJS
 

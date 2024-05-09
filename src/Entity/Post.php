@@ -5,6 +5,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PostRepository;
 use Symfony\Component\Validator\Constraints\DateTime;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
@@ -14,9 +15,11 @@ class Post
     #[ORM\Column]
     private $idPost = null;
 
+    #[Assert\NotBlank(message: "Le Titre ne peut pas etre null")]
     #[ORM\Column(length: 255)]
     private ?string $title=null;
 
+    #[Assert\NotBlank(message: "Le message ne peut pas etre null")]
     #[ORM\Column(length: 255)]
     private ?string $textmessage=null;
 
@@ -24,12 +27,14 @@ class Post
     private ?int $likeNumber=null;
 
     #[ORM\Column(name: "TimeofCreation", type: "datetime", nullable: false)]
-    private ?DateTime $timeofcreation = null;
+    private  $timeofcreation = null;
 
-    #[ORM\ManyToOne(targetEntity : "Forum",inversedBy :'idPost')]
+    #[ORM\ManyToOne(targetEntity : "Forum")]
+    #[ORM\JoinColumn(name:"id_forum", referencedColumnName:"id_forum")]
     private ?Forum $idForum= null;
 
-    #[ORM\ManyToOne(targetEntity : "User", inversedBy :'idUser')]
+    #[ORM\ManyToOne(targetEntity : "User")]
+    #[ORM\JoinColumn(name:"id_user", referencedColumnName:"Id_User")]
     private ?User $idUser=null;
 
     public function getIdPost(): ?string

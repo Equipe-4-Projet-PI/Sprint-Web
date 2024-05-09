@@ -17,16 +17,17 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class OrderproductController extends AbstractController
 {
-    #[Route('/orderproduct', name: 'app_orderproduct_index', methods: ['GET'])]
-    public function index(OrderRepository $orderRepository): Response
+    #[Route('/orderproduct_{id_user}', name: 'app_orderproduct_index', methods: ['GET'])]
+    public function index(OrderRepository $orderRepository,$id_user): Response
     {
         return $this->render('orderproduct/index.html.twig', [
             'orderproducts' => $orderRepository->findAll(),
+            'id_user'=>$id_user
         ]);
     }
 
-    #[Route('/neworder{idProduct}', name: 'app_orderproduct_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, $idProduct): Response
+    #[Route('/neworder{idProduct}_prod{id_user}', name: 'app_orderproduct_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager, $idProduct,$id_user): Response
     {
         $orderproduct = new Orderproduct();
         $form = $this->createForm(OrderproductType::class, $orderproduct);
@@ -47,33 +48,35 @@ class OrderproductController extends AbstractController
             $entityManager->persist($orderproduct);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_orderproduct_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_orderproduct_index', ['id_user'=>$id_user], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('orderproduct/new.html.twig', [
             'orderproduct' => $orderproduct,
             'form' => $form,
+            'id_user'=>$id_user
         ]);
     }
 
-    #[Route('/showorder{idOrder}', name: 'app_orderproduct_show', methods: ['GET'])]
-    public function show(Orderproduct $orderproduct): Response
+    #[Route('/showorder{idOrder}_prod{id_user}', name: 'app_orderproduct_show', methods: ['GET'])]
+    public function show(Orderproduct $orderproduct,$id_user): Response
     {
         return $this->render('orderproduct/show.html.twig', [
             'orderproduct' => $orderproduct,
+            'id_user'=>$id_user
         ]);
     }
 
 
-    #[Route('/deleteorder{idOrder}', name: 'app_orderproduct_delete', methods: ['POST'])]
-    public function delete(Request $request, Orderproduct $orderproduct, EntityManagerInterface $entityManager): Response
+    #[Route('/deleteorder{idOrder}_p{id_user}', name: 'app_orderproduct_delete', methods: ['POST'])]
+    public function delete(Request $request, Orderproduct $orderproduct, EntityManagerInterface $entityManager,$id_user): Response
     {
         if ($this->isCsrfTokenValid('delete'.$orderproduct->getIdOrder(), $request->request->get('_token'))) {
             $entityManager->remove($orderproduct);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_orderproduct_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_orderproduct_index', ['id_user'=>$id_user], Response::HTTP_SEE_OTHER);
     }
 
 }

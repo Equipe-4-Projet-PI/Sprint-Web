@@ -6,17 +6,21 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\Date;
 use App\Repository\UserRepository;
+use DateTime;
+use Symfony\Bundle\MakerBundle\Str;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User
 {
    
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(name:"Id_User", type:"integer", nullable:false)]
-    private $idUser = null;
-    
-    #[ORM\Column(length: 255)]
+     #[ORM\Id]
+     #[ORM\GeneratedValue]
+     #[ORM\Column(name:"Id_User", type:"integer", nullable:false)]
+    private ?int $idUser = null;
+
+
+
+     #[ORM\Column(length: 255)]
     private ?string $username = null;
 
     #[ORM\Column(length: 255)]
@@ -43,11 +47,14 @@ class User
     #[ORM\Column(length: 255)]
     private ?string $gender  = null;
 
-    #[ORM\Column(name: "DOB", type: "date", nullable: false)]
-    private $dob = null;
+    #[ORM\Column(length: 255)]
+    private ?string $dob = null ;
 
     #[ORM\Column(length: 255)]
     private ?string $imageurl = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $status = null;
 
     public function getIdUser(): ?int
     {
@@ -161,12 +168,12 @@ class User
         return $this;
     }
 
-    public function getDob(): ?\DateTimeInterface
+    public function getDob(): ?string
     {
         return $this->dob;
     }
 
-    public function setDob(\DateTimeInterface $dob): static
+    public function setDob(string $dob): static
     {
         $this->dob = $dob;
 
@@ -181,6 +188,18 @@ class User
     public function setImageurl(string $imageurl): static
     {
         $this->imageurl = $imageurl;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }
