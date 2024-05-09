@@ -4,11 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Form\ProductType;
+use App\Repository\EventRepository;
 use App\Repository\ForumRepository;
 use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -129,21 +131,23 @@ class ProductController extends AbstractController
     }
 
     #[Route('/Adminprods', name: 'AdminProds')]
-    public function Admin( ProductRepository $repo , UserRepository $repoU , ForumRepository $repoF): Response
+    public function Admin( ProductRepository $repo , UserRepository $repoU , ForumRepository $repoF,EventRepository $repoE): Response
 
     {
         $usernumbers = $repoU ->numberOfUsers();
         $NumForums = $repoF ->numberOfForums();
         $productsnumbers= $repo -> numberOfProducts();
         $prods = $repo->findAll() ; 
+        $eventnumbers = $repoE->numberOfEvents();
         return $this->render('admin/ProdsAdmin.html.twig', [
             'prods' => $prods ,
             'usernumber'=> $usernumbers,
             'NumForms'=> $NumForums,
-            'productnumber'=> $productsnumbers
+            'productnumber'=> $productsnumbers,
+            'NumEvents'=> $eventnumbers,
         ]);
     }
-    #[Route('/product_forsale-{id_user}', name: 'app_product_forsale', methods: ['GET'])]
+    #[Route('/productforsale{id_user}', name: 'app_product_forsale', methods: ['GET'])]
     public function forsaleprod(ProductRepository $productRepository , $id_user): Response
     {
         return $this->render('product/index.html.twig', [
@@ -161,6 +165,26 @@ class ProductController extends AbstractController
             
         ]);
     }
+
+
+
+
+
+    #[Route('/deleteadmin{idProduct}', name: 'app_admin_delete')]
+    public function deleteadmin(ManagerRegistry $manager,ProductRepository $repo,$idProduct){
+        $product = $repo->find($idProduct);
+        $manager->getManager()->remove($product);
+        $manager->getManager()->flush();
+        return $this->redirectToRoute('AdminProds');
+    }
+
+
+
+
+
+
+
+
     #[Route('/app_search_{id_user}', name: 'app_search', methods: ['GET'])]
     public function search(Request $request,ProductRepository $productRepository,$id_user): Response
     {
@@ -180,6 +204,8 @@ class ProductController extends AbstractController
         // Handle case when searchBy or searchText is not provided
         $products = $productRepository->findAll(); // Or any default logic you want
          }
+
+         
 
     return $this->render('product/index.html.twig', [
         'products' => $products,

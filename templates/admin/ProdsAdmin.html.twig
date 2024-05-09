@@ -84,13 +84,12 @@
 
 				<tr>
 					<th style="background:#144CCC;">Prod ID</th>
-					<th style="background:#144CCC;"></th>
+					<th style="background:#144CCC;">image</th>
 					<th style="background:#144CCC;">Title</th>
 					<th style="background:#144CCC;">Description</th>
-					<th style="background:#144CCC;">For Sale</th>
 					<th style="background:#144CCC;">Price</th>
 					<th style="background:#144CCC;">Creation Date</th>
-					<th style="background:#144CCC;"></th>
+					<th style="background:#144CCC;">Action</th>
 				</tr>
 			</thead>
 
@@ -104,18 +103,19 @@
 						<td>{{prod.idProduct}}</td>
 						<td style=" width: 10px;">
 							<img src="{{ relativeImagePath }}" class="card-img-top" alt="{{ prod.title }}" style="height:100px;"></td>
+						<td>{{prod.title}}</td>
+		<td>{{prod.description}}</td>
+	
+		<td>{{prod.price}}</td>
+		<td>{{prod.creationdate}}</td>
+		<td style=" width: 10px;">
+			<a href="{{ path('app_admin_delete', {'idProduct': prod.idProduct}) }}" onclick="return confirm('Are you sure you want to delete this product?');">
+				<img src="{{asset('img/deleteUser.png')}}" alt="Delete Product"></img>
+		</td>	
 					</tr>
 				</img>
 			</tbody>
 		</td>
-		<td>{{prod.title}}</td>
-		<td>{{prod.description}}</td>
-		<td>{{prod.forsale}}</td>
-		<td>{{prod.price}}</td>
-		<td>{{prod.creationdate}}</td>
-		<td style=" width: 10px;">
-			<a href="{{ path('app_product_delete', {'idProduct': prod.idProduct}) }}" onclick="return confirm('Are you sure you want to delete this product?');">
-				<img src="{{asset('img/deleteUser.png')}}" alt="Delete Product"></img>
-		</td>
+		
 	</a>
 </li></td></tr>{% endfor %}<tbody></tbody></table></div></li></main><!-- MAIN --></div></li> {% endblock %}
