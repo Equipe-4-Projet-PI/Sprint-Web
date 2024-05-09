@@ -8,6 +8,9 @@ use App\Entity\AuctionParticipant;
 use App\Form\AuctionType;
 use App\Repository\AuctionParticipantRepository;
 use App\Repository\AuctionRepository;
+use App\Repository\EventRepository;
+use App\Repository\ForumRepository;
+use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Id;
@@ -209,6 +212,25 @@ class AuctionController extends AbstractController
         $entityManager->flush();
         return $this->redirectToRoute('app_auction_show', [
             'idAuction' => $auction->getIdArtist(),
+        ]);
+    }
+
+    #[Route('/AdminAuc', name: 'Admin')]
+    public function Admin( UserRepository $repo,ForumRepository $repoF,ProductRepository $repoP,EventRepository $repoE,AuctionRepository $repoAuc): Response
+    {
+        $Auctions = $repoAuc->findAll() ;
+        $NumForums = $repoF ->numberOfForums(); 
+        $usernumbers = $repo ->numberOfUsers();
+        $productsnumbers= $repoP -> numberOfProducts();
+        $eventnumbers = $repoE->numberOfEvents();
+        $auctiontnumbers = $repoAuc->numberOfAuctions();
+        return $this->render('admin/user/UsersAdmin.html.twig', [
+            'Auctions' => $Auctions ,
+            'usernumber'=> $usernumbers,
+            'NumForms'=> $NumForums,
+            'productnumber'=> $productsnumbers,
+            'NumEvents'=> $eventnumbers,
+            'NumAuctions'=> $Auctions
         ]);
     }
 }

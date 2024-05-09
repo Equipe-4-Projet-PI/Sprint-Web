@@ -21,6 +21,14 @@ class AuctionRepository extends ServiceEntityRepository
         parent::__construct($registry, Auction::class);
     }
 
+    public function numberOfAuctions(){
+        $entitymanager=$this->getEntityManager();
+        $query= $entitymanager->createQuery("SELECT COUNT(a) FROM APP\Entity\Auction a");
+        return $query->getSingleScalarResult();
+
+    }
+
+
 //    /**
 //     * @return Auction[] Returns an array of Auction objects
 //     */
