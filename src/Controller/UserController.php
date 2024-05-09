@@ -576,6 +576,48 @@ class UserController extends AbstractController
     
       
     }
+
+
+    #[Route('/ResetPassword{id_user}', name: 'changePassword')]
+    public function ChangePassword(Request $request, UserRepository $repo,ManagerRegistry $manager,$id_user): Response
+    {
+        $error = $request->query->get('error');
+        return $this->render('user/changepassword.html.twig',['id_user'=>$id_user, 'error' => $error]);
+        
+    
+      
+    }
+
+    #[Route('/updatePassword/{id_user}', name: 'upassword')]
+    public function updatepass(Request $request, UserRepository $repo,ManagerRegistry $manager,$id_user): Response
+    {
+        $oldpass = $request->request->get('oldp');
+        $newpass = $request->request->get('newp');
+
+        
+        $user = $repo->find($id_user);
+
+        if ($oldpass === null || $newpass === '') {
+          
+            return $this->redirectToRoute('changePassword', ['error' => 'field is Empty','id_user'=>$id_user]);
+        }
+
+        if ($user->getPassword() == $oldpass)
+        {
+            $user->setPassword($newpass);
+            $manager->getManager()->flush();
+            return $this->redirectToRoute('Profile', ['id_user'=>$id_user]);
+            
+        }
+        else
+        {
+            return $this->redirectToRoute('changePassword', ['error' => 'Wrong Password','id_user'=>$id_user]);
+        }
+        
+    
+    
+      
+    }
   
     
    

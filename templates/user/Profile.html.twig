@@ -575,6 +575,9 @@ select.form-control:not([size]):not([multiple]) {
                                  <td class="field">Adress</td>
                                  <td><input type="text" name="address" id="address"  value={{user.adress}} placeholder="Adress" style="padding: 0 16px;height: 100%;border: none;background: var(--grey);border-radius: 36px  36px;outline: none;color: white;"></td>
                               </tr>
+                              
+			
+				</div>
 
 
                              
@@ -586,6 +589,8 @@ select.form-control:not([size]):not([multiple]) {
                                  <td class="p-t-10 p-b-10">
                                     <button type="submit" class="btn btn-primary width-150">Update</button>
                                     <button type="submit" class="btn btn-white btn-white-without-border width-150 m-l-5" style="color: white;">Cancel</button>
+                                  
+                                     <a href="{{path('changePassword',{'id_user':user.idUser})}}" class="btn btn-white btn-white-without-border width-150 m-l-5">Change Password</a>
                                  </td>
                               </tr>
                            </tbody>
