@@ -547,17 +547,15 @@ class UserController extends AbstractController
         $firstname = $request->request->get('firstname');
         $lastname = $request->request->get('lastname');
         $username = $request->request->get('username');
-        $email = $request->request->get('email');
+       
         $phone = $request->request->get('phone');
         $address = $request->request->get('address');
-        $role= $request->request->get('role');
+       
         $birth= $request->request->get('birthdate');
         
         $user = $repo->find($id);
 
         $user->setUsername($username);
-        $user->setEmail($email);
-        $user->setRole($role);
         $user->setFirstname($firstname);
         $user->setLastname($lastname);
         $user->setAdress($address);
@@ -567,7 +565,10 @@ class UserController extends AbstractController
        
 
         $manager->getManager()->flush();
-        return $this->redirectToRoute('Admin');
+        return $this->redirectToRoute('Profile', [
+            'user'=>$user,
+            'id_user'=>$id
+         ]);
 
     
       

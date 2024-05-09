@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Form\ProductType;
-use App\Repository\EventRepository;
 use App\Repository\ForumRepository;
 use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
@@ -72,16 +71,17 @@ class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/show{idProduct}', name: 'app_product_show', methods: ['GET'])]
-    public function show(Product $product): Response
+    #[Route('/show{idProduct}_{id_user}', name: 'app_product_show', methods: ['GET'])]
+    public function show(Product $product,$id_user): Response
     {
         return $this->render('product/show.html.twig', [
             'product' => $product,
+            'id_user'=>$id_user
         ]);
     }
 
-    #[Route('/edit{idProduct}', name: 'app_product_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Product $product, EntityManagerInterface $entityManager,UserRepository $repoUser): Response
+    #[Route('/edit_{idProduct}_{id_user}_prod', name: 'app_product_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Product $product, EntityManagerInterface $entityManager,UserRepository $repoUser,$id_user): Response
     {
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
@@ -107,52 +107,52 @@ class ProductController extends AbstractController
             }
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_product_index', ['id_user'=>$id_user], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('product/edit.html.twig', [
             'product' => $product,
             'form' => $form,
+            'id_user'=>$id_user
         ]);
     }
 
-    #[Route('/delete{idProduct}', name: 'app_product_delete', methods: ['POST'])]
-    public function delete(Request $request, Product $product, EntityManagerInterface $entityManager): Response
+    #[Route('/delete{idProduct}_prod_{id_user}', name: 'app_product_delete', methods: ['POST'])]
+    public function delete(Request $request, Product $product, EntityManagerInterface $entityManager,$id_user): Response
     {
         if ($this->isCsrfTokenValid('delete'.$product->getIdProduct(), $request->request->get('_token'))) {
             $entityManager->remove($product);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_product_index', ['id_user'=>$id_user], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/Adminprods', name: 'AdminProds')]
-    public function Admin( ProductRepository $repo , UserRepository $repoU , ForumRepository $repoF,EventRepository $repoE): Response
+    public function Admin( ProductRepository $repo , UserRepository $repoU , ForumRepository $repoF): Response
 
     {
         $usernumbers = $repoU ->numberOfUsers();
         $NumForums = $repoF ->numberOfForums();
         $productsnumbers= $repo -> numberOfProducts();
         $prods = $repo->findAll() ; 
-        $eventnumbers = $repoE->numberOfEvents();
         return $this->render('admin/ProdsAdmin.html.twig', [
             'prods' => $prods ,
             'usernumber'=> $usernumbers,
             'NumForms'=> $NumForums,
-            'productnumber'=> $productsnumbers,
-            'NumEvents'=> $eventnumbers,
+            'productnumber'=> $productsnumbers
         ]);
     }
-    #[Route('/product_forsale', name: 'app_product_forsale', methods: ['GET'])]
+    #[Route('/product_forsale-{id_user}', name: 'app_product_forsale', methods: ['GET'])]
     public function forsaleprod(ProductRepository $productRepository , $id_user): Response
     {
         return $this->render('product/index.html.twig', [
             'products' => $productRepository->findBy(['forsale' => true]),
+            'id_user' =>$id_user
             
         ]);
     }
-    #[Route('/product_notforsale_{id_user}', name: 'app_product_notforsale', methods: ['GET'])]
+    #[Route('/productnotforsale{id_user}', name: 'app_product_notforsale', methods: ['GET'])]
     public function notforsaleprod(ProductRepository $productRepository, $id_user): Response
     {
         return $this->render('product/index.html.twig', [

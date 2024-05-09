@@ -525,7 +525,7 @@ select.form-control:not([size]):not([multiple]) {
                      <!-- begin table -->
                      <div class="table-responsive">
                         <table class="table table-profile">
-                         <form name="form1" class="box"  action="" method="post" >
+                         <form name="form1" class="box"  action="{{path('update_profile',{'id':user.idUser})}}" method="post" >
                            <tbody>
                               <tr class="highlight">
                                  <td class="field">Username</td>
@@ -536,7 +536,7 @@ select.form-control:not([size]):not([multiple]) {
                               </tr>
                               <tr>
                                  <td class="field">FirsName</td>
-                                 <td><input type="text" name="firstname" id="lastname"  placeholder="Lastname" value={{user.firstname}} style="padding: 0 16px;height: 100%;border: none;background: var(--grey);border-radius: 36px  36px;outline: none;color: white;"></td>
+                                 <td><input type="text" name="firstname" id="firstname"  placeholder="Lastname" value={{user.firstname}} style="padding: 0 16px;height: 100%;border: none;background: var(--grey);border-radius: 36px  36px;outline: none;color: white;"></td>
                               </tr>
                               <tr>
                                  <td class="field">LastName</td>
@@ -544,7 +544,7 @@ select.form-control:not([size]):not([multiple]) {
                               </tr>
                               <tr>
                                  <td class="field">Phone</td>
-                                 <td><input type="text" name="phone" id="phone"  placeholder="phone" value="+216 {{user.phone}}"  style="padding: 0 16px;height: 100%;border: none;background: var(--grey);border-radius: 36px  36px;outline: none;color: white;"></td>
+                                 <td><input type="text" name="phone" id="phone"  placeholder="phone" value="{{user.phone}}"  style="padding: 0 16px;height: 100%;border: none;background: var(--grey);border-radius: 36px  36px;outline: none;color: white;"></td>
                               </tr>
                             
                               
@@ -573,7 +573,7 @@ select.form-control:not([size]):not([multiple]) {
                               </tr>
                                <tr>
                                  <td class="field">Adress</td>
-                                 <td><input type="text" name="adress" id="adress"  value={{user.adress}} placeholder="Adress" style="padding: 0 16px;height: 100%;border: none;background: var(--grey);border-radius: 36px  36px;outline: none;color: white;"></td>
+                                 <td><input type="text" name="address" id="address"  value={{user.adress}} placeholder="Adress" style="padding: 0 16px;height: 100%;border: none;background: var(--grey);border-radius: 36px  36px;outline: none;color: white;"></td>
                               </tr>
 
 

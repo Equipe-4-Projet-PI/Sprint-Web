@@ -1,7 +1,16 @@
-{% extends 'baHomese.html.twig' %}
+{% extends 'Home.html.twig' %}
 
 {% block title %}Product{% endblock %}
-
+{% block navbar %}
+   
+    {% if id_user %}
+	    <li><a href="{{path('app_product_index',{'id_user': id_user })}}"class="active" >Gallery</a> 
+        <li><a href="{{path('app_lists_forum_user',{'idu': id_user })}}" >Forums</a>
+        <li><a href="{{path('app_auction_index',{ 'id_user': id_user })}}">Auction</a></li>
+        <li><a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a></li>
+        <li><a href="{{ path('app_discussion_index', { 'id_user': id_user }) }}">Messenger</a></li> 
+    {% endif %}
+    {% endblock %}
 {% block body %}
     <!-- ======= Hero Section ======= -->
   <section id="hero" class="hero d-flex flex-column justify-content-center align-items-center" data-aos="fade" data-aos-delay="1500">
@@ -46,9 +55,9 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_product_index') }}">back to list</a>
+    <a href="{{ path('app_product_index',{ 'id_user': id_user }) }}">back to list</a>
     </br>
-    <a href="{{ path('app_product_edit', {'idProduct': product.idProduct}) }}">edit</a>
+    <a href="{{ path('app_product_edit', {'idProduct': product.idProduct,'id_user': id_user }) }}">edit</a>
 
     {{ include('product/_delete_form.html.twig') }}
     
