@@ -195,7 +195,7 @@ public function new(Request $request, EntityManagerInterface $entityManager, $id
         $entityManager->flush();
 
         return $this->redirectToRoute('app_auction_show', [
-            'idAuction' => $auction->getIdArtist(),
+            'idAuction' => $auction->getIdAuction(),
             'id_user'=> $id_user,
         ]);
     }
