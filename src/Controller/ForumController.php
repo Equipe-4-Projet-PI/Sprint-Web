@@ -4,8 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Forum;
 use App\Form\ForumType;
-use App\Repository\AuctionRepository;
-use App\Repository\EventRepository;
 use App\Repository\ForumRepository;
 use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
@@ -108,7 +106,7 @@ class ForumController extends AbstractController
             $manager->getManager()->flush();
             return $this->redirectToRoute('app_lists_forum_user', ['idu' => $user]);
         }
-        return $this->render('forum/addForum.html.twig',['f'=>$form->createView()]);
+        return $this->render('forum/addForum.html.twig',['f'=>$form->createView(),'idu' => $user]);
     }
     /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -179,23 +177,21 @@ class ForumController extends AbstractController
 
     //////////////   ADMIN SECTION   //////////////
     #[Route('/adminForums', name: 'ForumsAdmin')]
-    public function AdminForums(UserRepository $Urepo,ForumRepository $repo,ProductRepository $repoP,EventRepository $repoE,AuctionRepository $repoAuc): Response
+    public function AdminForums(UserRepository $Urepo,ForumRepository $repo,ProductRepository $repoP): Response
     {
         $forums = $repo->findAll() ; 
         $NumForums = $repo ->numberOfForums();
         $productsnumbers= $repoP -> numberOfProducts();
-        $auctionnumbers = $repoAuc->numberOfAuctions();
+
         $users = $Urepo->findAll() ; 
         $usernumbers = $Urepo ->numberOfUsers();
-        $eventnumbers = $repoE->numberOfEvents();
+
         return $this->render('admin/ForumsAdmin.html.twig', [
             'forums' => $forums ,
             'NumForms'=> $NumForums,
             'users' => $users ,
             'usernumber'=> $usernumbers,
-            'productnumber'=> $productsnumbers,
-            'NumEvents'=> $eventnumbers,
-            'NumAuctions'=> $auctionnumbers,
+            'productnumber'=> $productsnumbers
         ]);
     }
 

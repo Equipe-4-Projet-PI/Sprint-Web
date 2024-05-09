@@ -1,7 +1,17 @@
 {% extends 'Home.html.twig' %}
 
-{% block title %}Display Forums{% endblock %}
-
+{% block title %}Display Posts{% endblock %}
+{% block navbar %}
+		{% set id_user = idu.idUser %}
+		{% if id_user %}
+			<li><a href="{{path('app_product_index',{'id_user': id_user })}}"class="active" >Gallery</a> 
+        <li><a href="{{path('app_lists_forum_user',{'idu': id_user })}}" >Forums</a>
+        <li><a href="{{path('app_auction_index',{ 'id_user': id_user })}}">Auction</a></li>
+        <li><a href="{{ path('app_discussion_index', { 'id_user': id_user }) }}">Messenger</a></li> 
+        <li><a href="{{ path('app_event_index_front', { 'id_user': id_user }) }}">Events</a></li> 
+        <li><a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a></li>
+		{% endif %}
+	{% endblock %}
 {% block body %}
 <style>
   .DisplayTable  {
@@ -57,7 +67,7 @@
             <a class="fcc-btn" href="{{path('app_add_post_diff_forum',{'idf':firstPost.idForum.getIdForum})}}">+</a>
           {% endif %}
           
-          <a class="fcc-btn-pdf" href="{{path('app_pdf',{'id':firstPost.idForum.getIdForum})}}">PDF</a>
+          <a class="fcc-btn-pdf" href="{{path('app_pdf',{'id':firstPost.idForum.getIdForum,'idu':idu.idUser})}}">PDF</a>
         {% endif %}
         </div>
       </div>

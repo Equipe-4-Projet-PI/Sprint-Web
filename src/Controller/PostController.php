@@ -10,6 +10,7 @@ use App\Form\PostType;
 use App\Repository\ForumRepository;
 use App\Repository\PostlikesRepository;
 use App\Repository\PostRepository;
+use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
@@ -201,11 +202,12 @@ class PostController extends AbstractController
 
     //////////////   ADMIN SECTION   //////////////
     #[Route('/adminPosts_{idf}', name: 'PostsAdmin')]
-    public function AdminPosts($idf,UserRepository $Urepo,PostRepository $Prepo,ForumRepository $Frepo): Response
+    public function AdminPosts($idf,UserRepository $Urepo,PostRepository $Prepo,ForumRepository $Frepo,ProductRepository $repoP): Response
     {
         $posts = $Prepo->getPostsByForumNormalSQL($idf);
         $ForumName = $Frepo->find($idf)->getTitle();
         $NumForums = $Frepo ->numberOfForums();
+        $productsnumbers= $repoP -> numberOfProducts();
 
         $users = $Urepo->findAll() ; 
         $usernumbers = $Urepo ->numberOfUsers();
@@ -216,14 +218,15 @@ class PostController extends AbstractController
             'NameForum'=>$ForumName,
             'users' => $users ,
             'usernumber'=> $usernumbers,
+            'productnumber'=> $productsnumbers,
         ]);
     }
 
 
     ///////////////// BUNDLEPDF //////////////////////////
 
-    #[Route('/exportPdf/{id}', name: 'app_pdf', methods: ['GET', 'POST'])]
-    public function ExportPdf($id,PostRepository $repo) :Response
+    #[Route('/exportPdf/{id}_{idu}', name: 'app_pdf', methods: ['GET', 'POST'])]
+    public function ExportPdf($id,PostRepository $repo,$idu,UserRepository $Urepo) :Response
     {
         
         $posts = $repo->getPostsByForumNormalSQL($id);
@@ -232,9 +235,11 @@ class PostController extends AbstractController
         $options->set('defaultFont', 'Arial');
 
         $dompdf = new Dompdf($options);
+        $user =$Urepo->find($idu);
         $html = $this->renderView('post/pdf.html.twig', [
             
             'posts'=>$posts,
+            'idu'=>$user,
         ]);
 
         $dompdf->loadHtml($html);
@@ -305,16 +310,16 @@ class PostController extends AbstractController
                 'idu' => $user,
             ]);
         }
-        return $this->render('post/addPost.html.twig',['f'=>$form->createView()]);
+        return $this->render('post/addPost.html.twig',['f'=>$form->createView(),'idu' => $user]);
     }
     
     //Update Post and Keep Connected USER
-    #[Route('/postsupdate{id}_{idu}',name:'app_update_post_user')]
-    public function updateWithConnectedUser(PostRepository $rep,$id,$idu,Request $req,ManagerRegistry $manager){
+    #[Route('/postsupdate{idp}_{idu}',name:'app_update_post_user')]
+    public function updateWithConnectedUser(PostRepository $rep,$idp,$idu,Request $req,ManagerRegistry $manager){
         //keep the user
         $user = $idu; 
         //normal Update
-        $post = $rep->find($id);
+        $post = $rep->find($idp);
         $form = $this->createForm(PostType::class,$post);
         $form->handleRequest($req);
         $forumid = $post->getIdForum()->getIdForum();
@@ -326,7 +331,8 @@ class PostController extends AbstractController
                 'idu' => $user,
             ]);
         }
-        return $this->render('post/addPost.html.twig',['f'=>$form->createView()]);
+        return $this->render('post/addPost.html.twig',['f'=>$form->createView(),'idu' => $user
+    ]);
     }
 
     //Delete the Forums and KEEP USER CONNECTED
