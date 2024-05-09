@@ -21,23 +21,23 @@ use App\Repository\MessageRepository;
 use phpDocumentor\Reflection\Types\Integer;
 use phpDocumentor\Reflection\Types\This;
 use App\Form\SignalType;
-
+use Doctrine\Persistence\ManagerRegistry;
 
 #[Route('/discussion')]
 class DiscussionController extends AbstractController
 {
 
-    private $currentUserId;
+    private ?int $currentUserId;
 
-    public function SetcurrUser($iduser)
+    public function SetcurrUser( $iduser)
     {
-        $this->currentUserId = $iduser;
+        $this->currentUserId = (int)$iduser;
     }
 
 
 
 
-#[Route('_{id_user}', name: 'app_discussion_index', methods: ['GET'])]
+#[Route('-{id_user}', name: 'app_discussion_index', methods: ['GET'])]
 public function index(DiscussionRepository $discussionRepository, UserRepository $userRepository,$id_user): Response
 {
 
@@ -54,42 +54,102 @@ public function index(DiscussionRepository $discussionRepository, UserRepository
 
 
 
-#[Route('_new', name: 'app_discussion_new', methods: ['GET', 'POST'])]
-public function new(Request $request, EntityManagerInterface $entityManager): Response
+// #[Route('new_{id_user}', name: 'app_discussion_new', methods: ['GET', 'POST'])]
+// public function new(Request $request, EntityManagerInterface $entityManager , $id_user): Response
+// {
+//     $this->SetcurrUser($id_user);
+//     $discussion = new Discussion();
+//     $form = $this->createForm(DiscussionType::class, $discussion);
+//     $form->handleRequest($request);
+
+//     if ($form->isSubmitted() && $form->isValid()) {
+
+//         //existence de la discussion
+//         $receiver = $discussion->getReceiver();
+//         if ($receiver !== null) {
+//             $receiverId = $receiver->getIdUser();
+//             $existingDiscussion = $entityManager->getRepository(Discussion::class)->findExistingDiscussion($this->currentUserId, $receiverId);
+//             if ($existingDiscussion) {
+//                 // Une discussion existe déjà, rediriger vers cette discussion
+//                 return $this->redirectToRoute('app_discussion_show_messages', ['iddis' => $existingDiscussion->getIddis()], Response::HTTP_SEE_OTHER);
+//             }
+
+//             // Aucune discussion existante, procéder à la création de la nouvelle discussion
+//             $discussion->setIdsender($this->currentUserId);
+//             $discussion->setSig(null);
+
+//             $entityManager->persist($discussion);
+//             $entityManager->flush();
+
+//             return $this->redirectToRoute('app_discussion_show_messages', ['iddis' => $discussion->getIddis()], Response::HTTP_SEE_OTHER);
+//         } else {
+//             // Si aucun destinataire n'a été sélectionné, afficher un message d'erreur ou rediriger vers une page appropriée
+//             // Ici, je redirige vers la page de création de discussion avec un message d'erreur
+//             $this->addFlash('error', 'Veuillez sélectionner un destinataire.');
+//             return $this->redirectToRoute('app_discussion_new');
+//         }
+//     }
+
+//     // Le formulaire n'est pas soumis ou n'est pas valide
+//     // Afficher le formulaire de création de discussion
+//     return $this->renderForm('discussion/new.html.twig', [
+//         'discussion' => $discussion,
+//         'form' => $form,
+//         'id_user'=>$this->currentUserId,
+//     ]);
+// }
+
+// //Add a Forum
+// #[Route('-discadd_{idu}',name:'app_add_ds')]
+// public function AddForum($idu,Request $req,ManagerRegistry $manager){
+//     $Newforum = new Discussion();
+//     $form = $this->createForm(DiscussionType::class,$Newforum);
+//     $form->handleRequest($req);
+//     if($form->isSubmitted()){
+//         $manager->getManager()->persist($Newforum);
+//         $manager->getManager()->flush();
+//         return $this->redirectToRoute('app_list_forums');
+//     }
+//     return $this->render('discussion/new.html.twig',[
+//         'discussion' => $Newforum
+//         ,'form'=>$form->createView(),
+//         'id_user'=>$idu,
+// ]);
+// }
+
+#[Route('new_disc_{id_user}', name: 'app_discussion_new_two')]
+public function newDis(Request $request, EntityManagerInterface $entityManager , $id_user): Response
 {
+    $this->SetcurrUser($id_user);
     $discussion = new Discussion();
     $form = $this->createForm(DiscussionType::class, $discussion);
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
 
-
-        // Le formulaire est soumis et valide
-        // Procéder à la vérification de l'existence de la discussion
+        //existence de la discussion
         $receiver = $discussion->getReceiver();
         if ($receiver !== null) {
             $receiverId = $receiver->getIdUser();
             $existingDiscussion = $entityManager->getRepository(Discussion::class)->findExistingDiscussion($this->currentUserId, $receiverId);
-//dump($receiverId);
             if ($existingDiscussion) {
                 // Une discussion existe déjà, rediriger vers cette discussion
-//dump($existingDiscussion);
-                return $this->redirectToRoute('app_discussion_show_messages', ['iddis' => $existingDiscussion->getIddis()], Response::HTTP_SEE_OTHER);
+                return $this->redirectToRoute('app_discussion_show_messages', ['id_user'=>$id_user,'iddis' => $existingDiscussion->getIddis()], Response::HTTP_SEE_OTHER);
             }
 
             // Aucune discussion existante, procéder à la création de la nouvelle discussion
             $discussion->setIdsender($this->currentUserId);
-            $discussion->setSig("");
-    
+            $discussion->setSig(null);
+
             $entityManager->persist($discussion);
             $entityManager->flush();
-    
-            return $this->redirectToRoute('app_discussion_show_messages', ['iddis' => $discussion->getIddis()], Response::HTTP_SEE_OTHER);
+
+            return $this->redirectToRoute('app_discussion_show_messages', ['id_user'=>$id_user,'iddis' => $discussion->getIddis()], Response::HTTP_SEE_OTHER);
         } else {
             // Si aucun destinataire n'a été sélectionné, afficher un message d'erreur ou rediriger vers une page appropriée
             // Ici, je redirige vers la page de création de discussion avec un message d'erreur
             $this->addFlash('error', 'Veuillez sélectionner un destinataire.');
-            return $this->redirectToRoute('app_discussion_new');
+            return $this->redirectToRoute('app_discussion_new_two');
         }
     }
 
@@ -98,30 +158,27 @@ public function new(Request $request, EntityManagerInterface $entityManager): Re
     return $this->renderForm('discussion/new.html.twig', [
         'discussion' => $discussion,
         'form' => $form,
+        'id_user'=>$id_user,
     ]);
 }
 
 
-    #[Route('_{iddis}', name: 'app_discussion_show', methods: ['GET'])]
-    public function show(Discussion $discussion): Response
+    #[Route('d-{iddis}_{id_user}', name: 'app_discussion_show', methods: ['GET'])]
+    public function show(Discussion $discussion , $id_user): Response
     {
+        $this->SetcurrUser($id_user);
+
         return $this->render('discussion/show.html.twig', [
             'discussion' => $discussion,
+            'id_user'=>$id_user,
         ]);
     }
+    
 
-    #[Route('/discussionlist', name: 'app_list_disc')]
-    public function getAll(DiscussionRepository $repo): Response
+    #[Route('-{iddis}_edit_{id_user}', name: 'app_discussion_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Discussion $discussion, EntityManagerInterface $entityManager , $id_user): Response
     {
-        $discussions = $repo->findAll();
-        return $this->render('discussion/Admin.html.twig', [
-            'discussions' => $discussions
-        ]);
-    }
-
-    #[Route('-{iddis}_edit', name: 'app_discussion_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Discussion $discussion, EntityManagerInterface $entityManager): Response
-    {
+        $this->SetcurrUser($id_user);
         $form = $this->createForm(DiscussionType::class, $discussion);
         $form->handleRequest($request);
 
@@ -134,115 +191,157 @@ public function new(Request $request, EntityManagerInterface $entityManager): Re
         return $this->renderForm('discussion/edit.html.twig', [
             'discussion' => $discussion,
             'form' => $form,
+            'id_user' => $this->currentUserId,
         ]);
     }
-    
-    #[Route('_{iddis}', name: 'app_discussion_delete', methods: ['POST'])]
-    public function delete(Request $request, Discussion $discussion, EntityManagerInterface $entityManager): Response
+
+    #[Route('deletedis{iddis}_{id_user}', name: 'app_discussion_delete', methods: ['GET', 'POST'])]
+    public function delete(Request $request, Discussion $discussion, EntityManagerInterface $entityManager , $id_user): Response
     {
+        $this->SetcurrUser($id_user);
         if ($this->isCsrfTokenValid('delete' . $discussion->getIddis(), $request->request->get('_token'))) {
             $entityManager->remove($discussion);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_discussion_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_discussion_index', ['id_user' => $id_user], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('-messages_{iddis}', name: 'app_discussion_show_messages', methods: ['GET', 'POST'])]
-    public function showMessages($iddis, Request $request, MessageRepository $messageRepository, UserRepository $userRepository , EntityManagerInterface $entityManager): Response
+    #[Route('messages_{iddis}_{id_user}', name: 'app_discussion_show_messages', methods: ['GET', 'POST'])]
+    public function showMessages( NotificationController $notificationController ,$iddis, Request $request,MessageRepository $messageRepository,$id_user, EntityManagerInterface $entityManager): Response
     {
+        $this->SetcurrUser($id_user);
         $discussion = $this->getDoctrine()->getRepository(Discussion::class)->find($iddis);
-        
+
        // $idCurrentUser = User.get_current_user();
         $user = null ;
         //$sender = $userRepository->findUserById($idCurrentUser);
 
+
         $message = new Message();
         $message->setIdsender($this->currentUserId);
         $message->setIddis($iddis);
-    
+
         $messages = $messageRepository->findBy(['iddis' => $iddis]);
 
         $form = $this->createForm(MessageType::class, $message);
         $form->handleRequest($request);
-    
+
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $notificationController->sendNotification($request);
+
             $entityManager->persist($message);
             $entityManager->flush();
-            
-            return $this->redirectToRoute('app_discussion_show_messages', ['iddis'=>$iddis], Response::HTTP_SEE_OTHER);
+
+            return $this->redirectToRoute('app_discussion_show_messages', ['id_user' => $id_user,
+                                                                            'iddis'=>$iddis], 
+                        Response::HTTP_SEE_OTHER);
         }
-    
+
         return $this->render('message/messages.html.twig', [
             'discussion' => $discussion,
             'messages' => $messages,
             //'sender' => $sender ,
             'form' => $form->createView(),
-            'currentUserId' => $this->currentUserId,
+            'id_user' => $id_user,
 
         ]);
     }
 
 
-    #[Route('-{iddis}-signaler', name: 'app_discussion_signal', methods: ['GET', 'POST'])]
-    public function signaler(Request $request, Discussion $discussion, EntityManagerInterface $entityManager): Response
+    #[Route('signaler-{iddis}-{id_user}', name: 'app_discussion_signal', methods: ['GET', 'POST'])]
+    public function signaler(Request $request, Discussion $discussion, EntityManagerInterface $entityManager , $id_user): Response
     {
+        $this->SetcurrUser($id_user);
         $form = $this->createForm(SignalType::class);
-    
+
         $form->handleRequest($request);
-    
+
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $discussion->setSig($data['motif']);
             $entityManager->flush();
-    
-            return $this->redirectToRoute('app_discussion_show_messages', ['iddis' => $discussion->getIddis()]);
+
+            return $this->redirectToRoute('app_discussion_show_messages',  ['id_user' => $id_user,
+            'iddis' => $discussion->getIddis()]);
         }
-    
+
         return $this->render('discussion/signaler.html.twig', [
             'form' => $form->createView(),
             'discussion' => $discussion,
+            'id_user' => $this->currentUserId,
         ]);
     }
 
 
+    //Admin
 
-    #[Route('discussionsearchres',name:'discussions_search_res')]
-    public function searchResults(Request $request, discussionRepository $discussionRepository ) : Response
+    #[Route('annulersignaler-{iddis}', name: 'app_discussion_annul_signal', methods: ['GET', 'POST'])]
+    public function AnuulerSignaler(Request $request,DiscussionRepository $repo , Discussion $discussion, EntityManagerInterface $entityManager ): Response
+    {
+        $discussion->setSig(null);
+        $discussions = $repo->findByNonEmptySig();
+
+        return $this->render('discussion/Admin.html.twig', [
+            'discussion' => $discussion,
+            'discussions' => $discussions ,
+        ]);
+    }
+
+    #[Route('discussionlist', name: 'app_list_disc')]
+    public function getAll(DiscussionRepository $repo): Response
+    {
+        $discussions = $repo->findByNonEmptySig();
+        return $this->render('discussion/Admin.html.twig', [
+            'discussions' => $discussions
+        ]);
+    }
+
+    
+    
+
+    //Recherche
+
+    #[Route('discussionsearchres_{id_user}',name:'discussions_search_res')]
+    public function searchResults(Request $request, discussionRepository $discussionRepository , $id_user) : Response
     {
         $query = $request->query->get('query');
-    
+        $this->SetcurrUser($id_user);
+
         if($query != null){
-            $discussions = $discussionRepository->search($query , $this->currentUserId);
+            $discussions = $discussionRepository->SEARCH($query );
         }else{
             $discussions = $discussionRepository->findAll();
         }
-    
+
         return $this->render('discussion/discussionResults.html.twig', [
             'discussions' => $discussions,
+            'id_user' => $this->currentUserId,
         ]);
     }
-    
-    
-    #[Route('discussionlistsearch',name:'discussions_search')]
-    public function search(discussionRepository $repo, Request $request) : Response
+
+
+    #[Route('discussionlistsearch_{id_user}',name:'discussions_search')]
+    public function search(discussionRepository $repo, Request $request , $id_user) : Response
     {
         $searchTerm = $request->query->get('query');
-    
+        $this->SetcurrUser($id_user);
+
         if($searchTerm != null){
-            $searchResults = $repo->SEARCH($searchTerm , $this->currentUserId);
+            $searchResults = $repo->SEARCH($searchTerm );
         }else{
             $searchResults = $repo->findAll();
         }
         $searchResults = $repo->findAll();
-    
+
         return $this->render('discussion/search.html.twig', [
-            'discussion' => $searchResults
+            'discussion' => $searchResults,
+            'id_user'=>$this->currentUserId,
         ]);
     }
 
 
+
+
 }
-
-
-    

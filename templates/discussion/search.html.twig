@@ -1,6 +1,16 @@
 {% extends 'Home.html.twig' %}
 
 {% block title %}Search{% endblock %}
+{% block navbar %}
+   
+    {% if id_user %}
+	    <li><a href="{{path('app_product_index',{'id_user': id_user })}}" >Gallery</a> 
+        <li><a href="{{path('app_lists_forum_user',{'idu': id_user })}}" >Forums</a>
+        <li><a href="{{path('app_auction_index',{ 'id_user': id_user })}}" >Auction</a></li>
+        <li><a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a></li>
+        <li><a href="{{ path('app_discussion_index', { 'id_user': id_user }) }}"class="active" >Messenger</a></li> 
+    {% endif %}
+{% endblock %}
 
 {% block body %}
     <style>
@@ -74,10 +84,10 @@ isRequestPending = true;
 
 // Send AJAX request
 $.ajax({
-url: "{{ path('discussions_search_res') }}",
+url: "{{ path('discussions_search_res' , { 'id_user': id_user } )}}",
 method: "GET",
 data: {
-query: input
+query: input,
 },
 timeout: 5000,
 success: function (data) {

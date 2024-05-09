@@ -1,6 +1,6 @@
 
 
-{% extends 'Home.html.twig' %}
+{% extends 'Admin.html.twig' %}
 
 {% block title %}Discussion{% endblock %}
 
@@ -43,5 +43,5 @@
 
     {#<a href="{{ path('app_discussion_edit', {'iddis': discussion.iddis}) }}">edit</a>#}
 
-    {{ include('discussion/_delete_form.html.twig') }}
+    {{ include('discussion/_delete_form_Admin.html.twig') }}
 {% endblock %}
