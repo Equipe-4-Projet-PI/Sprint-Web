@@ -2,7 +2,16 @@
 
 {% block title %}Auction
 {% endblock %}
-
+{% block navbar %}
+   
+    {% if id_user %}
+	    <li><a href="{{path('app_product_index',{'id_user': id_user })}}" >Gallery</a> 
+        <li><a href="{{path('app_lists_forum_user',{'idu': id_user })}}" >Forums</a>
+        <li><a href="{{path('app_auction_index',{ 'id_user': id_user })}}"class="active" >Auction</a></li>
+        <li><a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a></li>
+        <li><a href="{{ path('app_discussion_index', { 'id_user': id_user }) }}">Messenger</a></li> 
+    {% endif %}
+{% endblock %}
 {% block body %}
 	<h1>Auction</h1>
 
@@ -15,7 +24,10 @@
 		<div class="card p-4">
 			<div class=" image d-flex flex-column justify-content-center align-items-center">
 				<button class="btn btn-secondary">
-					<img src="https://i.imgur.com/wvxPV9S.png" height="100" width="100"/></button>
+				{% set imagePath = produit.productimage %}
+                {% set parts = imagePath|split('/') %}
+                {% set relativeImagePath = '/uploads/' ~ parts|last %}
+					<img src="{{ relativeImagePath }}" height="100" width="100"/></button>
 				<span class="name mt-3">{{auction.nom}}</span>
 				<span class="idd">Un produit à
 				</span>
@@ -34,7 +46,7 @@
 					<button class="btn1 btn-dark" id="participerButton" onclick="showPopup()">Participer</button>
 				</div>
 				<div id="popup" style="display: none;">
-					<form id="priceForm" method="post" action="{{ path('submit_price' , {'idUser': 13}) }}">
+					<form id="priceForm" method="post" action="{{ path('submit_price' , {'id_user': id_user}) }}">
 						<input type="hidden" name="idAuction" value="{{ auction.idAuction }}">
 						<label for="price">Enter the price:</label>
 						<input type="text" id="price" name="price">
@@ -42,11 +54,7 @@
 					</form>
 				</div>
 
-				<div class="text mt-3">
-					<span>Eleanor Pena is a creator of minimalistic x bold graphics and digital artwork.<br><br>
-						Artist/ Creative Director by Day #NFT minting@ with FND night.
-					</span>
-				</div>
+				
 				<div class=" px-2 rounded mt-4 date ">
 					<span class="join">Commence à
 						{{auction.dateLancement|date('Y-m-d H:i:s')}}</span>
@@ -60,7 +68,7 @@
 
 			<h3>Give a rating please!</h3>
 
-			<form id="ratingForm" action="{{ path('save_rating', {'idUser': 13}) }}" method="post">
+			<form id="ratingForm" action="{{ path('save_rating', {'id_user': id_user}) }}" method="post">
 				<div class="star-group">
 					<input type="hidden" name="idAuction" value="{{ auction.idAuction }}">
 					<input type="radio" class="star" id="one" name="rating" value="1">
@@ -78,11 +86,11 @@
 			</form>
 
 
-			<a href="{{ path('app_auction_index') }}">back to list</a>
+			<a href="{{ path('app_auction_index',{'id_user': id_user }) }}">back to list</a>
 
-			<a href="{{ path('app_auction_edit', {'idAuction': auction.idAuction}) }}">edit</a>
+			<a href="{{ path('app_auction_edit', {'idAuction': auction.idAuction , 'id_user': id_user}) }}">edit</a>
+			<a href="{{ path('app_auction_delete', {'idAuction': auction.idAuction , 'id_user' : id_user}) }}">supprimer</a>
 
-			{{ include('auction/_delete_form.html.twig') }}
 		</div>
 
 	</div>
@@ -112,7 +120,7 @@ const jsonData = JSON.stringify({rating: ratingValue});
 
 // Send the AJAX request
 const xhr = new XMLHttpRequest();
-xhr.open("POST", "{{ path('save_rating', {'idUser': 13 }) }}", true);
+xhr.open("POST", "{{ path('save_rating', {'id_user': id_user }) }}", true);
 xhr.setRequestHeader("Content-Type", "application/json");
 xhr.onreadystatechange = function () {
 if (xhr.readyState === XMLHttpRequest.DONE) {

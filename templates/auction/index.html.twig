@@ -30,18 +30,17 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-		<!--font-family-->
-		<link
-		href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet"> <!-- title of site -->
-		<title>Directory Landing Page</title>
+	<link rel="stylesheet" href="{{ asset('css/auctionStyle.css') }}">
 
-		<!-- For favicon png -->
-		<link
-		rel="shortcut icon" type="image/icon" href="{{ asset('logo/favicon.png') }}"/>
+	<div class="frame">
+    <!-- Contenu à placer dans le cadre -->
+    <a href="{{ path('app_auction_new', {'id_user':id_user} ) }}">Ajouter un Enchère</a>
+</div>
 
-		<!--font-awesome.min.css-->
-		<link
-		rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}">
+<div class="frame1">
+    <!-- Contenu à placer dans le cadre -->
+    <a href="{{ path('auctions_search', {'id_user':id_user} ) }}">Trouver un Enchère</a>
+</div>
 
 		<!--linear icon css-->
 		<link

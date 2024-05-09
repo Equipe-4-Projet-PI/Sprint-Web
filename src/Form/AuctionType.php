@@ -7,6 +7,9 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;  
+use App\Entity\Product;
+use App\Repository\ProductRepository;
 
 class AuctionType extends AbstractType
 {
@@ -25,6 +28,7 @@ class AuctionType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Auction::class,
+            'id_user' => null,
         ]);
     }
 }

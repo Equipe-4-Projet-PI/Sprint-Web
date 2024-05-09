@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Auction;
+use App\Entity\Product;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Entity\AuctionParticipant;
 use App\Form\AuctionType;
@@ -25,7 +26,47 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/auction')]
 class AuctionController extends AbstractController
 {
-    #[Route('_{id_user}', name: 'app_auction_index', methods: ['GET'])]
+
+    #[Route('/auctionlistsearchres_{id_user}',name:'auction_search_res')]
+    public function searchfunc(Request $request, AuctionRepository $auctionRepository,$id_user) : Response
+    {
+        $query = $request->query->get('query');
+        $forums = $auctionRepository->search($query);
+
+        if($query != null){
+            $auction = $auctionRepository->SEARCH($query);
+        }else{
+            $auction = $auctionRepository->findAll();
+        }
+
+        return $this->render('auction/searchResults.html.twig', [
+            'auctions' => $forums,
+            'id_user'=>$id_user,
+        ]);
+    }
+    #[Route('/auctionlistsearch_{id_user}',name:'auctions_search')]
+    public function search(AuctionRepository $repo, Request $request,$id_user) : Response
+    {
+        
+        $searchTerm = $request->query->get('query');
+
+        // Perform search logic here
+        if($searchTerm != null){
+            $searchResults = $repo->SEARCH($searchTerm);
+        }else{
+            $searchResults = $repo->findAll();
+        }
+        
+        
+        
+        return $this->render('auction/search.html.twig', [
+            'auctions' => $searchResults,
+            'id_user'=>$id_user,
+        ]);
+    }
+
+
+    #[Route('_home{id_user}', name: 'app_auction_index', methods: ['GET'])]
     public function index(AuctionRepository $auctionRepository, AuctionParticipantRepository $apRepo , PaginatorInterface $pi , Request $req,$id_user): Response
     {
         $data =$auctionRepository->findAll();
@@ -33,7 +74,7 @@ class AuctionController extends AbstractController
             $data,
             $req->query->getInt('page',1),
             3
-    );
+        );
         $participants = $apRepo->findAll();
 
         $participantWithRating = [];
@@ -53,75 +94,88 @@ class AuctionController extends AbstractController
         ]);
     }
 
-    #[Route('_new', name: 'app_auction_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $auction = new Auction();
-        $auction->setIdArtist(1);
-        $form = $this->createForm(AuctionType::class, $auction);
-        $form->handleRequest($request);
+    #[Route('_new{id_user}', name: 'app_auction_new', methods: ['GET', 'POST'])]
+public function new(Request $request, EntityManagerInterface $entityManager, $id_user): Response
+{
+    $auction = new Auction();
+    $auction->setIdArtist($id_user);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($auction);
-            $entityManager->flush();
+    $form = $this->createForm(AuctionType::class, $auction, ['id_user' => $id_user]);
+    $form->handleRequest($request);
 
-            return $this->redirectToRoute('app_auction_index', [], Response::HTTP_SEE_OTHER);
-        }
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Récupérer l'ID du produit sélectionné dans le formulaire
+        $idProduit = $auction->getIdProduit();
 
-        return $this->renderForm('auction/new.html.twig', [
-            'auction' => $auction,
-            'form' => $form,
-        ]);
+        // Affecter l'ID du produit à l'entité Auction
+        $auction->setIdProduit($idProduit);
+
+        $entityManager->persist($auction);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_auction_index', ['id_user' => $id_user], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('_{idAuction}', name: 'app_auction_show', methods: ['GET'])]
-    public function show(Auction $auction, AuctionParticipantRepository $apRepo): Response
+    return $this->renderForm('auction/new.html.twig', [
+        'auction' => $auction,
+        'form' => $form,
+        'id_user'=> $id_user,
+    ]);
+}
+
+    #[Route('_{idAuction}_{id_user}', name: 'app_auction_show', methods: ['GET'])]
+    public function show(Auction $auction, AuctionParticipantRepository $apRepo , $id_user , ProductRepository $pRepo): Response
     {
         $idAuction = $auction->getIdAuction();
         $participants = $apRepo->findBy(['idAuction' => $idAuction]);
         $numberParticipants = count($participants);
+        $produit = $pRepo -> find($auction->getIdProduit());
+        
 
         return $this->render('auction/show.html.twig', [
             'auction' => $auction,
             'numberParticipants' => $numberParticipants,
+            'id_user' => $id_user,
+            'produit' => $produit,
         ]);
     }
 
-    #[Route('_{idAuction}/edit', name: 'app_auction_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Auction $auction, EntityManagerInterface $entityManager): Response
+    #[Route('_{idAuction}/edit{id_user}', name: 'app_auction_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Auction $auction, EntityManagerInterface $entityManager , $id_user): Response
     {
         $form = $this->createForm(AuctionType::class, $auction);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            return $this->redirectToRoute('app_auction_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_auction_index', ['id_user' => $id_user], Response::HTTP_SEE_OTHER);
         }
         return $this->renderForm('auction/edit.html.twig', [
             'auction' => $auction,
             'form' => $form,
+            'id_user' => $id_user,
         ]);
     }
 
-    #[Route('_{idAuction}_delete', name: 'app_auction_delete', methods: ['POST'])]
-    public function delete(Request $request, Auction $auction, EntityManagerInterface $entityManager): Response
+    #[Route('_{idAuction}_delete{id_user}', name: 'app_auction_delete', methods: ['POST'])]
+    public function delete(Request $request, Auction $auction, EntityManagerInterface $entityManager,$id_user): Response
     {
         if ($this->isCsrfTokenValid('delete' . $auction->getIdAuction(), $request->request->get('_token'))) {
             $entityManager->remove($auction);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_auction_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_auction_index', ['id_user' => $id_user], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/submit-price_{idUser}', name: "submit_price", methods: ['POST'])]
-    public function submitPrice( UserRepository $uRepo ,$idUser , Request $request ,  AuctionRepository $aRepo , EntityManagerInterface $entityManager,  AuctionParticipantRepository $apRepo): Response
+    #[Route('/submit-price_{id_user}', name: "submit_price", methods: ['POST'])]
+    public function submitPrice( $id_user , UserRepository $uRepo , Request $request ,  AuctionRepository $aRepo , EntityManagerInterface $entityManager,  AuctionParticipantRepository $apRepo): Response
     {
         $idAuction = $request->request->get('idAuction');
         $price = $request->request->get('price');
         $auction = $aRepo->find($idAuction);
 
-        $participant = $apRepo->findOneBy(['idParticipant' => $idUser, 'idAuction' => $idAuction]);
+        $participant = $apRepo->findOneBy(['idParticipant' => $id_user, 'idAuction' => $idAuction]);
         
         if (!$auction) {
             throw $this->createNotFoundException('Auction not found');
@@ -132,7 +186,7 @@ class AuctionController extends AbstractController
             $participant->setDate();
         } else {
             $participant = new AuctionParticipant();
-            $user = $uRepo -> find($idUser);
+            $user = $uRepo -> find($id_user);
             $participant->setIdParticipant($user);
             $participant->setIdAuction($auction);
             $participant->setDate();
@@ -143,6 +197,7 @@ class AuctionController extends AbstractController
 
         return $this->redirectToRoute('app_auction_show', [
             'idAuction' => $auction->getIdArtist(),
+            'id_user'=> $id_user,
         ]);
     }
 
@@ -155,14 +210,14 @@ class AuctionController extends AbstractController
         ]);
     }
 
-    #[Route("/save-rating_{idUser}", name: "save_rating", methods: ["GET", "POST"])]
-    public function saveRating(AuctionRepository $aRepo, EntityManagerInterface $entityManager, Request $request ,  $idUser , AuctionParticipantRepository $apRepo , UserRepository $uRepo): Response
+    #[Route("/save-rating_{id_user}", name: "save_rating", methods: ["GET", "POST"])]
+    public function saveRating(AuctionRepository $aRepo, EntityManagerInterface $entityManager, Request $request ,  $id_user , AuctionParticipantRepository $apRepo , UserRepository $uRepo): Response
     {
         $idAuction = $request->request->get('idAuction');
         $ratingValue = $request->request->get('rating');
 
         $auction = $aRepo->find($idAuction);
-        $participant = $apRepo->findOneBy(['idParticipant' => $idUser, 'idAuction' => $idAuction]);
+        $participant = $apRepo->findOneBy(['idParticipant' => $id_user, 'idAuction' => $idAuction]);
 
         if (!$auction) {
             throw $this->createNotFoundException('Auction not found');
@@ -175,24 +230,25 @@ class AuctionController extends AbstractController
             $auctionParticipant->setRating($ratingValue);
             $auctionParticipant->setDate(new \DateTime());
             $auctionParticipant->setIdAuction($auction);
-            $auctionParticipant->setIdParticipant($uRepo->find($idUser));
+            $auctionParticipant->setIdParticipant($uRepo->find($id_user));
             $entityManager->persist($auctionParticipant);
         }
         
         $entityManager->flush();
         return $this->redirectToRoute('app_auction_show', [
-            'idAuction' => $auction->getIdArtist(),
+            'idAuction' => $auction->getIdAuction(),
+            'id_user' => $id_user,
         ]);
     }
 
-    #[Route('/save-love-click/{idUser}', name: 'save_love_click', methods: ['GET','POST'])]
-    public function saveLoveClick( AuctionRepository $aRepo, EntityManagerInterface $entityManager, Request $request ,  $idUser , AuctionParticipantRepository $apRepo , UserRepository $uRepo): Response
+    #[Route('/save-love-click/{id_user}', name: 'save_love_click', methods: ['GET','POST'])]
+    public function saveLoveClick( AuctionRepository $aRepo, EntityManagerInterface $entityManager, Request $request ,  $id_user , AuctionParticipantRepository $apRepo , UserRepository $uRepo): Response
     {
         $idAuction = $request->request->get('idAuction');
 
 
         $auction = $aRepo->find($idAuction);
-        $participant = $apRepo->findOneBy(['idParticipant' => $idUser, 'idAuction' => $idAuction]);
+        $participant = $apRepo->findOneBy(['idParticipant' => $id_user, 'idAuction' => $idAuction]);
 
         if (!$auction) {
             throw $this->createNotFoundException('Auction not found');
@@ -205,13 +261,14 @@ class AuctionController extends AbstractController
             $auctionParticipant->setDate(new \DateTime()); 
             $auctionParticipant->setLove(1);
             $auctionParticipant->setIdAuction($auction);
-            $auctionParticipant->setIdParticipant($uRepo->find($idUser));
+            $auctionParticipant->setIdParticipant($uRepo->find($id_user));
             $entityManager->persist($auctionParticipant);
         }
         
         $entityManager->flush();
         return $this->redirectToRoute('app_auction_show', [
             'idAuction' => $auction->getIdArtist(),
+            'id_user' => $id_user,
         ]);
     }
 
