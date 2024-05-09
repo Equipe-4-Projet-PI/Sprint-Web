@@ -25,7 +25,8 @@
   <link href="assets/vendor/aos/aos.css" rel="stylesheet">
   <!-- Template Main CSS File -->
   <link href="{{asset('css/main.css')}}" rel="stylesheet">
- 
+  
+
  
 
 </head>
@@ -33,6 +34,8 @@
 <body>
 
   <!-- ======= Header ======= -->
+  <div
+		class="vertical-align-container">
   <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid d-flex align-items-center justify-content-between">
 
@@ -43,28 +46,18 @@
   
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a href="index.html" class="active">Home</a></li>
-          <li><a href="about.html">About</a></li>
-          <li class="dropdown"><a href="#"><span>Gallery</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
-            <ul>
-              <li><a href="gallery.html">Nature</a></li>
-              <li><a href="gallery.html">People</a></li>
-              <li><a href="gallery.html">Architecture</a></li>
-              <li><a href="gallery.html">Animals</a></li>
-              <li><a href="gallery.html">Sports</a></li>
-              <li><a href="gallery.html">Travel</a></li>
-              <li class="dropdown"><a href="#"><span>Sub Menu</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
-                <ul>
-                  <li><a href="#">Sub Menu 1</a></li>
-                  <li><a href="#">Sub Menu 2</a></li>
-                  <li><a href="#">Sub Menu 3</a></li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="{{path('app_auction_index')}}">Auction</a></li>
-          <li><a href="{{path('app_list_forums')}}">Forums</a></li>
+       
+       
+          
+    {% block navbar %}
+    
+   
+    {% endblock %}
+     
+    
+    <li><a href="{{path('login')}}">Logout</a></li>
+
+        
         </ul>
       </nav><!-- .navbar -->
 
@@ -78,6 +71,7 @@
       <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
 
     </div>
+    
   </header><!-- End Header -->
 
   {% block body %}

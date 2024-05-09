@@ -26,31 +26,35 @@
     <div class="container">
       <span class="error animated tada" id="msg"></span>
        <img src="{{asset('img/Closepage.png')}}" alt="ArtyVnci" style="width: 10%;position: absolute;top: 2%;right: 2%;" >
-       <img src="{{asset('img/return.png')}}" alt="ArtyVnci" style="width: 8%;position: absolute;top: 3%;left: 4%;" >
+       <a href="{{path('signup2')}}"><img src="{{asset('img/return.png')}}" alt="ArtyVnci" style="width: 8%;position: absolute;top: 3%;left: 4%;" ></a>
+      
        <form name="form1" class="box" {{ form_start(form) }}>
     <img src="{{ asset('img/logo.png') }}" alt="ArtyVnci" style="width: 35%;">
     <h5>Sign in to your account.</h5>
     <img src="{{asset('img/pagination3.png')}}" alt="ArtyVnci" style="position: fixed;width: 10%;top: 27%;right: 45%;">
  
-<div class="profile-pic">
-    <label class="-label" for="file">
-        Change Image
-    </label> 
-    <input id="file" type="file" onchange="loadFile(event)" name="imageurl"/>
+<div>
     <img src="{{ asset('img/userprofile.png') }}" id="output" width="200" />
 </div>
+{{ form_widget(form.imageurl, {'id': 'imageurl'}) }}
 <br>
 <br>
-{{ form_widget(form.imageurl) }}
+
 
 <script>
-    function loadFile(event) {
-        var image = document.getElementById('output');
-        image.src = URL.createObjectURL(event.target.files[0]);
-        
-        var imageUrlInput = document.getElementById('imageurl_field');
-        imageUrlInput.value = event.target.value; // Set the value of the hidden input field to the image URL
-    }
+    const imageUrlInput = document.getElementById('imageurl');
+    const imageOutput = document.getElementById('output');
+
+    imageUrlInput.addEventListener('change', function() {
+        // Get the value of the image input
+        const imageName = this.value.replace(/^.*[\\\/]/, ''); // Remove path leaving only the filename
+
+        // Construct the full URL of the image
+        const imageUrl = "{{ asset('img/testimonials/') }}" + imageName;
+
+        // Set the src attribute of the image
+        imageOutput.src = imageUrl;
+    });
 </script>
 
 
@@ -60,9 +64,8 @@
 
 
 
-
     
-    {{ form_row(form.Done, {'attr': {'class': 'btn1', 'value': 'Sign in'}}) }}
+    {{ form_row(form.Done, {'attr': {'class': 'btn2', 'value': 'Sign in' }}) }}
    
 </form >
       

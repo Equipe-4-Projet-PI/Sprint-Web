@@ -19,7 +19,9 @@
 
 <body id="particles-js"></body>
 <div class="animated bounceInDown">
-  <div class="container">
+  <div class="container" style="
+    height: 580px;
+">
     <span class="error animated tada" id="msg"></span>
    
    
@@ -43,17 +45,15 @@
           <span></span>
           <small class="rmb">Remember me</small>
         </label>
-        <a href="#" class="forgetpass">Forget Password?</a>
-        <input type="submit" value="Sign in" class="btn1">
+        <a href="{{path('Reset_Password')}}" class="forgetpass">Forget Password?</a>
+        <input type="submit" value="Sign in" class="btn1" style="
+    top: 70%;
+" >
       </form>
 
     
      
-      <div class="a b c ">
-        <div class="slide"></div>
-        <div class="lab">or</div>
-        <div class="slide"></div>
-      </div>
+     
 
         <a href="{{path('signup')}}" class="dnthave">Join ArtyVenci</a>
   </div> 

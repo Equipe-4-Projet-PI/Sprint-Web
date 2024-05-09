@@ -28,7 +28,7 @@
     height: 690px;">
     <span class="error animated tada" id="msg" style="top: 21%;" ></span>
      <img src="{{asset('img/Closepage.png')}}" alt="ArtyVnci" style="width: 10%;position: absolute;top: 2%;right: 2%;" >
-     <img src="{{asset('img/return.png')}}" alt="ArtyVnci" style="width: 8%;position: absolute;top: 3%;left: 4%;" >
+     <a href="{{path('signup')}}"><img src="{{asset('img/return.png')}}" alt="ArtyVnci" style="width: 8%;position: absolute;top: 3%;left: 4%;" ></a>
       <form name="form1"  class="box" onsubmit = "return check()" action="{{ path('signup3',{'username': 'example_username', 'email': 'example_email' , 'dob':'example_dob'})}}">
         <img src="{{asset('img/logo.png')}}" alt="ArtyVnci"style="width: 35%;">
         <h5>Join ArtyVenci</h5>

@@ -45,4 +45,36 @@ class ForumRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    public function numberOfForums(){
+        $entitymanager=$this->getEntityManager();
+        $query= $entitymanager->createQuery("SELECT COUNT(f) FROM APP\Entity\Forum f");
+        return $query->getSingleScalarResult();
+
+    }
+    public function searchByName(string $title): array
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.title LIKE :title')
+            ->setParameter('title', '%' . $title . '%')
+            ->getQuery()
+            ->getResult();
+    }
+    public function SEARCH(string $title): array{
+        $manager = $this->getEntityManager();
+        $req = $manager->createQuery('SELECT f FROM App\Entity\Forum f WHERE f.title LIKE :idF')
+        ->setParameter('idF','%' . $title . '%');
+        $result = $req->getResult();
+    
+        if (empty($result)) {
+            //$manager = $this->getEntityManager();
+            //$req = $manager->createQuery('SELECT f FROM App\Entity\Forum f');
+            //$result = $req->getResult();
+            $forum = new Forum();
+            $forum->setTitle("No records");
+            $result[] = $forum;
+        }
+
+        return $result;
+    }
 }

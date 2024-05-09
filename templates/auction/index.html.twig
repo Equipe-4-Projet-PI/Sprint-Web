@@ -5,619 +5,83 @@
 	<link rel="stylesheet" href="{{ asset('css/style2.css') }}">
 {% endblock %}
 
+
+{% block navbar %}
+
+	{% if id_user %}
+		<li>
+			<a href="{{path('app_product_index',{'id_user': id_user })}}">Gallery</a>
+		</li>
+		<li>
+			<a href="{{path('app_lists_forum_user',{'idu': id_user })}}">Forums</a>
+		</li>
+		<li>
+			<a href="{{path('app_auction_index',{ 'id_user': id_user })}}" class="active">Auction</a>
+		</li>
+		<li>
+			<a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a>
+		</li>
+		<li>
+			<a href="{{ path('app_discussion_index', { 'id_user': id_user }) }}">Messenger</a>
+		</li>
+	{% endif %}
+{% endblock %}
+
 {% block body %}
-	<head>
-		<!-- meta data -->
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-		<!--font-family-->
-		<link
-		href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet"> <!-- title of site -->
-		<title>Directory Landing Page</title>
+	<link rel="stylesheet" href="{{ asset('css/auctionStyle.css') }}">
 
-		<!-- For favicon png -->
-		<link
-		rel="shortcut icon" type="image/icon" href="{{ asset('logo/favicon.png') }}"/>
+	<div class="frame">
+    <!-- Contenu à placer dans le cadre -->
+    <a href="{{ path('app_auction_new', {'id_user':id_user} ) }}">Ajouter un Enchère</a>
+</div>
 
-		<!--font-awesome.min.css-->
-		<link
-		rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}">
+<div class="frame1">
+    <!-- Contenu à placer dans le cadre -->
+    <a href="{{ path('auctions_search', {'id_user':id_user} ) }}">Trouver un Enchère</a>
+</div>
 
-		<!--linear icon css-->
-		<link
-		rel="stylesheet" href="{{ asset('css/linearicons.css') }}">
-
-		<!--animate.css-->
-		<link
-		rel="stylesheet" href="{{ asset('css/animate.css') }}">
-
-		<!--flaticon.css-->
-		<link
-		rel="stylesheet" href="{{ asset('css/flaticon.css') }}">
-
-		<!--slick.css-->
-		<link rel="stylesheet" href="{{ asset ('css/slick.css') }}">
-		<link
-		rel="stylesheet" href="{{ asset ('css/slick-theme.css') }}">
-
-		<!--bootstrap.min.css-->
-		<link
-		rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
-
-		<!-- bootsnav -->
-		<link
-		rel="stylesheet" href="{{ asset('css/bootsnav.css') }}">
-
-		<!--style.css-->
-		<link
-		rel="stylesheet" href="{{ asset ('css/style.css') }}">
-
-		<!--responsive.css-->
-		<link rel="stylesheet" href=" {{ asset ('css/responsive.css') }}">
-
-	</head>
-
-	<body>
-		<!-- top-area Start -->
-		<!--subscription strat -->
-			<section id="contact" class="subscription"> <div class="container">
-				<div class="subscribe-title text-center">
-					<h2>
-						do you want to add your business listing with us?
-					</h2>
-					<p>
-						Listrace offer you to list your business with us and we very much able to promote your Business.
-					</p>
+	<div class="main-container">
+		<div class="row">
+			{% for item in auctions %}
+				{% set i = (auctions.currentPageNumber - 1) * auctions.getItemNumberPerPage() + loop.index %}
+				<div class="small-container">
+					<div class="wrapper">
+						<img src="{{asset ('img/explore/e1.jpg') }}" alt="explore image" class="banner-image">
+						<h1>
+							{{ item.nom }}</h1>
+						<p>FROM
+							{{ item.prixInitial }}DT
+							<br/>
+							TO
+							{{ item.prixFinal }}DT.</p>
+					</div>
+					<span class="explore-rating">
+						{% if AvgRating[i] != null %}
+							{{ AvgRating[i] }} Ratings <a href="#" class="fas fa-star s5"></a>
+						{% else %}
+							0 Rating
+							<i class="fa fa-star"></i>
+						{% endif %}
+					</span>
+				
+					<div class="button-wrapper">
+						<div class="button-wrapper">
+							<a href="{{ path('app_auction_show', {'idAuction': item.idAuction , 'id_user':id_user} ) }}" class="btn fill">Show Detail</a>
+						</div>
+					</div>
+				</div>
+				{% if loop.index % 3 == 0 and not loop.last %}
 				</div>
 				<div class="row">
-					<div class="col-sm-12">
-						<div class="subscription-input-group">
-							<form action="#">
-								<input type="email" class="subscription-input-form" placeholder="Enter your email here">
-								<button class="appsLand-btn subscribe-btn" onclick="window.location.href='#'">
-									creat account
-								</button>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-		<!--/subscription-->
-		<!--subscription end -->
-		<section class="top-area">
-			<div
-				class="header-area">
-				<!--explore start -->
-				<section id="explore" class="explore">
-					<div
-						class="container">
-						<!--/.section-header-->
-						<div class="explore-content">
-							<div class="row">
-							{% set i = 1 %}
-								{% for item in auctions %}
-									<div class=" col-md-4 col-sm-6">
-										<div class="single-explore-item">
-											<div class="single-explore-img">
-												<img src="{{asset ('img/explore/e1.jpg') }}" alt="explore image">
-												<div class="single-explore-img-info">
-													<a href="{{ path('app_auction_show', {'idAuction': item.idAuction}) }}" class="btn btn-primary">Participer</a>
-												</div>
-											</div>
-											<div class="single-explore-txt bg-theme-1">
-												<h2>
-													<a href="#">{{ item.nom }}</a>
-												</h2>
-												<p class="explore-rating-price">
-													<span class="explore-rating">
-														{% if AvgRating[i] != null %}
-															{{ AvgRating[i] }}<i class="fa fa-star"></i>
-														{% else %}
-															0 <i class="fa fa-star"></i>
-														{% endif %}
-													</span>
-													<a href="#">
-														{{ PartsRating[i] }} Love</a>
-													<span class="explore-price-box">
-														form
-														<span class="explore-price">{{ item.prixInitial }}</span>
-														to
-														<span class="explore-price">{{ item.prixFinal }}</span>
-													</span>
-													<a href="#">{{ item.nom }}</a>
-												</p>
-												<div class="explore-person">
-													<div class="row">
-														<div class="col-sm-2">
-															<div class="explore-person-img">
-																<a href="#">
-																	<img src="{{ asset('img/explore/person.png') }}" alt="explore person">
-																</a>
-															</div>
-														</div>
-														<div class="col-sm-10">
-															<p>{{ item.nom }}</p>
-														</div>
-													</div>
-												</div>
-												<div class="explore-open-close-part">
-													<div class="row">
-														<div class="col-sm-5">
-															{% set now = "2024-04-30 12:00:00" %}
-															{% if item.dateLancement > now %}
-																{% set label = "Soon" %}
-															{% elseif item.dateLancement < now and item.dateCloture > now %}
-																{% set label = "Live" %}
-															{% elseif item.dateCloture < now %}
-																{% set label = "Close" %}
-															{% else %}
-																{% set label = "Unknown" %}
-															{% endif %}
-															<button class="close-btn" onclick="window.location.href='#'">{{ label }}</button>
-														</div>
-														<div class="col-sm-7">
-															<div class="explore-map-icon">
-																<a href="#">
-																	<i data-feather="map-pin"></i>
-																</a>
-																<a href="#">
-																	<i data-feather="upload"></i>
-																</a>
-																<a href="#">
-																	<i data-feather="heart"></i>
-																</a>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									{% if loop.index % 3 == 0 and not loop.last %}
-									</div>
-									<div class="row">
-									{% endif %}
-								{% set i = i + 1  %}
-								{% endfor %}
-							</div>
-						</div>
-					</div>
-				</div>
-				<!--/.container-->
+				{% endif %}
+			{% endfor %}
+		</div>
+	</div>
+	<div style= "display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 0;
+    list-style: none;">{{ knp_pagination_render(auctions)}}</div>
 
-			</section>
-			<!--/.explore-->
-			<!--explore end -->
-
-			<!--reviews start -->
-				<section id="reviews" class="reviews"> <div class="section-header">
-					<h2>clients reviews</h2>
-					<p>What our client say about us</p>
-				</div>
-				<!--/.section-header-->
-				<div class="reviews-content">
-					<div class="testimonial-carousel">
-						<div class="single-testimonial-box">
-							<div class="testimonial-description">
-								<div class="testimonial-info">
-									<div class="testimonial-img">
-										<img src="{{ asset('img/clients/c1.png') }}" alt="clients">
-									</div>
-									<!--/.testimonial-img-->
-									<div class="testimonial-person">
-										<h2>Tom Leakar</h2>
-										<h4>london, UK</h4>
-										<div class="testimonial-person-star">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-										</div>
-									</div>
-									<!--/.testimonial-person-->
-								</div>
-								<!--/.testimonial-info-->
-								<div class="testimonial-comment">
-									<p>
-										Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis eaque.
-									</p>
-								</div>
-								<!--/.testimonial-comment-->
-							</div>
-							<!--/.testimonial-description-->
-						</div>
-						<!--/.single-testimonial-box-->
-						<div class="single-testimonial-box">
-							<div class="testimonial-description">
-								<div class="testimonial-info">
-									<div class="testimonial-img">
-										<img src="{{ asset('img/clients/c2.png') }}" alt="clients">
-									</div>
-									<!--/.testimonial-img-->
-									<div class="testimonial-person">
-										<h2>monirul islam</h2>
-										<h4>london, UK</h4>
-										<div class="testimonial-person-star">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-										</div>
-									</div>
-									<!--/.testimonial-person-->
-								</div>
-								<!--/.testimonial-info-->
-								<div class="testimonial-comment">
-									<p>
-										Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis eaque.
-									</p>
-								</div>
-								<!--/.testimonial-comment-->
-							</div>
-							<!--/.testimonial-description-->
-						</div>
-						<!--/.single-testimonial-box-->
-						<div class="single-testimonial-box">
-							<div class="testimonial-description">
-								<div class="testimonial-info">
-									<div class="testimonial-img">
-										<img src="{{ asset('img/clients/c3.png') }}" alt="clients">
-									</div>
-									<!--/.testimonial-img-->
-									<div class="testimonial-person">
-										<h2>Shohrab Hossain</h2>
-										<h4>london, UK</h4>
-										<div class="testimonial-person-star">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-										</div>
-									</div>
-									<!--/.testimonial-person-->
-								</div>
-								<!--/.testimonial-info-->
-								<div class="testimonial-comment">
-									<p>
-										Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis eaque.
-									</p>
-								</div>
-								<!--/.testimonial-comment-->
-							</div>
-							<!--/.testimonial-description-->
-						</div>
-						<!--/.single-testimonial-box-->
-						<div class="single-testimonial-box">
-							<div class="testimonial-description">
-								<div class="testimonial-info">
-									<div class="testimonial-img">
-										<img src="{{ asset('img/clients/c4.png') }}" alt="clients">
-									</div>
-									<!--/.testimonial-img-->
-									<div class="testimonial-person">
-										<h2>Tom Leakar</h2>
-										<h4>london, UK</h4>
-										<div class="testimonial-person-star">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-										</div>
-									</div>
-									<!--/.testimonial-person-->
-								</div>
-								<!--/.testimonial-info-->
-								<div class="testimonial-comment">
-									<p>
-										Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis eaque.
-									</p>
-								</div>
-								<!--/.testimonial-comment-->
-							</div>
-							<!--/.testimonial-description-->
-						</div>
-						<!--/.single-testimonial-box-->
-						<div class="single-testimonial-box">
-							<div class="testimonial-description">
-								<div class="testimonial-info">
-									<div class="testimonial-img">
-										<img src="{{ asset('img/clients/c1.png') }}" alt="clients">
-									</div>
-									<!--/.testimonial-img-->
-									<div class="testimonial-person">
-										<h2>Tom Leakar</h2>
-										<h4>london, UK</h4>
-										<div class="testimonial-person-star">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-										</div>
-									</div>
-									<!--/.testimonial-person-->
-								</div>
-								<!--/.testimonial-info-->
-								<div class="testimonial-comment">
-									<p>
-										Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis eaque.
-									</p>
-								</div>
-								<!--/.testimonial-comment-->
-							</div>
-							<!--/.testimonial-description-->
-						</div>
-						<!--/.single-testimonial-box-->
-						<div class="single-testimonial-box">
-							<div class="testimonial-description">
-								<div class="testimonial-info">
-									<div class="testimonial-img">
-										<img src="{{ asset('img/clients/c2.png') }}" alt="clients">
-									</div>
-									<!--/.testimonial-img-->
-									<div class="testimonial-person">
-										<h2>monirul islam</h2>
-										<h4>london, UK</h4>
-										<div class="testimonial-person-star">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-										</div>
-									</div>
-									<!--/.testimonial-person-->
-								</div>
-								<!--/.testimonial-info-->
-								<div class="testimonial-comment">
-									<p>
-										Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis eaque.
-									</p>
-								</div>
-								<!--/.testimonial-comment-->
-							</div>
-							<!--/.testimonial-description-->
-						</div>
-						<!--/.single-testimonial-box-->
-						<div class="single-testimonial-box">
-							<div class="testimonial-description">
-								<div class="testimonial-info">
-									<div class="testimonial-img">
-										<img src="{{ asset ('img/clients/c3.png') }}" alt="clients">
-									</div>
-									<!--/.testimonial-img-->
-									<div class="testimonial-person">
-										<h2>Shohrab Hossain</h2>
-										<h4>london, UK</h4>
-										<div class="testimonial-person-star">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-										</div>
-									</div>
-									<!--/.testimonial-person-->
-								</div>
-								<!--/.testimonial-info-->
-								<div class="testimonial-comment">
-									<p>
-										Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis eaque.
-									</p>
-								</div>
-								<!--/.testimonial-comment-->
-							</div>
-							<!--/.testimonial-description-->
-						</div>
-						<!--/.single-testimonial-box-->
-						<div class="single-testimonial-box">
-							<div class="testimonial-description">
-								<div class="testimonial-info">
-									<div class="testimonial-img">
-										<img src="{{ asset('img/clients/c4.png') }}" alt="clients">
-									</div>
-									<!--/.testimonial-img-->
-									<div class="testimonial-person">
-										<h2>Tom Leakar</h2>
-										<h4>london, UK</h4>
-										<div class="testimonial-person-star">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-										</div>
-									</div>
-									<!--/.testimonial-person-->
-								</div>
-								<!--/.testimonial-info-->
-								<div class="testimonial-comment">
-									<p>
-										Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis eaque.
-									</p>
-								</div>
-								<!--/.testimonial-comment-->
-							</div>
-							<!--/.testimonial-description-->
-						</div>
-						<!--/.single-testimonial-box-->
-					</div>
-				</div>
-
-			</section>
-			<!--/.reviews-->
-			<!--reviews end -->
-
-			<!-- statistics strat -->
-				<section id="statistics" class="statistics"> <div class="container">
-					<div class="statistics-counter">
-						<div class="col-md-3 col-sm-6">
-							<div class="single-ststistics-box">
-								<div class="statistics-content">
-									<div class="counter">90
-									</div>
-									<span>K+</span>
-								</div>
-								<!--/.statistics-content-->
-								<h3>listings</h3>
-							</div>
-							<!--/.single-ststistics-box-->
-						</div>
-						<!--/.col-->
-						<div class="col-md-3 col-sm-6">
-							<div class="single-ststistics-box">
-								<div class="statistics-content">
-									<div class="counter">40</div>
-									<span>k+</span>
-								</div>
-								<!--/.statistics-content-->
-								<h3>listing categories</h3>
-							</div>
-							<!--/.single-ststistics-box-->
-						</div>
-						<!--/.col-->
-						<div class="col-md-3 col-sm-6">
-							<div class="single-ststistics-box">
-								<div class="statistics-content">
-									<div class="counter">65</div>
-									<span>k+</span>
-								</div>
-								<!--/.statistics-content-->
-								<h3>visitors</h3>
-							</div>
-							<!--/.single-ststistics-box-->
-						</div>
-						<!--/.col-->
-						<div class="col-md-3 col-sm-6">
-							<div class="single-ststistics-box">
-								<div class="statistics-content">
-									<div class="counter">50</div>
-									<span>k+</span>
-								</div>
-								<!--/.statistics-content-->
-								<h3>happy clients</h3>
-							</div>
-							<!--/.single-ststistics-box-->
-						</div>
-						<!--/.col-->
-					</div>
-					<!--/.statistics-counter-->
-				</div>
-				<!--/.container-->
-
-			</section>
-			<!--/.counter-->
-			<!-- statistics end -->
-
-			<!--blog start -->
-				<section id="blog" class="blog"> <div class="container">
-					<div class="section-header">
-						<h2>news and articles</h2>
-						<p>Always upto date with our latest News and Articles
-						</p>
-					</div>
-					<!--/.section-header-->
-					<div class="blog-content">
-						<div class="row">
-							<div class="col-md-4 col-sm-6">
-								<div class="single-blog-item">
-									<div class="single-blog-item-img">
-										<img src="{{ asset('img/blog/b1.jpg') }}" alt="blog image">
-									</div>
-									<div class="single-blog-item-txt">
-										<h2>
-											<a href="#">How to find your Desired Place more quickly</a>
-										</h2>
-										<h4>posted
-											<span>by</span>
-											<a href="#">admin</a>
-											march 2018</h4>
-										<p>
-											Lorem ipsum dolor sit amet, consectetur de adipisicing elit, sed do eiusmod tempore incididunt ut labore et dolore magna.
-										</p>
-									</div>
-								</div>
-							</div>
-							<div class="col-md-4 col-sm-6">
-								<div class="single-blog-item">
-									<div class="single-blog-item-img">
-										<img src="{{ asset('img/blog/b2.jpg') }}" alt="blog image">
-									</div>
-									<div class="single-blog-item-txt">
-										<h2>
-											<a href="#">How to find your Desired Place more quickly</a>
-										</h2>
-										<h4>posted
-											<span>by</span>
-											<a href="#">admin</a>
-											march 2018</h4>
-										<p>
-											Lorem ipsum dolor sit amet, consectetur de adipisicing elit, sed do eiusmod tempore incididunt ut labore et dolore magna.
-										</p>
-									</div>
-								</div>
-							</div>
-							<div class="col-md-4 col-sm-6">
-								<div class="single-blog-item">
-									<div class="single-blog-item-img">
-										<img src="{{ asset('img/blog/b3.jpg') }}" alt="blog image">
-									</div>
-									<div class="single-blog-item-txt">
-										<h2>
-											<a href="#">How to find your Desired Place more quickly</a>
-										</h2>
-										<h4>posted
-											<span>by</span>
-											<a href="#">admin</a>
-											march 2018</h4>
-										<p>
-											Lorem ipsum dolor sit amet, consectetur de adipisicing elit, sed do eiusmod tempore incididunt ut labore et dolore magna.
-										</p>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!--/.container-->
-
-			</section>
-			<!--/.blog-->
-			<!--blog end -->
-
-			<!-- Include all js compiled plugins (below), or include individual files as needed --><script src="{{ asset('js/jquery.js') }}"> </script>
-
-			<!--modernizr.min.js-->
-			<script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
-
-			<!--bootstrap.min.js-->
-			<script src="{{ asset('js/bootstrap.min.js') }}"></script>
-
-			<!-- bootsnav js -->
-			<script src="{{ asset('js/bootsnav.js') }}"></script>
-
-			<!--feather.min.js-->
-			<script src="{{ asset('js/feather.min.js') }}"></script>
-
-			<!-- counter js -->
-			<script src="{{ asset('js/jquery.counterup.min.js') }}"></script>
-			<script src="{{ asset('js/waypoints.min.js') }}"></script>
-
-			<!--slick.min.js-->
-			<script src="{{ asset('js/slick.min.js') }}"></script>
-
-			<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
-
-			<!--Custom JS-->
-			<script src="{{ asset('js/custom.js') }}"></script>
-		</body>
-	</body>
 </html>{% endblock %}

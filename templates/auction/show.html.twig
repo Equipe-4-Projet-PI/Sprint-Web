@@ -2,19 +2,32 @@
 
 {% block title %}Auction
 {% endblock %}
-
+{% block navbar %}
+   
+    {% if id_user %}
+	    <li><a href="{{path('app_product_index',{'id_user': id_user })}}" >Gallery</a> 
+        <li><a href="{{path('app_lists_forum_user',{'idu': id_user })}}" >Forums</a>
+        <li><a href="{{path('app_auction_index',{ 'id_user': id_user })}}"class="active" >Auction</a></li>
+        <li><a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a></li>
+        <li><a href="{{ path('app_discussion_index', { 'id_user': id_user }) }}">Messenger</a></li> 
+    {% endif %}
+{% endblock %}
 {% block body %}
 	<h1>Auction</h1>
 
 	<head>
 
 		<link rel="stylesheet" href="{{ asset('css/ParticiperStyle.css') }}">
+		<link rel="stylesheet" href="{{ asset('css/stars.css') }}">
 	</head>
 	<div class="container mt-4 mb-4 p-3 d-flex justify-content-center">
 		<div class="card p-4">
 			<div class=" image d-flex flex-column justify-content-center align-items-center">
 				<button class="btn btn-secondary">
-					<img src="https://i.imgur.com/wvxPV9S.png" height="100" width="100"/></button>
+				{% set imagePath = produit.productimage %}
+                {% set parts = imagePath|split('/') %}
+                {% set relativeImagePath = '/uploads/' ~ parts|last %}
+					<img src="{{ relativeImagePath }}" height="100" width="100"/></button>
 				<span class="name mt-3">{{auction.nom}}</span>
 				<span class="idd">Un produit à
 				</span>
@@ -33,19 +46,15 @@
 					<button class="btn1 btn-dark" id="participerButton" onclick="showPopup()">Participer</button>
 				</div>
 				<div id="popup" style="display: none;">
-					<form id="priceForm" method="post" action="{{ path('submit_price' , {'idUser': 6}) }}">
-					<input type="hidden" name="idAuction" value="{{ auction.idAuction }}">
+					<form id="priceForm" method="post" action="{{ path('submit_price' , {'id_user': id_user}) }}">
+						<input type="hidden" name="idAuction" value="{{ auction.idAuction }}">
 						<label for="price">Enter the price:</label>
 						<input type="text" id="price" name="price">
 						<button type="submit" id="acheterButton">Effectuer</button>
 					</form>
 				</div>
 
-				<div class="text mt-3">
-					<span>Eleanor Pena is a creator of minimalistic x bold graphics and digital artwork.<br><br>
-						Artist/ Creative Director by Day #NFT minting@ with FND night.
-					</span>
-				</div>
+				
 				<div class=" px-2 rounded mt-4 date ">
 					<span class="join">Commence à
 						{{auction.dateLancement|date('Y-m-d H:i:s')}}</span>
@@ -57,24 +66,77 @@
 				</div>
 			</div>
 
-			
-			<a href="{{ path('app_auction_index') }}">back to list</a>
+			<h3>Give a rating please!</h3>
 
-			<a href="{{ path('app_auction_edit', {'idAuction': auction.idAuction}) }}">edit</a>
+			<form id="ratingForm" action="{{ path('save_rating', {'id_user': id_user}) }}" method="post">
+				<div class="star-group">
+					<input type="hidden" name="idAuction" value="{{ auction.idAuction }}">
+					<input type="radio" class="star" id="one" name="rating" value="1">
+					<label for="one"></label>
+					<input type="radio" class="star" id="two" name="rating" value="2">
+					<label for="two"></label>
+					<input type="radio" class="star" id="three" name="rating" value="3">
+					<label for="three"></label>
+					<input type="radio" class="star" id="four" name="rating" value="4">
+					<label for="four"></label>
+					<input type="radio" class="star" id="five" name="rating" value="5">
+					<label for="five"></label>
+				</div>
+				<button type="submit">Submit Rating</button>
+			</form>
 
-			{{ include('auction/_delete_form.html.twig') }}
+
+			<a href="{{ path('app_auction_index',{'id_user': id_user }) }}">back to list</a>
+
+			<a href="{{ path('app_auction_edit', {'idAuction': auction.idAuction , 'id_user': id_user}) }}">edit</a>
+			<a href="{{ path('app_auction_delete', {'idAuction': auction.idAuction , 'id_user' : id_user}) }}">supprimer</a>
+
 		</div>
 
 	</div>
 
 	<script>
 		function showPopup() {
-			document.getElementById('popup').style.display = 'block';
-		}
+document.getElementById('popup').style.display = 'block';
+}
 
-		document.getElementById('acheterButton').addEventListener('click', function () {
-			document.getElementById('popup').style.display = 'none';
-		});
+document.getElementById('acheterButton').addEventListener('click', function () {
+document.getElementById('popup').style.display = 'none';
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+const submitBtn = document.getElementById("submitRating");
+
+submitBtn.addEventListener("click", function (event) {
+event.preventDefault(); // Prevent default link behavior
+
+const selectedStar = document.querySelector(".star:checked");
+if (selectedStar) {
+const ratingValue = selectedStar.value;
+// Get the value directly from the selected input
+
+// Construct the JSON data
+const jsonData = JSON.stringify({rating: ratingValue});
+
+// Send the AJAX request
+const xhr = new XMLHttpRequest();
+xhr.open("POST", "{{ path('save_rating', {'id_user': id_user }) }}", true);
+xhr.setRequestHeader("Content-Type", "application/json");
+xhr.onreadystatechange = function () {
+if (xhr.readyState === XMLHttpRequest.DONE) {
+if (xhr.status === 200) { // Afficher un message de succès ou effectuer d'autres actions si nécessaire
+console.log("Rating saved successfully.");
+} else {
+console.error("Failed to save rating.");
+}
+}
+};
+xhr.send(jsonData); // Send JSON data in the request body
+} else {
+console.error("No star selected.");
+}
+});
+});
 	</script>
 
 {% endblock %}
