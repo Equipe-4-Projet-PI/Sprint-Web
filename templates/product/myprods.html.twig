@@ -89,9 +89,7 @@
                     {% endif %}
                     <p class="card-text">Creation Date: {{ product.creationdate }}</p>
                     <a href="{{ path('app_product_show', {'idProduct': product.idProduct,'id_user': id_user }) }}" class="btn btn-primary">Show</a>
-                    {% if product.idUser.idUser == id_user %}
                     <a href="{{ path('app_product_edit', {'idProduct': product.idProduct,'id_user': id_user }) }}" class="btn btn-secondary">Edit</a>
-                    {% endif %}
                     {% if product.forsale %}
                         <a href="{{ path('app_orderproduct_new', {'idProduct': product.idProduct,'id_user': id_user }) }}" class="btn btn-success">Order</a>
                     {% endif %}

@@ -33,6 +33,17 @@ class ProductController extends AbstractController
             'id_user' =>$id_user
         ]);
     }
+    #[Route('/myproduct_{id_user}', name: 'app_myproduct_index', methods: ['GET'])]
+    public function myprods(ProductRepository $productRepository , Request $request, $id_user): Response
+    {
+        // Fetch products where id_user is equal to the provided id_user
+        $products = $productRepository->findBy(['idUser' => $id_user]);
+
+        return $this->render('product/myprods.html.twig', [
+            'products' => $products,
+            'id_user' => $id_user
+        ]);
+    }
 
     #[Route('/addprod{id_user}', name: 'app_product_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager,UserRepository $repoUser,$id_user): Response

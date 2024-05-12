@@ -1,31 +1,78 @@
-
 {{ form_start(form) }}
 <style>
-    .custom-table {
-        margin-left: 6rem;
+    .custom-table{
+        margin-left: 200px;
+        margin-top: 100px;
     }
+    .btn_save{
+        margin-top:50px;
+    }
+    .login-box {
+    background: rgba(24, 20, 20, 0.987);
+    box-shadow: 0 15px 25px rgba(0,0,0,.6);
+    border-radius: 10px;
+    }
+    .form_group {
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    margin: 10px;
+    }
+    .sub_title {
+    font-weight: 600;
+    margin: 5px 0;
+    }
+    .form_style {
+    outline: none;
+    border: 2px solid #264143;
+    box-shadow: 3px 4px 0px 1px #E99F4C;
+    border-radius: 4px;
+    font-size: 15px;
+    }
+    .form_style:focus, .btn:focus {
+    transform: translateY(4px);
+    box-shadow: 1px 2px 0px 0px #E99F4C;
+    }
+     .image-preview {
+        margin-top: 10px;
+        border: 2px solid #264143;
+        border-radius: 4px;
+        padding: 10px;
+    }
+    .image-preview img {
+        max-width: 200px; /* Adjust the max-width as needed */
+        max-height: 200px; /* Adjust the max-height as needed */
+        display: block;
+        margin: 0 auto;
+    }
+
 </style>
-<table class="custom-table">
-    <tr>
-        <td>{{ form_label(form.title) }}</td>
-        <td>{{ form_widget(form.title) }}</td>
-    </tr>
-    <tr>
-        <td>{{ form_label(form.description) }}</td>
-        <td>{{ form_widget(form.description) }}</td>
-    </tr>
-    <tr>
-        <td>{{ form_label(form.forsale) }}</td>
-        <td>{{ form_widget(form.forsale) }}</td>
-    </tr>
-    <tr>
-        <td>{{ form_label(form.price) }}</td>
-        <td>{{ form_widget(form.price) }}</td>
-    </tr>
-    <tr>
-        <td>{{ form_label(form.productimage) }}</td>
-        <td>{{ form_widget(form.productimage) }}</td>
-    </tr>
-</table>
-<button class="btn">{{ button_label|default('Save') }}</button>
+<div >
+<div class="custom-table">
+            <div class="form_group">
+                <label class="sub_title" for="name">{{ form_label(form.title) }}</label>
+                <div class="form_style">{{ form_widget(form.title) }}</div>
+            </div>
+            <div class="form_group">
+                <label class="sub_title" for="name">{{ form_label(form.description) }}</label>
+                <div class="form_style">{{ form_widget(form.description) }}</div>
+            </div>
+            <div class="form_group">
+                <label class="sub_title" for="name">{{ form_label(form.forsale) }}</label>
+                <div class="form_style">{{ form_widget(form.forsale) }}</div>
+            </div>
+             <div class="form_group">
+                <label class="sub_title" for="name">{{ form_label(form.price) }}</label>
+                <div class="form_style">{{ form_widget(form.price) }}</div>
+            </div>
+            <div class="form_group">
+                <label class="sub_title" for="name">{{ form_label(form.productimage) }}</label>
+                <div class="form_style">{{ form_widget(form.productimage) }}</div>
+            </div>
+
+</div>
+<div class="btn_save">
+<button class="btn btn-primary mb-4">{{ button_label|default('Save') }}</button>
+</div>
+</div>
 {{ form_end(form) }}
