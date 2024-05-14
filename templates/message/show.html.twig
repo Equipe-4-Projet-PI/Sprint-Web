@@ -5,11 +5,12 @@
 {% block navbar %}
    
     {% if id_user %}
-	    <li><a href="{{path('app_product_index',{'id_user': id_user })}}" >Gallery</a> 
+	     <li><a href="{{path('app_product_index',{'id_user': id_user })}}" >Gallery</a> 
         <li><a href="{{path('app_lists_forum_user',{'idu': id_user })}}" >Forums</a>
         <li><a href="{{path('app_auction_index',{ 'id_user': id_user })}}" >Auction</a></li>
-        <li><a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a></li>
         <li><a href="{{ path('app_discussion_index', { 'id_user': id_user }) }}"class="active" >Messenger</a></li> 
+         <li><a href="{{ path('app_event_index_front', { 'id_user': id_user }) }}">Events</a></li> 
+         <li><a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a></li>
     {% endif %}
 {% endblock %}
 
@@ -57,11 +58,11 @@
         </div>
 
         <div class="text-center mt-4">
-            <a href="{{ path('app_message_index' , { 'id_user': id_user }) }}" class="btn btn-secondary">Retour à la liste</a>
-            <a href="{{ path('app_message_edit', {'idmsg': message.idmsg , 'id_user': id_user}) }}" class="btn btn-primary">Modifier</a>
+           
+            {{ include('message/_delete_form.html.twig') }}
         </div>
 
-        {{ include('message/_delete_form.html.twig') }}
+        
     </div>
     
 {% endblock %}

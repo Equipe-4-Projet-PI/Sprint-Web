@@ -267,9 +267,13 @@ public function new(Request $request, EntityManagerInterface $entityManager, $id
     
 
     #[Route('_{idAuction}_edit{id_user}', name: 'app_auction_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Auction $auction, EntityManagerInterface $entityManager, $id_user): Response
+    public function edit(AuctionRepository $Arepo,ProductRepository $Prepo,Request $request, Auction $auction, EntityManagerInterface $entityManager, $id_user): Response
     {
-        $form = $this->createForm(AuctionType::class, $auction);
+        $auction = $Arepo->find($auction);
+        $prod = $Prepo->find($auction->getIdProduit());
+        $Products = [];
+        $Products = $Arepo->findProductById($prod->getIdProduct());
+        $form = $this->createForm(AuctionType::class, $auction, ['id_user' => $id_user, 'prod' => $Products]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -283,7 +287,7 @@ public function new(Request $request, EntityManagerInterface $entityManager, $id
         ]);
     }
 
-    #[Route('_{idAuction}_delete{id_user}', name: 'app_auction_delete', methods: ['POST'])]
+    #[Route('_{idAuction}_delete{id_user}', name: 'app_auction_delete', methods: ['GET','POST'])]
     public function delete(Request $request, Auction $auction, EntityManagerInterface $entityManager, $id_user): Response
     {
         if ($this->isCsrfTokenValid('delete' . $auction->getIdAuction(), $request->request->get('_token'))) {
@@ -294,14 +298,14 @@ public function new(Request $request, EntityManagerInterface $entityManager, $id
         return $this->redirectToRoute('app_auction_index', ['id_user' => $id_user], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/submit-price_{id_user}', name: "submit_price", methods: ['POST'])]
-    public function submitPrice($id_user, UserRepository $uRepo, Request $request,  AuctionRepository $aRepo, EntityManagerInterface $entityManager,  AuctionParticipantRepository $apRepo): Response
+    #[Route('/submit-price_{id_user}_{id_auction}_{etat}', name: "submit_price", methods: ['POST'])]
+    public function submitPrice($id_auction , $etat , $id_user, UserRepository $uRepo, Request $request,  AuctionRepository $aRepo, EntityManagerInterface $entityManager,  AuctionParticipantRepository $apRepo): Response
     {
-        $idAuction = $request->request->get('idAuction');
+        
         $price = $request->request->get('price');
-        $auction = $aRepo->find($idAuction);
+        $auction = $aRepo->find($id_auction);
 
-        $participant = $apRepo->findOneBy(['idParticipant' => $id_user, 'idAuction' => $idAuction]);
+        $participant = $apRepo->findOneBy(['idParticipant' => $id_user, 'idAuction' => $id_auction]);
 
         if (!$auction) {
             throw $this->createNotFoundException('Auction not found');
@@ -324,15 +328,16 @@ public function new(Request $request, EntityManagerInterface $entityManager, $id
         $entityManager->flush();
 
         return $this->redirectToRoute('app_auction_show', [
-            'idAuction' => $auction->getIdArtist(),
+            'idAuction' => $id_auction,
             'id_user' => $id_user,
+            'etat'=> $etat,
         ]);
     }
 
     
 
-    #[Route("/save-rating_{id_user}", name: "save_rating", methods: ["GET", "POST"])]
-    public function saveRating(AuctionRepository $aRepo, EntityManagerInterface $entityManager, Request $request,  $id_user, AuctionParticipantRepository $apRepo, UserRepository $uRepo): Response
+    #[Route("/save-rating_{id_user}_{etat}", name: "save_rating", methods: ["GET", "POST"])]
+    public function saveRating($etat,AuctionRepository $aRepo, EntityManagerInterface $entityManager, Request $request,  $id_user, AuctionParticipantRepository $apRepo, UserRepository $uRepo): Response
     {
         $idAuction = $request->request->get('idAuction');
         $ratingValue = $request->request->get('rating');
@@ -359,6 +364,7 @@ public function new(Request $request, EntityManagerInterface $entityManager, $id
         return $this->redirectToRoute('app_auction_show', [
             'idAuction' => $auction->getIdAuction(),
             'id_user' => $id_user,
+            'etat'=> $etat,
         ]);
     }
 

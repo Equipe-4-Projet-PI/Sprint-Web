@@ -64,6 +64,23 @@ class AuctionRepository extends ServiceEntityRepository
 
         return $result;
     }
+    public function findProductById(int $prod): array
+    {
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+            'SELECT p FROM App\Entity\Product p WHERE p.idProduct = :prod'
+        )->setParameter('prod', $prod);
+
+       
+        $products = $query->getResult();
+
+        $productsArray = [];
+        foreach ($products as $product) {
+            $productsArray[$product->getTitle()] = $product->getIdProduct();
+        }
+
+        return $productsArray;
+    }
 
 
 //    /**

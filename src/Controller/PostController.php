@@ -7,9 +7,12 @@ use App\Entity\Post;
 use App\Entity\Postlikes;
 use App\Entity\User;
 use App\Form\PostType;
+use App\Repository\AuctionRepository;
+use App\Repository\EventRepository;
 use App\Repository\ForumRepository;
 use App\Repository\PostlikesRepository;
 use App\Repository\PostRepository;
+use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
@@ -201,14 +204,19 @@ class PostController extends AbstractController
 
     //////////////   ADMIN SECTION   //////////////
     #[Route('/adminPosts_{idf}', name: 'PostsAdmin')]
-    public function AdminPosts($idf,UserRepository $Urepo,PostRepository $Prepo,ForumRepository $Frepo): Response
+    public function AdminPosts($idf,UserRepository $Urepo,PostRepository $Prepo,ForumRepository $Frepo,ProductRepository $repoP,AuctionRepository $repoAuc, EventRepository $repoE): Response
     {
         $posts = $Prepo->getPostsByForumNormalSQL($idf);
         $ForumName = $Frepo->find($idf)->getTitle();
-        $NumForums = $Frepo ->numberOfForums();
 
+        $NumForums = $Frepo ->numberOfForums();
         $users = $Urepo->findAll() ; 
         $usernumbers = $Urepo ->numberOfUsers();
+
+        
+        $productsnumbers= $repoP -> numberOfProducts();
+        $auctionnumbers = $repoAuc->numberOfAuctions();
+        $eventnumbers = $repoE->numberOfEvents();
 
         return $this->render('admin/PostsAdmin.html.twig', [
             'posts' => $posts ,
@@ -216,16 +224,39 @@ class PostController extends AbstractController
             'NameForum'=>$ForumName,
             'users' => $users ,
             'usernumber'=> $usernumbers,
+            'productnumber'=> $productsnumbers,
+            'NumEvents'=> $eventnumbers,
+            'NumAuctions'=> $auctionnumbers,
+            'idf'=>$idf,
         ]);
+    }
+
+    //Delete the Forums
+    #[Route('/postsdeletus_{id}_{idf}',name:'app_delete_post_admin')]
+    public function deleteAdmin($id,$idf,ManagerRegistry $manager,PostRepository $repo,ForumRepository $Frepo){
+        $post = $repo->find($id);
+        $manager->getManager()->remove($post);
+        $manager->getManager()->flush();
+        $forumid = $post->getIdForum()->getIdForum();
+        //Remove 1 Post from Froum Attribute
+        $forum = $Frepo->find($forumid);
+        $forum->setRepliesNumber($forum->getRepliesNumber()-1);
+        $manager->getManager()->persist($forum);
+        $manager->getManager()->flush();
+
+        return $this->redirectToRoute('PostsAdmin',['idf'=>$idf]);
     }
 
 
     ///////////////// BUNDLEPDF //////////////////////////
 
-    #[Route('/exportPdf/{id}', name: 'app_pdf', methods: ['GET', 'POST'])]
-    public function ExportPdf($id,PostRepository $repo) :Response
+    #[Route('/exportPdf/{id}_{idu}', name: 'app_pdf', methods: ['GET', 'POST'])]
+    public function ExportPdf($id,$idu,UserRepository $Urepo,PostRepository $repo) :Response
     {
         
+        //keep the user
+        $User = $Urepo->find($idu);
+
         $posts = $repo->getPostsByForumNormalSQL($id);
 
         $options = new Options();
@@ -235,6 +266,7 @@ class PostController extends AbstractController
         $html = $this->renderView('post/pdf.html.twig', [
             
             'posts'=>$posts,
+            'idu'=>$User,
         ]);
 
         $dompdf->loadHtml($html);
@@ -244,6 +276,7 @@ class PostController extends AbstractController
         
         return new Response($dompdf->output(), 200, [
             'Content-Type' => 'application/pdf',
+            'idu'=>$idu,
         ]);
     }
 
@@ -309,12 +342,12 @@ class PostController extends AbstractController
     }
     
     //Update Post and Keep Connected USER
-    #[Route('/postsupdate{id}_{idu}',name:'app_update_post_user')]
-    public function updateWithConnectedUser(PostRepository $rep,$id,$idu,Request $req,ManagerRegistry $manager){
+    #[Route('/postsupdate{idp}_{idu}',name:'app_update_post_user')]
+    public function updateWithConnectedUser(PostRepository $rep,$idp,$idu,Request $req,ManagerRegistry $manager){
         //keep the user
         $user = $idu; 
         //normal Update
-        $post = $rep->find($id);
+        $post = $rep->find($idp);
         $form = $this->createForm(PostType::class,$post);
         $form->handleRequest($req);
         $forumid = $post->getIdForum()->getIdForum();
@@ -326,7 +359,7 @@ class PostController extends AbstractController
                 'idu' => $user,
             ]);
         }
-        return $this->render('post/addPost.html.twig',['f'=>$form->createView()]);
+        return $this->render('post/addPost.html.twig',['f'=>$form->createView(),'idu' => $user]);
     }
 
     //Delete the Forums and KEEP USER CONNECTED

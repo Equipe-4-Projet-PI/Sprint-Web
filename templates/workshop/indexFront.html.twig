@@ -34,7 +34,10 @@
                     {% for w in workshops %}
                         <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
                             <div class="pricing_box">
-                               <img src="{{asset(w.image)}}" width="200" height="250" />
+                              {% set imagePath = w.image %}
+                {% set parts = imagePath|split('/') %}
+                {% set relativeImagePath = '/uploads/' ~ parts|last %}
+                               <img src="{{relativeImagePath}}" width="200" height="250" />
                                 <h3>{{w.title}}</h3>
                                
                                 <p> {{ w.details }}</p>

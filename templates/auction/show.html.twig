@@ -73,7 +73,7 @@
 			{% endif %}
 			<div id="popup" style="display: none;margin-top: 10px;">
 
-				<form id="priceForm" method="post" action="{{ path('submit_price' , {'id_user': id_user}) }}">
+				<form id="priceForm" method="post" action="{{ path('submit_price' , {'id_user': id_user ,'id_auction': auction.idAuction , 'etat':etat}) }}">
 					<input type="hidden" name="idAuction" value="{{ auction.idAuction }}">
 					<label for="price">Enter the price:</label>
 					<input type="text" id="price" name="price">
@@ -98,7 +98,7 @@
 		{% if auction.idArtist != id_user %}
 			{% if etat != 'Terminé' %}
 				<h3 style=" margin-left: 50;">Rate this ART!</h3>
-				<form id="ratingForm" action="{{ path('save_rating', {'id_user': id_user}) }}" method="post">
+				<form id="ratingForm" action="{{ path('save_rating', {'id_user': id_user , 'etat':etat}) }}" method="post">
 					<div class="star-group">
 						<input type="hidden" name="idAuction" value="{{ auction.idAuction }}">
 						<input type="radio" class="star" id="one" name="rating" value="1">
@@ -154,7 +154,7 @@ const jsonData = JSON.stringify({rating: ratingValue});
 
 // Send the AJAX request
 const xhr = new XMLHttpRequest();
-xhr.open("POST", "{{ path('save_rating', {'id_user': id_user }) }}", true);
+xhr.open("POST", "{{ path('save_rating', {'id_user': id_user , 'etat' : etat}) }}", true);
 xhr.setRequestHeader("Content-Type", "application/json");
 xhr.onreadystatechange = function () {
 if (xhr.readyState === XMLHttpRequest.DONE) {

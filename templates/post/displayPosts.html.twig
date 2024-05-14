@@ -67,7 +67,7 @@
             <a class="fcc-btn" href="{{path('app_add_post_diff_forum',{'idf':firstPost.idForum.getIdForum})}}">+</a>
           {% endif %}
           
-          <a class="fcc-btn-pdf" href="{{path('app_pdf',{'id':firstPost.idForum.getIdForum})}}">PDF</a>
+          <a class="fcc-btn-pdf" href="{{path('app_pdf',{'id':firstPost.idForum.getIdForum,'idu':idu.idUser})}}">PDF</a>
         {% endif %}
         </div>
       </div>
