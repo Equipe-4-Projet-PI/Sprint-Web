@@ -79,6 +79,7 @@
                 {% set imagePath = product.productimage %}
                 {% set parts = imagePath|split('/') %}
                 {% set relativeImagePath = '/uploads/' ~ parts|last %}
+                
                 <img src="{{ relativeImagePath }}" class="card-img-top" alt="{{ product.title }}" width="auto" height="300" object-fit="contain">
                 <div class="card-body">
                     <h2 class="card-title">{{ product.title }}</h2>
