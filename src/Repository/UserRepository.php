@@ -69,9 +69,10 @@ class UserRepository extends ServiceEntityRepository
      * @return User|null L'utilisateur trouvé ou null si non trouvé
      */
     }
-    public function findUserById(int $id): ?User
+  
+    public function findUserById(int $idUser): ?User
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->findOneBy(['idUser' => $idUser]);
     }
 
 //    /**

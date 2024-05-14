@@ -60,6 +60,15 @@
             align-items: center;
             
         }
+        .card button {
+            display: inline-block;
+            padding: 3px 8px; /* Decreased padding */
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 3px;
+            margin-left: 5px; /* Decreased margin */
+        }
     </style>
 </head>
 <body>
@@ -73,8 +82,9 @@
         <p class="date">Date: {{ p.timeofcreation| date("d/m/Y H:i:s") }}</p>
         <div class="like-container">
             <p>{{ p.likeNumber }}</p>
-            <p> Can't Like it's mine </p>
+            <p> Likes </p>
             <a href="{{path('app_delete_post_user',{'idp':p.idPost , 'idu':p.idUser.idUser})}}">Delete</a>
+            <a href="{{path('app_update_post_user',{'idp':p.idPost , 'idu':p.idUser.idUser})}}">Update</a>
         </div>
     </div>
 </div>

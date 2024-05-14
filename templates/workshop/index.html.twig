@@ -2,7 +2,68 @@
 
 {% block title %}Workshops{% endblock %}
 
+{% block sidebar  %} 
+	<section id="sidebar">
+		<a href={{path('Admin')}} class="brand">
+			<i class='bx bxs-smile'></i>
+			<span class="text">ArtyVenci_Admin</span>
+		</a>
+		<ul class="side-menu top">
+			<li >
+				<a href="{{path('Admin')}}">
+					<i class='bx bx-user' ></i>
+					<span class="text">Users</span>
+				</a>
+			</li>
+			<li>
+				<a href="{{path('AdminProds')}}">
+					<i class='bx bxl-product-hunt' ></i>
+					<span class="text">Products</span>
+				</a>
+			</li>
+			<li>
+				<a href="{{path('ForumsAdmin')}}">
+					<i class='bx bx-message-square-detail' ></i>
+					<span class="text">Forums</span>
+				</a>
+			</li>
+			<li class="active" >
+			<a href="{{path('app_event_index')}}">
+					<i class='bx bx-calendar-event'></i>
+					<span class="text">Events</span>
+				</a>
+			</li>
+			<li>
+				<a href="{{ path('AdminAuc') }}">
 
+					<i class='bx bx-edit-alt' ></i>
+					<span class="text">Auction</span>
+				</a>
+			</li>
+			<li  >
+				<a href="{{ path('app_list_disc') }}">
+					<i class='bx bx-chat'></i>
+					<span class="text">Discussion</span>
+				</a>
+			</li>
+		</ul>
+		<ul class="side-menu">
+			<li>
+				<a href="#">
+					<i class='bx bxs-cog' ></i>
+					<span class="text">Settings</span>
+				</a>
+			</li>
+			<li>
+				<a href={{path('login')}} class="logout">
+					<i class='bx bxs-log-out-circle' ></i>
+					<span class="text">Logout</span>
+				</a>
+			</li>
+		</ul>
+	</section>
+
+	{% endblock %}
 
 
 
@@ -19,7 +80,7 @@
                                 font-weight: 600;
                                 margin-bottom: 10px;
                                 color: var(--dark);
-                            ">Table of Forums</h1>
+                            ">Table of Workshop</h1>
 					
 				</div>
          <form action="{{ path('app_event_search') }}" method="POST">
@@ -63,7 +124,10 @@
                 
                 <td>{{ workshop.title }}</td>
                 <td>{{ workshop.details }}</td>
-                <td>><img src="{{asset(workshop.image)}}" width="100" height="150" /></td>
+                  {% set imagePath = workshop.image %}
+                                   {% set parts = imagePath|split('/') %}
+                                   {% set relativeImagePath = '/uploads/' ~ parts|last %}
+                <td>><img src="{{relativeImagePath}}" width="100" height="150" /></td>
                 
                 <td>
                    

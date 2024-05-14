@@ -104,7 +104,7 @@ class ProductController extends AbstractController
             $formattedDate = $today->format('d-m-Y');
             $product->setCreationdate($formattedDate);
             //setting User
-            $User = $repoUser->find(4);
+            $User = $repoUser->find($id_user);
             $product->setIdUser($User);
         if ($form->isSubmitted() && $form->isValid()) {
             $file = $form->get('productimage')->getData();

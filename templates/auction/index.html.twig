@@ -72,7 +72,7 @@
 	<div class="main-container">
 		<div class="row">
 			{% for item in auctions %}
-				{% set i = (auctions.currentPageNumber - 1) * auctions.getItemNumberPerPage() + loop.index %}
+				{% set i = item.getIdAuction() %}
 				{% set etat = 'Terminé' %}
 				{% set maintenant = now %}
 

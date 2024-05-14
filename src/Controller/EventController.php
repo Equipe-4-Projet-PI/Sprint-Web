@@ -142,20 +142,40 @@ class EventController extends AbstractController
     }
 
     #[Route('/new', name: 'app_event_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager ,UserRepository $repo,ForumRepository $repoF,ProductRepository $repoP,EventRepository $repoE,AuctionRepository $repoAuc): Response
     {
+        $NumForums = $repoF ->numberOfForums(); 
+        $usernumbers = $repo ->numberOfUsers();
+        $productsnumbers= $repoP -> numberOfProducts();
+        $eventnumbers = $repoE->numberOfEvents();
+        $auctionnumbers = $repoAuc->numberOfAuctions();
         $event = new Event();
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $file = $form->get('image')->getData();
-            $fileName = md5(uniqid()).'.'.$file->guessExtension();
-            $targetDirectory = $this->getParameter('kernel.project_dir') . '/public';
-            $file->move($targetDirectory, $fileName);
-
            
-            $event->setImage($fileName);
+            //$file = $form->get('image')->getData();
+           // $fileName = md5(uniqid()).'.'.$file->guessExtension();
+          //  $targetDirectory = $this->getParameter('kernel.project_dir') . '/public';
+          //  $file->move($targetDirectory, $fileName);
+            //  $event->setImage($fileName);
+
+            $file = $form->get('image')->getData();
+            if ($file) {
+                $fileName = uniqid().'.'.$file->guessExtension();
+                
+                $file->move(
+                    $this->getParameter('upload_directory'),
+                    $fileName
+                );
+                $filePath = 'C:/Users/Hei/OneDrive/Documents/GitHub/Sprint-Web/public/uploads/' . $fileName;
+                $event->setImage($filePath);
+            }
+
+
+
+
             $entityManager->persist($event);
             $entityManager->flush();
 
@@ -165,6 +185,11 @@ class EventController extends AbstractController
         return $this->renderForm('event/new.html.twig', [
             'event' => $event,
             'form' => $form,
+            'usernumber'=> $usernumbers,
+            'NumForms'=> $NumForums,
+            'productnumber'=> $productsnumbers,
+            'NumEvents'=> $eventnumbers,
+            'NumAuctions'=> $auctionnumbers,
         ]);
     }
 
@@ -183,13 +208,18 @@ class EventController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+        
             $file = $form->get('image')->getData();
-            $fileName = md5(uniqid()).'.'.$file->guessExtension();
-            $targetDirectory = $this->getParameter('kernel.project_dir') . '/public';
-            $file->move($targetDirectory, $fileName);
-
-           
-            $event->setImage($fileName);
+            if ($file) {
+                $fileName = uniqid().'.'.$file->guessExtension();
+                
+                $file->move(
+                    $this->getParameter('upload_directory'),
+                    $fileName
+                );
+                $filePath = 'C:/Users/Hei/OneDrive/Documents/GitHub/Sprint-Web/public/uploads/' . $fileName;
+                $event->setImage($filePath);
+            }
             $entityManager->flush();
 
             return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);

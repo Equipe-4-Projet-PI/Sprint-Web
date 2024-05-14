@@ -85,7 +85,7 @@
                                 font-weight: 600;
                                 margin-bottom: 10px;
                                 color: var(--dark);
-                            ">Table of Forums</h1>
+                            ">Table of Event</h1>
 					
 				</div>
                 <form action="{{ path('app_event_search') }}" method="POST">
@@ -103,6 +103,7 @@
 
        
                <a href="{{ path('app_event_new')}}">Create new</a>
+               <a href="{{ path('app_participation_index')}}">View Participants </a>
                 </div>
               
 				
@@ -133,7 +134,11 @@
                                 <td class="d-none d-xl-table-cell">{{ event.place }}</td>
                                 <td class="d-none d-xl-table-cell">{{ event.eDate ? event.eDate|date('Y-m-d') : '' }}</td>
                                 <td><span class="badge bg-success">{{ event.ticketPrice }} $</span></td>
-                                <td class="d-none d-md-table-cell"><img src="{{ asset(event.image) }}" width="100" height="150" /></td>
+                                   {% set imagePath = event.image %}
+                                   {% set parts = imagePath|split('/') %}
+                                   {% set relativeImagePath = '/uploads/' ~ parts|last %}
+                          
+                                <td class="d-none d-md-table-cell"><img src="{{ relativeImagePath }}" width="100" height="150" /></td>
                                 <td>
                                     <a href="{{ path('app_event_edit', {'idEvent': event.idEvent}) }}">edit</a>
                                     <a href="{{ path('app_workshop_new', {'idEvent': event.idEvent}) }}">Add Workshop</a>

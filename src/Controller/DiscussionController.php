@@ -41,19 +41,31 @@ class DiscussionController extends AbstractController
 
 
 
-#[Route('-{id_user}', name: 'app_discussion_index', methods: ['GET'])]
-public function index(DiscussionRepository $discussionRepository, UserRepository $userRepository,$id_user): Response
-{
-
-    $this->SetcurrUser($id_user);
-    // Récupérer les discussions où l'utilisateur courant est soit l'expéditeur (sender) ou le destinataire (receiver)
-    $discussions = $discussionRepository->findDiscussionsByUser($this->currentUserId);
-
-    return $this->render('discussion/afficherDis.html.twig', [
-        'discussions' => $discussions,
-        'id_user'=>$id_user
-    ]);
-}
+    #[Route('-{id_user}', name: 'app_discussion_index', methods: ['GET'])]
+    public function index(DiscussionRepository $discussionRepository, UserRepository $userRepository, $id_user): Response
+    {
+        $this->SetcurrUser($id_user);
+        // Récupérer les discussions où l'utilisateur courant est soit l'expéditeur (sender) ou le destinataire (receiver)
+        $discussions = $discussionRepository->findDiscussionsByUser($this->currentUserId);
+    
+        // Initialiser les variables en dehors de la boucle
+        $senderIds = [];
+        $usernamesender = null;
+    
+        foreach ($discussions as $discussion) {
+            // Pour chaque discussion, récupérer l'ID de l'expéditeur
+            $senderIds[] = $discussion->getIdsender();
+            $sender = $userRepository->findUserById($discussion->getIdsender());
+            $usernamesender = $sender->getUsername();
+        }
+    
+        return $this->render('discussion/afficherDis.html.twig', [
+            'discussions' => $discussions,
+            'id_user' => $id_user,
+            'usernamesender' => $usernamesender,
+            'senderIds' => $senderIds
+        ]);
+    }
 
 
 
@@ -354,6 +366,8 @@ public function newDis(Request $request, EntityManagerInterface $entityManager ,
             'id_user'=>$this->currentUserId,
         ]);
     }
+
+
 
 
 

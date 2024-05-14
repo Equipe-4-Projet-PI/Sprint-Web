@@ -305,7 +305,7 @@ class PostController extends AbstractController
                 'idu' => $user,
             ]);
         }
-        return $this->render('post/addPost.html.twig',['f'=>$form->createView()]);
+        return $this->render('post/addPost.html.twig',['f'=>$form->createView(), 'idu' => $user,]);
     }
     
     //Update Post and Keep Connected USER
