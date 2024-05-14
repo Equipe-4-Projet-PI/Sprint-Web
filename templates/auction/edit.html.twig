@@ -1,26 +1,62 @@
 {% extends 'Home.html.twig' %}
 
-{% block title %}Edit Auction{% endblock %}
+{% block title %}Edit Auction
+{% endblock %}
 {% block navbar %}
-   
-  {% if id_user %}
-	    <li><a href="{{path('app_product_index',{'id_user': id_user })}}" >Gallery</a> 
-        <li><a href="{{path('app_lists_forum_user',{'idu': id_user })}}" >Forums</a>
-        <li><a href="{{path('app_auction_index',{ 'id_user': id_user })}}"class="active">Auction</a></li>
-        <li><a href="{{ path('app_discussion_index', { 'id_user': id_user }) }}">Messenger</a></li> 
-        <li><a href="{{ path('app_event_index_front', { 'id_user': id_user }) }}">Events</a></li> 
-        <li><a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a></li>
-        
-    {% endif %}
+
+	{% if id_user %}
+		<li>
+			<a href="{{path('app_product_index',{'id_user': id_user })}}">Gallery</a>
+		</li>
+		<li>
+			<a href="{{path('app_lists_forum_user',{'idu': id_user })}}">Forums</a>
+		</li>
+		<li>
+			<a href="{{path('app_auction_index',{ 'id_user': id_user })}}" class="active">Auction</a>
+		</li>
+		<li>
+			<a href="{{ path('app_discussion_index', { 'id_user': id_user }) }}">Messenger</a>
+		</li>
+		<li>
+			<a href="{{ path('app_event_index_front', { 'id_user': id_user }) }}">Events</a>
+		</li>
+		<li>
+			<a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a>
+		</li>
+
+	{% endif %}
 {% endblock %}
 
 {% block body %}
-    <h1>Edit Auction</h1>
+	<h1>Edit Auction</h1>
+	<style>
+	.form-control{
+		width:250px;
+		display:inline-block;
+	}
+	</style>
 
-    {#{{ include('auction/_form.html.twig', {'button_label': 'Update'}) }}#}
-    {{form(form)}}
+	{#{{ include('auction/_form.html.twig', {'button_label': 'Update'}) }}#}
+	<section id="hero" class="hero d-flex flex-column justify-content-center align-items-center" data-aos="fade" data-aos-delay="1500">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-lg-6 text-center">
+					<div class="form-container">
+						<div
+							class="form-wrapper" style="background-color: #D3DAE7;
+    padding: 70;	">
+							<!-- Début du formulaire -->
+							{{ form_start(form, {'attr': {'class': 'auction-form'}}) }}
+							<div class="form-group">
+								{{ form_row(form.nom, {'attr': {'class': 'form-control', 'rows': 3}, 'label': false}) }}
+							</div>
+							{{ form_end(form) }}
 
-    <a href="{{ path('app_auction_index' , {'id_user':id_user}) }}">back to list</a>
+							<!-- Fin du formulaire -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-    {{ include('auction/_delete_form.html.twig') }}
-{% endblock %}
+	{% endblock %}

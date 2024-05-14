@@ -8,35 +8,78 @@
 
 {% block navbar %}
 
-  {% if id_user %}
-	    <li><a href="{{path('app_product_index',{'id_user': id_user })}}" >Gallery</a> 
-        <li><a href="{{path('app_lists_forum_user',{'idu': id_user })}}" >Forums</a>
-        <li><a href="{{path('app_auction_index',{ 'id_user': id_user })}}"class="active">Auction</a></li>
-        <li><a href="{{ path('app_discussion_index', { 'id_user': id_user }) }}">Messenger</a></li> 
-        <li><a href="{{ path('app_event_index_front', { 'id_user': id_user }) }}">Events</a></li> 
-        <li><a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a></li>
-        
-    {% endif %}
+	{% if id_user %}
+		<li>
+			<a href="{{path('app_product_index',{'id_user': id_user })}}">Gallery</a>
+		</li>
+		<li>
+			<a href="{{path('app_lists_forum_user',{'idu': id_user })}}">Forums</a>
+		</li>
+		<li>
+			<a href="{{path('app_auction_index',{ 'id_user': id_user })}}" class="active">Auction</a>
+		</li>
+		<li>
+			<a href="{{ path('app_discussion_index', { 'id_user': id_user }) }}">Messenger</a>
+		</li>
+		<li>
+			<a href="{{ path('app_event_index_front', { 'id_user': id_user }) }}">Events</a>
+		</li>
+		<li>
+			<a href="{{ path('Profile', { 'id_user': id_user }) }}">Profile</a>
+		</li>
+
+	{% endif %}
 {% endblock %}
 
 {% block body %}
 
+<style>
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 0;
+    list-style: none;
+}
+</style>
+
 	<link rel="stylesheet" href="{{ asset('css/auctionStyle.css') }}">
 
-	<div class="frame">
-    <!-- Contenu à placer dans le cadre -->
-    <a href="{{ path('app_auction_new', {'id_user':id_user} ) }}">Ajouter un Enchère</a>
-</div>
+	{% if user_is_artist %}
+		<div
+			class="frame">
+			<!-- Contenu à placer dans le cadre -->
+			<a href="{{ path('app_auction_new', {'id_user':id_user} ) }}">Ajouter un Enchère</a>
+		</div>
+	{% endif %}
 
-<div class="frame1">
-    <!-- Contenu à placer dans le cadre -->
-    <a href="{{ path('auctions_search', {'id_user':id_user} ) }}">Trouver un Enchère</a>
-</div>
+	<div
+		class="frame1">
+		<!-- Contenu à placer dans le cadre -->
+		<a href="{{ path('auctions_search', {'id_user':id_user} ) }}">Trouver un Enchère</a>
+	</div>
+
+	{% if user_is_artist %}
+		<div
+			class="frame2">
+			<!-- Contenu à placer dans le cadre -->
+			<a href="{{ path('artist', {'id_user':id_user} ) }}">Mes Enchères</a>
+		</div>
+	{% endif %}
 
 	<div class="main-container">
 		<div class="row">
 			{% for item in auctions %}
 				{% set i = (auctions.currentPageNumber - 1) * auctions.getItemNumberPerPage() + loop.index %}
+				{% set etat = 'Terminé' %}
+				{% set maintenant = now %}
+
+				{% if item.dateLancement > maintenant %}
+					{% set etat = 'Coming soon' %}
+				{% elseif maintenant >= item.dateLancement and maintenant <= item.dateCloture %}
+					{% set etat = 'Live' %}
+				{% endif %}
+
 				<div class="small-container">
 					<div class="wrapper">
 						<img src="{{asset ('img/explore/Auciton.jpg') }}" alt="explore image" class="banner-image">
@@ -50,17 +93,26 @@
 					</div>
 					<span class="explore-rating">
 						{% if AvgRating[i] != null %}
-							{{ AvgRating[i] }} Ratings <a href="#" class="fas fa-star s5"></a>
+							{{ AvgRating[i] }} <img src="{{ asset('img/star.png') }}" style="width:40px;">
+							
 						{% else %}
-							0 Rating
-							<i class="fa fa-star"></i>
+							0 <img src="{{ asset('img/star.png') }}" style="width:40px;">
+
 						{% endif %}
 					</span>
-				
+
 					<div class="button-wrapper">
 						<div class="button-wrapper">
-							<a href="{{ path('app_auction_show', {'idAuction': item.idAuction , 'id_user':id_user} ) }}" class="btn fill">Show Detail</a>
+							<a href="{{ path('app_auction_show', {'idAuction': item.idAuction , 'id_user':id_user , 'etat':etat} ) }}" class="btn fill">Show Detail</a>
 						</div>
+						{% if etat == 'Live' %}
+							<a class="btn fill">{{ etat }}</a>
+						{% elseif etat == 'Coming soon' %}
+							<a class="btn fill">{{ etat }}</a>
+						{% elseif etat == 'Terminé' %}
+							<a href="{{ path('gagnant', {'idAuction': item.idAuction, 'id_user': id_user, 'etat': etat} ) }}" class="btn fill">{{ etat }}</a>
+						{% endif %}
+
 					</div>
 				</div>
 				{% if loop.index % 3 == 0 and not loop.last %}
@@ -70,10 +122,28 @@
 			{% endfor %}
 		</div>
 	</div>
-	<div style= "display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-left: 0;
-    list-style: none;">{{ knp_pagination_render(auctions)}}</div>
+
+	
+	<div class="pagination-container d-flex justify-content-center mt-4">
+    <ul class="pagination">
+        {# Previous page link #}
+        <li class="page-item {% if auctions.currentPageNumber == 1 %}disabled{% endif %}">
+            <a class="page-link" href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'id_user': id_user,'page': auctions.currentPageNumber - 1})) }}">Previous</a>
+        </li>
+
+        {# Page links #}
+        {% for page in 1..auctions.pageCount %}
+            <li class="page-item {% if page == auctions.currentPageNumber %}active{% endif %}">
+                <a class="page-link" href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'id_user': id_user,'page': page})) }}">{{ page }}</a>
+            </li>
+        {% endfor %}
+
+        {# Next page link #}
+        <li class="page-item {% if auctions.currentPageNumber == auctions.pageCount %}disabled{% endif %}">
+            <a class="page-link" href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'id_user': id_user,'page': auctions.currentPageNumber + 1})) }}">Next</a>
+        </li>
+    </ul>
+</div>
+
 
 </html>{% endblock %}

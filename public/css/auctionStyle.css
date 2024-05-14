@@ -77,7 +77,16 @@ body {
   background-color: #4D81EA;
   
 }
-
+.frame2 {
+	position: fixed;
+	top: 15%; /* Ajustez la position verticale selon vos besoins */
+	right: 530;
+	padding: 10px;
+	border: 1px solid rgba(0, 0, 0, 0.2); /* Ajoutez une bordure */
+	border-radius: 15px; /* Ajoutez des coins arrondis */
+	background-color: #4D81EA;
+	
+  }
 a {
   color: #fff;
     font-style: italic;

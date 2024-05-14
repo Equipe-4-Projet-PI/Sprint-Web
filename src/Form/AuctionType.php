@@ -10,6 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;  
 use App\Entity\Product;
 use App\Repository\ProductRepository;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class AuctionType extends AbstractType
 {
@@ -20,8 +21,11 @@ class AuctionType extends AbstractType
             ->add('dateCloture')
             ->add('dateLancement')
             ->add('prixInitial')
-            ->add('idProduit')
-            ;
+            ->add('idProduit', ChoiceType::class, [
+                'label' => 'Produit',
+                'choices' => $options['prod'],
+            ])
+            ->add('ajouter', SubmitType::class, ['label' => 'Ajouter']);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -29,6 +33,9 @@ class AuctionType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Auction::class,
             'id_user' => null,
+            'prod'=>null
         ]);
     }
+
+
 }

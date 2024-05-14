@@ -28,6 +28,24 @@ class AuctionRepository extends ServiceEntityRepository
 
     }
 
+    public function findByUserId(int $userId): array
+    {
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+            'SELECT p FROM App\Entity\Product p WHERE p.idUser = :userId'
+        )->setParameter('userId', $userId);
+
+       
+        $products = $query->getResult();
+
+        $productsArray = [];
+        foreach ($products as $product) {
+            $productsArray[$product->getTitle()] = $product->getIdProduct();
+        }
+
+        return $productsArray;
+    }
+
 
 //    /**
 //     * @return Auction[] Returns an array of Auction objects

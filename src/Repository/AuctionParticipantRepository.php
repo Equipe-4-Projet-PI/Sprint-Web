@@ -64,6 +64,22 @@ class AuctionParticipantRepository extends ServiceEntityRepository
 
         return $average !== null ? (float) $average : null;
     }
+
+    public function findGagnant($idAuction)
+    {
+        $lastParticipant = $this->createQueryBuilder('ap')
+            ->andWhere('ap.idAuction = :idAuction')
+            ->setParameter('idAuction', $idAuction)
+            ->orderBy('ap.date', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+            if ($lastParticipant instanceof AuctionParticipant) {
+                return $lastParticipant->getIdParticipant();
+            }
+    
+            return null;
+    }
     ////////////////////////////////////////////////////
 
 //    /**
