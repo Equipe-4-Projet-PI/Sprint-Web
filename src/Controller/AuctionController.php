@@ -83,11 +83,11 @@ class AuctionController extends AbstractController
 
 
 
-    #[Route('/auctionlistsearchres_{id_user}', name: 'auction_search_res')]
+    #[Route('_auctionlistsearchres_{id_user}', name: 'auction_search_res')]
     public function searchfunc(Request $request, AuctionRepository $auctionRepository, $id_user): Response
     {
         $query = $request->query->get('query');
-        $forums = $auctionRepository->search($query);
+        $auction = $auctionRepository->SEARCH($query);
 
         if ($query != null) {
             $auction = $auctionRepository->SEARCH($query);
@@ -96,12 +96,12 @@ class AuctionController extends AbstractController
         }
 
         return $this->render('auction/searchResults.html.twig', [
-            'auctions' => $forums,
+            'auctions' => $auction,
             'id_user' => $id_user,
             'etat'=> "live",
         ]);
     }
-    #[Route('/auctionlistsearch_{id_user}', name: 'auctions_search')]
+    #[Route('_auctionlistsearch_{id_user}', name: 'auctions_search')]
     public function search(AuctionRepository $repo, Request $request, $id_user): Response
     {
 

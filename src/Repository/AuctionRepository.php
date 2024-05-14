@@ -46,6 +46,25 @@ class AuctionRepository extends ServiceEntityRepository
         return $productsArray;
     }
 
+    public function SEARCH(string $nom): array{
+        $manager = $this->getEntityManager();
+        $req = $manager->createQuery('SELECT a FROM App\Entity\Auction a WHERE a.nom LIKE :idF')
+        ->setParameter('idF','%' . $nom . '%');
+        $result = $req->getResult();
+    
+        if (empty($result)) {
+            //$manager = $this->getEntityManager();
+            //$req = $manager->createQuery('SELECT f FROM App\Entity\Forum f');
+            //$result = $req->getResult();
+           
+            $auction = new Auction();
+            $auction->setNom("No records");
+            $result[] = $auction;
+        }
+
+        return $result;
+    }
+
 
 //    /**
 //     * @return Auction[] Returns an array of Auction objects
