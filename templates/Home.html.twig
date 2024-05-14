@@ -27,11 +27,23 @@
   <link href="{{asset('css/main.css')}}" rel="stylesheet">
   
 
- 
+ <style>
+    .hero {
+      width: 100%;
+      min-height: 30vh;
+      background :  url('{{ asset('assets/images/forum/AtlBack.png') }}') no-repeat fixed center;
+      background-size: cover;
+      position: relative;
+      padding: 140px 0 60px 0;
+    }
+    .body {
+      background :  url('{{ asset('assets/images/forum/AtlBack.png') }}') no-repeat fixed center;
+    }
+  </style>
 
 </head>
 
-<body>
+<body style="background :  url('{{ asset('assets/images/AtlBack.png') }}') no-repeat fixed center;">
 
   <!-- ======= Header ======= -->
   <div
